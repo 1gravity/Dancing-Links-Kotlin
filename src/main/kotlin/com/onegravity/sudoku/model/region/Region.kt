@@ -2,6 +2,9 @@ package com.onegravity.sudoku.model.region
 
 import com.onegravity.sudoku.model.Cell
 
+/**
+ * Region defines a region within a Sudoku puzzle like a block, row, column or an ExtraRegion.
+ */
 abstract class Region<C: Cell>(val regionType: RegionType) : Comparable<Region<C>>, Cloneable {
 
     /**

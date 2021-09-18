@@ -31,12 +31,12 @@ class AlgorithmXTests {
     fun test1() {
         var solutionFound = false
         matrixTest1
-            .getDLX(PayloadProviderImpl)
+            .getDLX(DefaultPayloadProvider)
             .solve { solution ->
                 solutionFound = true
                 val rows = ArrayList<Int>()
                 solution.forEach { node ->
-                    val payload = node.payload as PayloadProviderImpl.DefaultPayload
+                    val payload = node.payload as DefaultPayloadProvider.DefaultPayload
                     rows.add(payload.row)
                 }
                 verifySolution(solution, 7)
@@ -51,12 +51,12 @@ class AlgorithmXTests {
     @Test
     fun test1Channels() = runBlocking(Dispatchers.Main) {
         var solutionFound = false
-        val dlxMatrix = matrixTest1.getDLX(PayloadProviderImpl)
+        val dlxMatrix = matrixTest1.getDLX(DefaultPayloadProvider)
         for (solution in solve(dlxMatrix)) {
             solutionFound = true
             val rows = ArrayList<Int>()
             solution.forEach { node ->
-                val payload = node.payload as PayloadProviderImpl.DefaultPayload
+                val payload = node.payload as DefaultPayloadProvider.DefaultPayload
                 rows.add(payload.row)
             }
             verifySolution(solution, 7)
@@ -73,12 +73,12 @@ class AlgorithmXTests {
     fun test2() {
         var solutionFound = false
         matrixTest2
-            .getDLX(PayloadProviderImpl)
+            .getDLX(DefaultPayloadProvider)
             .solve { solution ->
                 solutionFound = true
                 val rows = ArrayList<Int>()
                 solution.forEach { node ->
-                    val payload = node.payload as PayloadProviderImpl.DefaultPayload
+                    val payload = node.payload as DefaultPayloadProvider.DefaultPayload
                     rows.add(payload.row)
                 }
                 verifySolution(solution, 12)
@@ -103,19 +103,19 @@ class AlgorithmXTests {
     @Test
     fun testMultipleSolutions() {
         matrixTest1
-            .getDLX(PayloadProviderImpl)
+            .getDLX(DefaultPayloadProvider)
             .solveAll { solutions ->
                 assertEquals(1, solutions.size)
             }
 
         matrixTest2
-            .getDLX(PayloadProviderImpl)
+            .getDLX(DefaultPayloadProvider)
             .solveAll { solutions ->
                 assertEquals(2, solutions.size)
             }
 
         matrixTest3
-            .getDLX(PayloadProviderImpl)
+            .getDLX(DefaultPayloadProvider)
             .solveAll { solutions ->
                 assertEquals(64, solutions.size)
                 solutions.forEach { verifySolution(it, 12) }
@@ -125,15 +125,15 @@ class AlgorithmXTests {
     @Test
     fun testMultipleSolutionsChannel() = runBlocking(Dispatchers.Main) {
         var count = 0
-        for (solution in solve(matrixTest1.getDLX(PayloadProviderImpl))) count++
+        for (solution in solve(matrixTest1.getDLX(DefaultPayloadProvider))) count++
         assertEquals(1, count)
 
         count = 0
-        for (solution in solve(matrixTest2.getDLX(PayloadProviderImpl))) count++
+        for (solution in solve(matrixTest2.getDLX(DefaultPayloadProvider))) count++
         assertEquals(2, count)
 
         count = 0
-        for (solution in solve(matrixTest3.getDLX(PayloadProviderImpl))) {
+        for (solution in solve(matrixTest3.getDLX(DefaultPayloadProvider))) {
             verifySolution(solution, 12)
             count++
         }
@@ -143,7 +143,7 @@ class AlgorithmXTests {
     @Test
     fun testNoSolution() {
         matrixTest4
-            .getDLX(PayloadProviderImpl)
+            .getDLX(DefaultPayloadProvider)
             .solve {
                 // if we reach this point the algorithm failed since the matrix has no solution
                 assert(false)
@@ -152,7 +152,7 @@ class AlgorithmXTests {
 
     @Test
     fun testNoSolutionChannels() = runBlocking(Dispatchers.Main) {
-        val dlxMatrix = matrixTest4.getDLX(PayloadProviderImpl)
+        val dlxMatrix = matrixTest4.getDLX(DefaultPayloadProvider)
         for (solution in solve(dlxMatrix)) {
             // if we reach this point the algorithm failed since the matrix has no solution
             assert(false)
@@ -166,12 +166,12 @@ class AlgorithmXTests {
         val validation = BitSet()
 
         solution.forEach { node ->
-            (node.payload as PayloadProviderImpl.DefaultPayload).col.let {
+            (node.payload as DefaultPayloadProvider.DefaultPayload).col.let {
                 assertEquals(false, validation[it])
                 validation[it] = true
             }
             node.forEach(Right) { neighbor ->
-                (neighbor.payload as PayloadProviderImpl.DefaultPayload).col.let {
+                (neighbor.payload as DefaultPayloadProvider.DefaultPayload).col.let {
                     assertEquals(false, validation[it])
                     validation[it] = true
                 }

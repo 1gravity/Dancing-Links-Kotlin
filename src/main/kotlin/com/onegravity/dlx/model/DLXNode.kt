@@ -2,14 +2,18 @@ package com.onegravity.dlx.model
 
 import com.onegravity.dlx.model.Direction.*
 
+/**
+ * The base class for the three types of nodes (root node, header nodes and data nodes) implementing basic node
+ * operations: get, insert, delete.
+ */
 abstract class DLXNode(var payload: Any) {
 
     /**
-     * left, right, up and down must be initialized in the sub classes and be set to `this`
+     * left, right, up and down must be initialized in the subclasses and be set to `this`
      *
-     * We cannot initialize the properties with `this` in an `init { }` block here because
-     * the node isn't fully initialized yet at that point in time and it's an open class so sub
-     * classes could access the not fully initialized BaseNode through the properties.
+     * We cannot initialize the properties with `this` in an `init { }` block here because the node isn't fully
+     * initialized yet at that point in time, and it's an open class so subclasses could access the not fully
+     * initialized DLXNode through the properties.
      */
     lateinit var left: DLXNode
         protected set
@@ -23,48 +27,48 @@ abstract class DLXNode(var payload: Any) {
     lateinit var down: DLXNode
         protected set
 
-    suspend fun forEachSuspended(direction: Direction, block: suspend (node: DLXNode) -> Unit) {
-        forEachIndexedSuspended(direction) { _, node -> block(node) }
+    /**
+     * Performs the given action on each node.
+     *
+     * This is a convenience method to make looping over rows/columns easier.
+     * Note: since DLXNodes are part of two circular linked lists it will loop over all nodes in th row or column
+     * (excluding the starting node) so looping from a DataNode downwards would also loop over the HeaderNode.
+     *
+     * @param direction the Direction to loop over the nodes.
+     * @param action the action to perform on each node taking the node as parameter.
+     */
+    fun forEach(direction: Direction, action: (node: DLXNode) -> Unit) {
+        forEachIndexed(direction) { _, node -> action(node) }
     }
 
-    suspend fun forEachIndexedSuspended(direction: Direction, block: suspend (index: Int, node: DLXNode) -> Unit) {
-        val thisNode = this@DLXNode
-        var next = getNext(thisNode, direction)
+    /**
+     * Performs the given action on each node, providing sequential index with the node.
+     *
+     * @param direction the Direction to loop over the nodes.
+     * @param action the action to perform on each node taking the index of the node and the node itself as parameters.
+     */
+    fun forEachIndexed(direction: Direction, action: (index: Int, node: DLXNode) -> Unit) {
+        var next = next(direction)
         var index = 0
-        while (next != thisNode) {
-            block(index++, next)
-            next = getNext(next, direction)
+        while (next != this@DLXNode) {
+            action(index++, next)
+            next = next.next(direction)
         }
     }
 
-    fun forEach(direction: Direction, block: (node: DLXNode) -> Unit) {
-        forEachIndexed(direction) { _, node -> block(node) }
+    fun next(direction: Direction) = when (direction) {
+        Left -> this.left
+        Right -> this.right
+        Up -> this.up
+        Down -> this.down
     }
-
-    fun forEachIndexed(direction: Direction, block: (index: Int, node: DLXNode) -> Unit) {
-        val thisNode = this@DLXNode
-        var next = getNext(thisNode, direction)
-        var index = 0
-        while (next != thisNode) {
-            block(index++, next)
-            next = getNext(next, direction)
-        }
-    }
-
-    private fun getNext(node: DLXNode, direction: Direction) =
-        when (direction) {
-            Left -> node.left
-            Right -> node.right
-            Up -> node.up
-            Down -> node.down
-        }
 
     /**
      * Insert this DLXNode at the left, right, top or bottom of another DLXNode and returns the
      * inserted DLXNode (=this).
      *
-     * @param node the DLXNode at which the current node is inserted.
-     * @param direction defines where the node is inserted (left, right, up, down)
+     * @param node the DLXNode to insert the current node at.
+     * @param direction the Direction to insert the node at (left, right, up, down)
      *
      * @return the inserted DLXNode = this
      */
@@ -99,6 +103,13 @@ abstract class DLXNode(var payload: Any) {
         return this
     }
 
+    /**
+     * Remove the node from its neighbors in the indicated directions.
+     * While it's theoretically possible to remove a node just from one neighbor, in a double linked list, the node
+     * should be removed with up/down or left/right Directions to keep the data structure's integrity.
+     *
+     * @param directions one or more Directions the node is removed from.
+     */
     fun remove(vararg directions: Direction) {
         directions.forEach { remove(it) }
     }

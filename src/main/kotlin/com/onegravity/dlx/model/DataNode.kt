@@ -1,5 +1,9 @@
 package com.onegravity.dlx.model
 
+/**
+ * DataNodes make up the actual DLX matrix.
+ * On top of the four direct links they also link to the HeaderNode directly.
+ */
 class DataNode(val header: HeaderNode, payload: Any): DLXNode(payload) {
 
     init {

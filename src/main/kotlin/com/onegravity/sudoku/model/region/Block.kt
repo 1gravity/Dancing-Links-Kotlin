@@ -2,6 +2,14 @@ package com.onegravity.sudoku.model.region
 
 import com.onegravity.sudoku.model.Cell
 
+/**
+ * A block in the Sudoku puzzle.
+ *
+ * @param cells unlike Rows and Columns, Blocks don't retrieve the cells that are part of the block. For performance
+ * reasons the Grid does that job and just passes the List of Cells to the blocks.
+ * @param blockCode the blockCode defines which block this is (0 to 8). It's the equivalent of a region code for extra
+ * regions.
+ */
 class Block<C : Cell>(override val cells: List<C>, val blockCode: Int) :
     Region<C>(RegionType.BLOCK) {
 
@@ -19,7 +27,7 @@ class Block<C : Cell>(override val cells: List<C>, val blockCode: Int) :
         }
 
     companion object {
-        // region codes for standard blocks (not squiggly)
+        // region codes for standard blocks (not Jigsaw/squiggly)
         // (looks diagonally mirrored because we want to use (column, row) coordinates)
         val regionCodes = arrayOf(
             intArrayOf(0, 0, 0, 3, 3, 3, 6, 6, 6),

@@ -1,6 +1,6 @@
 package com.onegravity.dlx.model
 
-import com.onegravity.dlx.PayloadProviderImpl.DefaultPayload
+import com.onegravity.dlx.DefaultPayloadProvider.DefaultPayload
 import com.onegravity.dlx.model.Direction.*
 import com.onegravity.dlx.PayloadProvider
 import com.onegravity.dlx.getDLX

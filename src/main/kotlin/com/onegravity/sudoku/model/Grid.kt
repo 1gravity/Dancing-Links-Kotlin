@@ -6,6 +6,8 @@ import java.lang.StringBuilder
 import kotlin.collections.ArrayList
 
 /**
+ * The Grid class is the Puzzle implementation.
+ *
  * @param extraRegionType if not Null defines the extra regions this puzzle holds (X, Hyper,
  * Centerdot etc.
  * @param isJigsaw True if the puzzle is a Jigsaw puzzle in which case the blockCodes need to be

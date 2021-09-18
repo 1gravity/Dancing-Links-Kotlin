@@ -5,21 +5,22 @@ import com.onegravity.dlx.model.Direction.*
 import java.util.ArrayList
 
 /**
- * Use this extension function to create the dancing links based on an exact cover matrix.
- *
+ * This creates the dancing links data structure based on an exact cover matrix.
  * The exact cover matrix is an Array of Boolean Arrays (Array<BooleanArray>).
+ *
+ * @param provider The PayloadProvider to attach arbitrary information to DLX nodes, defaults to DefaultPayloadProvider.
+ *
+ * @return the RootNode of the DLX data structure.
  */
-fun Array<BooleanArray>.getDLX(provider: PayloadProvider = PayloadProviderImpl): RootNode {
-    val rootNode = RootNode()
-
+fun Array<BooleanArray>.getDLX(provider: PayloadProvider = DefaultPayloadProvider) = RootNode().apply {
     val nrOfColumns = when {
-        isNotEmpty() -> this[0].size
+        isNotEmpty() -> this@getDLX[0].size
         else -> 0
     }
 
     // create & insert all Headers
     val headers = ArrayList<HeaderNode>()
-    var currentHeader: DLXNode = rootNode
+    var currentHeader: DLXNode = this
     for (constraint in 0 until nrOfColumns) {
         val newHeader = HeaderNode(provider.getHeaderPayload(constraint))
         currentHeader = newHeader.insertAt(currentHeader, Right)
@@ -41,6 +42,4 @@ fun Array<BooleanArray>.getDLX(provider: PayloadProvider = PayloadProviderImpl):
             }
         }
     }
-
-    return rootNode
 }

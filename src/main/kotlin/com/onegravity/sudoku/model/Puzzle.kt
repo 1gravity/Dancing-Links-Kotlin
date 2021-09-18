@@ -2,6 +2,10 @@ package com.onegravity.sudoku.model
 
 import com.onegravity.sudoku.model.region.*
 
+/**
+ * Puzzle is the interface for a Sudoku puzzle.
+ * It supports jigsaw/squiggly puzzles and also puzzles with extra regions (X-Sudoku, Hyper-Sudoku etc.).
+ */
 interface Puzzle<C: Cell> {
 
     val extraRegionType: RegionType?

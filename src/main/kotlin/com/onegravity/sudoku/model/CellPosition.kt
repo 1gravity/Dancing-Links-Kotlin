@@ -1,5 +1,8 @@
 package com.onegravity.sudoku.model
 
+/**
+ * The position of a cell within a Sudoku grid.
+ */
 data class CellPosition(val col: Int, val row: Int) : Comparable<CellPosition> {
 
     constructor(index: Int): this(index % 9, index / 9)

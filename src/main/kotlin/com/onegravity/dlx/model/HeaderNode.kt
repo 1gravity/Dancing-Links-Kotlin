@@ -2,6 +2,10 @@ package com.onegravity.dlx.model
 
 import com.onegravity.dlx.model.Direction.*
 
+/**
+ * HeaderNodes are at the top of each column.
+ * They keep track of the number of nodes in the column and implement the crucial cover/uncover operations.
+ */
 class HeaderNode(payload: Any): DLXNode(payload) {
 
     init {

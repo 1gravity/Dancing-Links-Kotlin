@@ -5,6 +5,9 @@ import com.onegravity.sudoku.model.Puzzle
 import com.onegravity.sudoku.model.computeRegionIndices
 import com.onegravity.sudoku.model.computeNeighbors
 
+/**
+ * A row in the Sudoku puzzle.
+ */
 class Row<C : Cell>(private val puzzle: Puzzle<C>, private val rowIndex: Int) :
     Region<C>(RegionType.ROW) {
 

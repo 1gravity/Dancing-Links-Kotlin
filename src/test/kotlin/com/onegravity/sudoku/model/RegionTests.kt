@@ -61,6 +61,52 @@ class RegionTests {
     }
 
     @Test
+    fun testIntersects() {
+        val grid = getTestGrid(testValues, null)
+        (0..8).forEach { index1 ->
+            val columnRegion1 = grid.getRegionAtOrNull(index1, 0, RegionType.COLUMN)!!
+            val rowRegion1 = grid.getRegionAtOrNull(0, index1,  RegionType.ROW)!!
+            (0..8).forEach { index2 ->
+                val columnRegion2 = grid.getRegionAtOrNull(index2, index1, RegionType.COLUMN)!!
+                val rowRegion2 = grid.getRegionAtOrNull(index1, index2, RegionType.ROW)!!
+                assert(rowRegion2.intersects(columnRegion1))
+                assert(rowRegion1.intersects(columnRegion2))
+
+                val rowRegion = grid.getRegionAtOrNull(index1, index2, RegionType.ROW)!!
+                val columnRegion = grid.getRegionAtOrNull(index1, index2, RegionType.COLUMN)!!
+                val blockRegion = grid.getRegionAtOrNull(index1, index2, RegionType.BLOCK)!!
+                assert(rowRegion.intersects(blockRegion))
+                assert(columnRegion.intersects(blockRegion))
+            }
+        }
+    }
+
+    @Test
+    fun testIntersection() {
+        val grid = getTestGrid(testValues, null)
+        // columns
+        for (row in 0..8) {
+            val columnRegion = grid.getRegionAtOrNull(0, row,  RegionType.COLUMN)!!
+            for (col in 0..8) {
+                val rowRegion = grid.getRegionAtOrNull(col, row,  RegionType.ROW)!!
+                val blockRegion = grid.getRegionAtOrNull(0, row, RegionType.BLOCK)!!
+                assertEquals(3, columnRegion.intersection(blockRegion).size)
+                assertEquals(1, columnRegion.intersection(rowRegion).size)
+            }
+        }
+        // rows
+        for (col in 0..8) {
+            val rowRegion = grid.getRegionAtOrNull(col, 0,  RegionType.ROW)!!
+            for (row in 0..8) {
+                val columnRegion = grid.getRegionAtOrNull(col, row,  RegionType.COLUMN)!!
+                val blockRegion = grid.getRegionAtOrNull(col, 0, RegionType.BLOCK)!!
+                assertEquals(3, rowRegion.intersection(blockRegion).size)
+                assertEquals(1, rowRegion.intersection(columnRegion).size)
+            }
+        }
+    }
+
+    @Test
     fun testRegionAt() {
         val grid = getTestGrid(testValues, null)
         for (col in 0..8) {

@@ -5,8 +5,8 @@ import com.onegravity.sudoku.model.Puzzle
 import com.onegravity.sudoku.model.computeRegionIndices
 import com.onegravity.sudoku.model.computeNeighbors
 
-class Centerdot<C : Cell>(puzzle: Puzzle<C>, regionIndex: Int) :
-    ExtraRegion<C>(puzzle, RegionType.CENTERDOT, regionIndex, regionCodes) {
+class Centerdot<C : Cell>(puzzle: Puzzle<C>, regionCode: Int) :
+    ExtraRegion<C>(puzzle, RegionType.CENTERDOT, regionCode, regionCodes) {
 
     companion object {
         const val nrOfRegions: Int = 1
