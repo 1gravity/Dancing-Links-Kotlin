@@ -15,6 +15,13 @@ class RootNode: DLXNode("Root Node") {
         down = this
     }
 
+    /**
+     * Returns a Collection of all HeaderNodes
+     */
+    fun getHeaders(): Collection<HeaderNode> = ArrayList<HeaderNode>().apply {
+        forEach(Right) { add(it as HeaderNode) }
+    }
+
     override fun toString() = StringBuilder("$payload").apply {
         forEach(Right) { header ->
             append(" | $header")

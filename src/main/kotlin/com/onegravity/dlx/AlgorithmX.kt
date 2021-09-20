@@ -15,7 +15,7 @@ import kotlinx.coroutines.channels.produce
  * @param collect the function called with each of the found solutions (there can be 0..n solutions).
  */
 fun RootNode.solve(collect: (List<DLXNode>) -> Unit) {
-    solve(rootNode = this) { collect(it) }
+    solveProblem { collect(it) }
 }
 
 /**
@@ -23,7 +23,7 @@ fun RootNode.solve(collect: (List<DLXNode>) -> Unit) {
  */
 fun RootNode.solveAll(): Collection<List<DLXNode>> =
     ArrayList<List<DLXNode>>().apply {
-        solve(rootNode = this@solveAll) { add(it) }
+        solveProblem { add(it) }
     }
 
 /**
@@ -56,16 +56,17 @@ fun CoroutineScope.solve(rootNode: RootNode) = produce<List<DLXNode>> {
  *    5.1. Since step 2 (pick a row in the column) is done for all rows at this point we need to
  *         undo all changes for step 3 and 4
  */
-private fun solve(
+@Suppress("MoveVariableDeclarationIntoWhen")
+private fun RootNode.solveProblem(
     solution: ArrayList<DLXNode> = ArrayList(),
-    rootNode: RootNode,
     collect: (List<DLXNode>) -> Unit
 ) {
-   // 1. Pick a column
-    when (val header = findColumn(rootNode)) {
-        null, is RootNode -> {
+   // 1. Pick a column (the one with the least amount of nodes
+    val header = getHeaders().minByOrNull { header -> header.nrOfNodes } ?: this
+    when (header) {
+        is RootNode -> {
             // 1.1. if there's no column -> the matrix is empty -> we found a solution
-            //   we need to make a copy -> ArrayList(solution), because the solution list is mutable
+            //   we need to make a copy -> ArrayList(solution), because the solution list is mutable,
             //   and we want to return a list that won't be modified by the solve function
             collect(ArrayList(solution))
         }
@@ -75,8 +76,8 @@ private fun solve(
 
             // 2. Pick a row in the column
             // Note: we cannot use header.forEach here because the lambda can't be a suspending function (or the whole
-            // solve function must be suspending), and thus we cannot call solve(solution, rootNode, collect) within the
-            // lambda (step 5)
+            // solve function must be suspending), and thus we cannot call solveProblem(solution, rootNode, collect)
+            // within the lambda (step 5, see below)
             var node = header.next(Down)
             while (node != header) {
                 // 3. Add the row to the solution set
@@ -88,13 +89,14 @@ private fun solve(
                 }
 
                 // 5. Repeat this algorithm recursively on the reduced matrix
-                solve(solution, rootNode, collect)
+                solveProblem(solution, collect)
 
                 // 5.1. undo all changes for step 3 and 4
                 solution.remove(node)
                 node.forEach(Left) {
                     (it as DataNode).header.uncover()
                 }
+
                 node = node.next(Down)
             }
 
@@ -102,13 +104,4 @@ private fun solve(
             header.uncover()
         }
     }
-}
-
-private fun findColumn(rootNode: RootNode): DLXNode? {
-    var result: HeaderNode? = null
-    rootNode.forEach(Right) {
-        val header = it as HeaderNode
-        result = if (header.nrOfNodes < (result?.nrOfNodes ?: Int.MAX_VALUE)) header else result
-    }
-    return result
 }
