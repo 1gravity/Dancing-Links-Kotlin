@@ -3,7 +3,7 @@ package com.onegravity.dlx.model
 import com.onegravity.dlx.DefaultPayloadProvider.DefaultPayload
 import com.onegravity.dlx.model.Direction.*
 import com.onegravity.dlx.PayloadProvider
-import com.onegravity.dlx.getDLX
+import com.onegravity.dlx.toDLX
 import com.onegravity.dlx.matrixTest2
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -12,7 +12,7 @@ class DLXNodeTests {
 
     @Test
     fun testForEach() {
-        val rootNode = matrixTest2.getDLX()
+        val rootNode = matrixTest2.toDLX()
 
         val nodesIndexed = ArrayList<DLXNode>()
         rootNode.forEachIndexed(Right) { _, header ->
@@ -66,7 +66,7 @@ class DLXNodeTests {
             arrayOf(DefaultPayload(10, 1), DefaultPayload(10, 3)),
             arrayOf(DefaultPayload(11, 5), DefaultPayload(11, 7)),
         )
-        val rootNode = matrixTest2.getDLX()
+        val rootNode = matrixTest2.toDLX()
         rootNode.forEachIndexed(Right) { column, header ->
             (header as HeaderNode).forEachIndexed(Down) { row, node ->
                 assertEquals(payloads[column][row], node.payload)
@@ -97,7 +97,7 @@ class DLXNodeTests {
             }
         }
 
-        val rootNode = matrixTest2.getDLX(object: PayloadProvider {
+        val rootNode = matrixTest2.toDLX(object: PayloadProvider {
             override fun getHeaderPayload(index: Int) = "TESTHEADER$index"
             override fun getDataPayload(col: Int, row: Int) = TestPayload(row, col, payloads[row][col])
         })
@@ -113,7 +113,7 @@ class DLXNodeTests {
 
     @Test
     fun testInsert() {
-        val rootNode = matrixTest2.getDLX()
+        val rootNode = matrixTest2.toDLX()
         assertEquals("h0", rootNode.right.payload)
         assertEquals(DefaultPayload(0,0), rootNode.right.down.payload)
         assertEquals(DefaultPayload(0,1), rootNode.right.up.payload)
@@ -149,7 +149,7 @@ class DLXNodeTests {
 
     @Test
     fun testRemove() {
-        val rootNode = matrixTest2.getDLX()
+        val rootNode = matrixTest2.toDLX()
 
         val h1 = HeaderNode("New Header 1")
         val h2 = HeaderNode("New Header 2")

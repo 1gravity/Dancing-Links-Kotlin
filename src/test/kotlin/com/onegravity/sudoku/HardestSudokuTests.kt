@@ -1,9 +1,9 @@
 package com.onegravity.sudoku
 
 import com.onegravity.dlx.PayloadProvider
-import com.onegravity.dlx.getDLX
+import com.onegravity.dlx.toDLX
 import com.onegravity.dlx.solve
-import com.onegravity.sudoku.model.Grid
+import com.onegravity.sudoku.SudokuMatrix.Companion.sudokuMatrix
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -12,8 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger
 class HardestSudokuTests {
 
     private val sudokuPattern = """^([\d.]{81}).*$""".toRegex()
-
-    private fun Grid.sudokuMatrix() = SudokuMatrix(this).sudokuMatrix
 
     @Test
     fun testHardestSudokus() {
@@ -41,7 +39,7 @@ class HardestSudokuTests {
 
         val solutions = AtomicInteger(0)
         grid.sudokuMatrix()
-            .getDLX(object: PayloadProvider {
+            .toDLX(object: PayloadProvider {
                 override fun getHeaderPayload(index: Int) = "h$index"
                 override fun getDataPayload(col: Int, row: Int) = getIndexValue(row)
             })

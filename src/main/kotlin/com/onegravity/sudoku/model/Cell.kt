@@ -21,6 +21,11 @@ interface Cell {
     var isGiven: Boolean
 
     /**
+     * Returns true if no value has been set yet
+     */
+    fun isEmpty() = value == 0
+
+    /**
      * Get the potential values for this cell.
      *
      * The result is returned as a bitset. Each of the bit number 1 to 9 is set if the corresponding value is a

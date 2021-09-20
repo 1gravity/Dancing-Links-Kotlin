@@ -31,7 +31,7 @@ class AlgorithmXTests {
     fun test1() {
         var solutionFound = false
         matrixTest1
-            .getDLX(DefaultPayloadProvider)
+            .toDLX(DefaultPayloadProvider)
             .solve { solution ->
                 solutionFound = true
                 val rows = ArrayList<Int>()
@@ -51,7 +51,7 @@ class AlgorithmXTests {
     @Test
     fun test1Channels() = runBlocking(Dispatchers.Main) {
         var solutionFound = false
-        val dlxMatrix = matrixTest1.getDLX(DefaultPayloadProvider)
+        val dlxMatrix = matrixTest1.toDLX(DefaultPayloadProvider)
         for (solution in solve(dlxMatrix)) {
             solutionFound = true
             val rows = ArrayList<Int>()
@@ -73,7 +73,7 @@ class AlgorithmXTests {
     fun test2() {
         var solutionFound = false
         matrixTest2
-            .getDLX(DefaultPayloadProvider)
+            .toDLX(DefaultPayloadProvider)
             .solve { solution ->
                 solutionFound = true
                 val rows = ArrayList<Int>()
@@ -103,19 +103,19 @@ class AlgorithmXTests {
     @Test
     fun testMultipleSolutions() {
         matrixTest1
-            .getDLX(DefaultPayloadProvider)
+            .toDLX(DefaultPayloadProvider)
             .solveAll { solutions ->
                 assertEquals(1, solutions.size)
             }
 
         matrixTest2
-            .getDLX(DefaultPayloadProvider)
+            .toDLX(DefaultPayloadProvider)
             .solveAll { solutions ->
                 assertEquals(2, solutions.size)
             }
 
         matrixTest3
-            .getDLX(DefaultPayloadProvider)
+            .toDLX(DefaultPayloadProvider)
             .solveAll { solutions ->
                 assertEquals(64, solutions.size)
                 solutions.forEach { verifySolution(it, 12) }
@@ -125,15 +125,15 @@ class AlgorithmXTests {
     @Test
     fun testMultipleSolutionsChannel() = runBlocking(Dispatchers.Main) {
         var count = 0
-        for (solution in solve(matrixTest1.getDLX(DefaultPayloadProvider))) count++
+        for (solution in solve(matrixTest1.toDLX(DefaultPayloadProvider))) count++
         assertEquals(1, count)
 
         count = 0
-        for (solution in solve(matrixTest2.getDLX(DefaultPayloadProvider))) count++
+        for (solution in solve(matrixTest2.toDLX(DefaultPayloadProvider))) count++
         assertEquals(2, count)
 
         count = 0
-        for (solution in solve(matrixTest3.getDLX(DefaultPayloadProvider))) {
+        for (solution in solve(matrixTest3.toDLX(DefaultPayloadProvider))) {
             verifySolution(solution, 12)
             count++
         }
@@ -143,7 +143,7 @@ class AlgorithmXTests {
     @Test
     fun testNoSolution() {
         matrixTest4
-            .getDLX(DefaultPayloadProvider)
+            .toDLX(DefaultPayloadProvider)
             .solve {
                 // if we reach this point the algorithm failed since the matrix has no solution
                 assert(false)
@@ -152,7 +152,7 @@ class AlgorithmXTests {
 
     @Test
     fun testNoSolutionChannels() = runBlocking(Dispatchers.Main) {
-        val dlxMatrix = matrixTest4.getDLX(DefaultPayloadProvider)
+        val dlxMatrix = matrixTest4.toDLX(DefaultPayloadProvider)
         for (solution in solve(dlxMatrix)) {
             // if we reach this point the algorithm failed since the matrix has no solution
             assert(false)

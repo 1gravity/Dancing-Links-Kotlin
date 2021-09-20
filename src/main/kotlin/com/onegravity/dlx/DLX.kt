@@ -12,9 +12,9 @@ import java.util.ArrayList
  *
  * @return the RootNode of the DLX data structure.
  */
-fun Array<BooleanArray>.getDLX(provider: PayloadProvider = DefaultPayloadProvider) = RootNode().apply {
+fun Array<BooleanArray>.toDLX(provider: PayloadProvider = DefaultPayloadProvider) = RootNode().apply {
     val nrOfColumns = when {
-        isNotEmpty() -> this@getDLX[0].size
+        isNotEmpty() -> this@toDLX[0].size
         else -> 0
     }
 

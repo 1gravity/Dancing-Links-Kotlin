@@ -8,13 +8,10 @@ import kotlin.collections.ArrayList
 /**
  * The Grid class is the Puzzle implementation.
  *
- * @param extraRegionType if not Null defines the extra regions this puzzle holds (X, Hyper,
- * Centerdot etc.
- * @param isJigsaw True if the puzzle is a Jigsaw puzzle in which case the blockCodes need to be
- * passed in
- * @param blockCodes the block codes define to which block a cell belongs to.
- * The codes go from 0 to 8.
- * For a regular puzzle they are (not jigsaw):
+ * @param extraRegionType if not Null defines the extra regions this puzzle holds (X, Hyper, Centerdot etc.)
+ * @param isJigsaw True if the puzzle is a Jigsaw puzzle in which case the blockCodes need to be passed in
+ * @param blockCodes the block codes define to which block a cell belongs to. The codes go from 0 to 8.
+ * For a regular puzzle (not jigsaw) the blockCodes are:
  * 0, 0, 0, 3, 3, 3, 6, 6, 6
  * 0, 0, 0, 3, 3, 3, 6, 6, 6
  * 0, 0, 0, 3, 3, 3, 6, 6, 6

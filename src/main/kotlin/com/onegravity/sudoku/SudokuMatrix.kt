@@ -21,7 +21,13 @@ class SudokuMatrix(private val grid: Grid) {
 
     // helper functions
     companion object {
-        fun getSubset(index: Int, value: Int) = indexValue2Subset["$index#$value"] ?: 0
+        /**
+         * Convenience function to have a fluent api, e.g.:
+         * grid.sudokuMatrix()
+         *     .toDLX()
+         *     .solve { }
+         */
+        fun Grid.sudokuMatrix() = SudokuMatrix(this).sudokuMatrix
 
         /**
          * Maps cell indices and value to a subset / row, e.g.
@@ -32,6 +38,8 @@ class SudokuMatrix(private val grid: Grid) {
          *
          * (see also sudoku_matrix.txt)
          */
+        fun getSubset(index: Int, value: Int) = indexValue2Subset["$index#$value"] ?: 0
+
         private val indexValue2Subset = HashMap<String, Int>().apply {
             for (index in 0..80) {
                 for (value in 1..9) {
@@ -77,7 +85,7 @@ class SudokuMatrix(private val grid: Grid) {
     val sudokuMatrix = baseMatrix().apply {
         for (index in 0..80) {
             val cell = grid.getCell(index)
-            if (cell.isGiven && cell.value > 0) {
+            if (cell.isGiven && !cell.isEmpty()) {
                 // subset is the row describing the given value and as such part of the solution
                 val subset = getSubset(index, cell.value)
                 this[subset].forEachIndexed { col, isSet ->

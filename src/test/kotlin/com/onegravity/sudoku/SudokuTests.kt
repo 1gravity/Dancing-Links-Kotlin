@@ -3,7 +3,7 @@ package com.onegravity.sudoku
 import com.onegravity.sudoku.model.Grid
 import com.onegravity.sudoku.model.region.RegionType
 import com.onegravity.dlx.PayloadProvider
-import com.onegravity.dlx.getDLX
+import com.onegravity.dlx.toDLX
 import com.onegravity.dlx.solve
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -44,7 +44,7 @@ class SudokuTests {
         var solutionFound = false
         SudokuMatrix(grid)
             .sudokuMatrix
-            .getDLX(object: PayloadProvider {
+            .toDLX(object: PayloadProvider {
                 override fun getHeaderPayload(index: Int) = "h$index"
                 override fun getDataPayload(col: Int, row: Int) = getIndexValue(row)
             })

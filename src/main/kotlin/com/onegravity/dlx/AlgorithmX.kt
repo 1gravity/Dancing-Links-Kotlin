@@ -61,7 +61,7 @@ private fun RootNode.solveProblem(
     collect: (List<DLXNode>) -> Unit
 ) {
    // 1. Pick a column (the one with the least amount of nodes
-    val header = getHeaders().minByOrNull { header -> header.nrOfNodes }
+    val header = getHeaders().minByOrNull { it.nrOfNodes }
     when (header) {
         null -> {
             // 1.1. if there's no column -> the matrix is empty -> we found a solution
