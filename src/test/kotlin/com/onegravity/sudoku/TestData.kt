@@ -163,7 +163,8 @@ fun getTestGrid(
     blockCodes: Array<IntArray> = Block.regionCodes
 ) = Grid(extraRegionType, isJigsaw, blockCodes).apply {
         for (index in 0..80) {
-            setValue(index, values[index], true)
+            val value = values[index]
+            setValue(index, value, value != 0)
         }
     }
 

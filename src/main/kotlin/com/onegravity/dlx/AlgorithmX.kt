@@ -3,7 +3,6 @@ package com.onegravity.dlx
 import com.onegravity.dlx.model.DLXNode
 import com.onegravity.dlx.model.DataNode
 import com.onegravity.dlx.model.Direction.*
-import com.onegravity.dlx.model.HeaderNode
 import com.onegravity.dlx.model.RootNode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -62,15 +61,15 @@ private fun RootNode.solveProblem(
     collect: (List<DLXNode>) -> Unit
 ) {
    // 1. Pick a column (the one with the least amount of nodes
-    val header = getHeaders().minByOrNull { header -> header.nrOfNodes } ?: this
+    val header = getHeaders().minByOrNull { header -> header.nrOfNodes }
     when (header) {
-        is RootNode -> {
+        null -> {
             // 1.1. if there's no column -> the matrix is empty -> we found a solution
             //   we need to make a copy -> ArrayList(solution), because the solution list is mutable,
             //   and we want to return a list that won't be modified by the solve function
             collect(ArrayList(solution))
         }
-        is HeaderNode -> {
+        else -> {
             // 1.2. else remove the found column from the matrix
             header.cover()
 

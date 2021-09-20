@@ -4,7 +4,6 @@ import com.onegravity.sudoku.model.Grid
 import com.onegravity.sudoku.model.region.RegionType
 import com.onegravity.dlx.PayloadProvider
 import com.onegravity.dlx.getDLX
-import com.onegravity.dlx.model.DLXNode
 import com.onegravity.dlx.solve
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -49,32 +48,18 @@ class SudokuTests {
                 override fun getHeaderPayload(index: Int) = "h$index"
                 override fun getDataPayload(col: Int, row: Int) = getIndexValue(row)
             })
-            .solve {
-                validateSolution(solution, getGrid(grid, it))
+            .solve { nodes ->
+                validateSolution(solution, grid, nodes.toGrid(grid))
                 solutionFound = true
             }
         assert(solutionFound)
     }
 
-    private fun validateSolution(expected: IntArray, actual: Grid) {
+    private fun validateSolution(expected: IntArray, original: Grid, actual: Grid) {
         expected.forEachIndexed { index, value ->
+            assertEquals(original.getCell(index).isGiven, actual.getCell(index).isGiven)
             assertEquals(value, actual.getCell(index).value)
         }
     }
 
-    private val sudokuComparator = Comparator<DLXNode> { n0, n1 ->
-        val p0 = (n0.payload as IndexValue)
-        val p1 = (n1.payload as IndexValue)
-        p0.index.compareTo(p1.index)
-    }
-
-    private fun getGrid(original: Grid, solution: Collection<DLXNode>): Grid {
-        val grid = Grid(null, false)
-        solution.sortedWith(sudokuComparator).forEach { node ->
-            with(node.payload as IndexValue) {
-                grid.setValue(index, value, original.getCell(index).isGiven)
-            }
-        }
-        return grid
-    }
 }
