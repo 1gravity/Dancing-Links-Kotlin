@@ -4,8 +4,8 @@ This is a 100% Kotlin implementation of Donald Knuth's [Algorithm X](https://en.
 
 See also Donald Knuth's paper from 2020 on the topic: https://arxiv.org/pdf/cs/0011047.pdf.
 
-##Sudoku
-
+Sudoku
+------
 A classic application of the exact cover problem is the Sudoku puzzle.
 This repo implements a Sudoku solver that can solve not just standard Sudoku puzzles but also puzzles with extra regions:
 - Asterisk-Sudoku
@@ -19,13 +19,14 @@ It also supports Jigsaw puzzles (puzzles with non-square blocks).
 
 A database of the hardest known Sudoku puzzles is part of the extensive test suite. 
 
-##Build & Run
+Build & Run
+-----------
 - Clone the repo
 - `cd dancing-links-kotlin`
 - run `./gradlew build` to build and run the test suite
 
-##Resources
-
+Resources
+---------
 - https://medium.com/javarevisited/building-a-sudoku-solver-in-java-with-dancing-links-180274b0b6c1
 - https://garethrees.org/2007/06/10/zendoku-generation
 - https://www.baeldung.com/java-sudoku
