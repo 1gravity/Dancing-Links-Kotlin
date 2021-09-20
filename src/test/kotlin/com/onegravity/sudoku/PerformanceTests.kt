@@ -21,7 +21,7 @@ class PerformanceTests {
         val grid = getTestGrid(testSudoku1, null)
         val dlx = testSudoku(grid, testSudoku1Solution)
         val legacy = testSudokuLegacy(grid, testSudoku1Solution)
-        println("legacy: $legacy ms, dlx: $dlx ms")
+        println("Puzzle 1        - legacy: $legacy ms, dlx: $dlx ms")
     }
 
     @Test
@@ -29,7 +29,7 @@ class PerformanceTests {
         val grid = getTestGrid(testSudoku2, null)
         val dlx = testSudoku(grid, testSudoku2)
         val legacy = testSudokuLegacy(grid, testSudoku2)
-        println("legacy: $legacy ms, dlx: $dlx ms")
+        println("Puzzle 2        - legacy: $legacy ms, dlx: $dlx ms")
     }
 
     @Test
@@ -37,7 +37,7 @@ class PerformanceTests {
         val grid = getTestGrid(testSudokuAlEscargot, null)
         val dlx = testSudoku(grid, testSudokuAlEscargotSolution)
         val legacy = testSudokuLegacy(grid, testSudokuAlEscargotSolution)
-        println("legacy: $legacy ms, dlx: $dlx ms")
+        println("Puzzle 3        - legacy: $legacy ms, dlx: $dlx ms")
     }
 
     /**
@@ -50,6 +50,7 @@ class PerformanceTests {
     fun testHardest() {
         var dlx = 0L
         var legacy = 0L
+        var count = 0
 
         HardestSudokuTests.getHardestPuzzles { puzzle ->
             val grid = getTestGrid(puzzle, null)
@@ -73,9 +74,12 @@ class PerformanceTests {
                 }
                 override fun getHints() = emptyList<Hint>()
             })
+
+            count++
         }
 
-        println("legacy: $legacy ms, dlx: $dlx ms")
+        println("Hardest Total   - legacy: $legacy ms, dlx: $dlx ms")
+        println("Hardest Average - legacy: ${legacy.div(count)} ms, dlx: ${dlx.div(count)} ms")
     }
 
     private fun testSudoku(grid: Grid, solution: IntArray) = measureTimeMillis {
