@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.targets
-
 buildscript {
     repositories {
         mavenCentral()
