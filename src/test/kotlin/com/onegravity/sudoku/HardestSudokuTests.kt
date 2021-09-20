@@ -3,6 +3,7 @@ package com.onegravity.sudoku
 import com.onegravity.dlx.PayloadProvider
 import com.onegravity.dlx.toDLX
 import com.onegravity.dlx.solve
+import com.onegravity.sudoku.SudokuMatrix.Companion.getIndexValue
 import com.onegravity.sudoku.SudokuMatrix.Companion.sudokuMatrix
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

@@ -1,5 +1,7 @@
 package com.onegravity.sudoku
 
+import com.onegravity.sudoku.SudokuMatrix.Companion.getIndexValue
+import com.onegravity.sudoku.SudokuMatrix.Companion.IndexValue
 import com.onegravity.sudoku.model.CellPosition
 import com.onegravity.sudoku.model.Grid
 import com.onegravity.sudoku.model.region.*

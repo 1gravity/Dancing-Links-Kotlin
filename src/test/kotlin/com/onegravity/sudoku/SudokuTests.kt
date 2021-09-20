@@ -5,6 +5,7 @@ import com.onegravity.sudoku.model.region.RegionType
 import com.onegravity.dlx.PayloadProvider
 import com.onegravity.dlx.toDLX
 import com.onegravity.dlx.solve
+import com.onegravity.sudoku.SudokuMatrix.Companion.getIndexValue
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

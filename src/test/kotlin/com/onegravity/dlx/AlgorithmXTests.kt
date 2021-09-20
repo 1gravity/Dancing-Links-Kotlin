@@ -12,6 +12,7 @@ import kotlin.collections.ArrayList
 
 @ObsoleteCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@OptIn(ExperimentalCoroutinesApi::class)
 class AlgorithmXTests {
 
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
