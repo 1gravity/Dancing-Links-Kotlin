@@ -49,8 +49,7 @@ class SudokuMatrix(private val grid: Grid) {
         BooleanArray(4 * 9 * 9 + extraRegions * 9)
     }
 
-    // the cover matrix for a generic Sudoku puzzle specified by the Grid
-    // (givens and placed digits) not considered yet
+    // the cover matrix for a generic Sudoku puzzle specified by the Grid (givens and placed digits not eliminated yet)
     @TestOnly
     fun baseMatrix() = emptyMatrix().apply {
         val regions = grid.getRegions(grid.extraRegionType)
@@ -74,23 +73,30 @@ class SudokuMatrix(private val grid: Grid) {
         }
     }
 
-    // the cover matrix for this specific Grid with givens and placed digits already "subtracted"
-    val sudokuMatrix: Array<BooleanArray> by lazy {
-        baseMatrix().apply {
-            for (index in 0..80) {
-                val cell = grid.getCell(index)
-                if (cell.value > 0) {
-                    val subset = getSubset(index, cell.value)
-                    this[subset].forEachIndexed { col, isSet ->
-                        if (isSet) {
-                            cover(this, col, subset)
-                        }
+    // the cover matrix for this specific Grid with givens already eliminated
+    val sudokuMatrix = baseMatrix().apply {
+        for (index in 0..80) {
+            val cell = grid.getCell(index)
+            if (cell.isGiven && cell.value > 0) {
+                // subset is the row describing the given value and as such part of the solution
+                val subset = getSubset(index, cell.value)
+                this[subset].forEachIndexed { col, isSet ->
+                    if (isSet) {
+                        // -> eliminate all rows that conflict with the subset/given value
+                        cover(this, col, subset)
                     }
                 }
             }
         }
     }
 
+    /**
+     * All rows that cover constraints that the given already covers are eliminated from the cover matrix.
+     *
+     * @param matrix the cover matrix
+     * @param col the column = constraint that the given already covers
+     * @param excludeRow don't eliminate the given's row itself
+     */
     private fun cover(matrix: Array<BooleanArray>, col: Int, excludeRow: Int) {
         for (row in matrix.indices) {
             if (row != excludeRow && matrix[row][col]) {

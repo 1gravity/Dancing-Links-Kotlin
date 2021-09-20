@@ -17,26 +17,35 @@ class DLXNodeTests {
         val nodesIndexed = ArrayList<DLXNode>()
         rootNode.forEachIndexed(Right) { _, header ->
             nodesIndexed.add(header)
+            var countDown = 0
             (header as HeaderNode).forEachIndexed(Down) { _, node ->
+                countDown++
                 nodesIndexed.add(node)
-                node.forEachIndexed(Right) { _, neighbor ->
-                    nodesIndexed.add(neighbor)
-                }
+                var countRight = 0
+                node.forEachIndexed(Right) { _, _ -> countRight++}
+                assertEquals(2, countRight)
             }
+            assertEquals(2, countDown)
         }
 
         val nodes = ArrayList<DLXNode>()
         rootNode.forEach(Right) { header ->
             nodes.add(header)
+            var countDown = 0
             (header as HeaderNode).forEach(Down) { node ->
+                countDown++
                 nodes.add(node)
-                node.forEach(Right) { neighbor ->
-                    nodes.add(neighbor)
-                }
+                var countRight = 0
+                node.forEachIndexed(Right) { _, _ -> countRight++}
+                assertEquals(2, countRight)
             }
+            assertEquals(2, countDown)
         }
 
+        // forEach and forEachIndexed must be the same
         assertEquals(nodes, nodesIndexed)
+        // total number of nodes
+        assertEquals(36, nodes.size)
     }
 
     @Test

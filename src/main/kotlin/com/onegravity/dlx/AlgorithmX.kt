@@ -5,10 +5,9 @@ import com.onegravity.dlx.model.DataNode
 import com.onegravity.dlx.model.Direction.*
 import com.onegravity.dlx.model.HeaderNode
 import com.onegravity.dlx.model.RootNode
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.produce
-import java.util.concurrent.CountDownLatch
 
 /**
  * Solve the exact cover problem using Algorithm X and dancing links.

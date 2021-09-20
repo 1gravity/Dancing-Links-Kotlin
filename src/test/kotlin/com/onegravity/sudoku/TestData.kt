@@ -163,7 +163,7 @@ fun getTestGrid(
     blockCodes: Array<IntArray> = Block.regionCodes
 ) = Grid(extraRegionType, isJigsaw, blockCodes).apply {
         for (index in 0..80) {
-            setValue(index, values[index], false)
+            setValue(index, values[index], true)
         }
     }
 
@@ -182,7 +182,7 @@ val jigsawIndices = arrayOf(
 fun getJigsawTestGrid(values:IntArray, blockCodes: Array<IntArray>) =
     Grid(null, true, blockCodes).apply {
         for (index in 0..80) {
-            setValue(index, values[index], false)
+            setValue(index, values[index], true)
         }
     }
 
