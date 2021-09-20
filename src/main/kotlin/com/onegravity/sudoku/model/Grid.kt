@@ -1,9 +1,6 @@
 package com.onegravity.sudoku.model
 
 import com.onegravity.sudoku.model.region.*
-import java.lang.IllegalArgumentException
-import java.lang.StringBuilder
-import kotlin.collections.ArrayList
 
 /**
  * The Grid class is the Puzzle implementation.

@@ -23,11 +23,11 @@ class SudokuMatrix(private val grid: Grid) {
     companion object {
         /**
          * Convenience function to have a fluent api, e.g.:
-         * grid.sudokuMatrix()
+         * grid.toSudokuMatrix()
          *     .toDLX()
          *     .solve { }
          */
-        fun Grid.sudokuMatrix() = SudokuMatrix(this).sudokuMatrix
+        fun Grid.toSudokuMatrix() = SudokuMatrix(this).sudokuMatrix
 
         /**
          * Maps cell indices and value to a subset / row, e.g.

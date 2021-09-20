@@ -1,7 +1,6 @@
 package com.onegravity.sudoku.model
 
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Map region codes to CellPositions

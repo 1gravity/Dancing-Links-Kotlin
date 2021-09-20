@@ -19,6 +19,9 @@ It also supports Jigsaw puzzles (puzzles with non-square blocks).
 
 A database of the hardest known Sudoku puzzles is part of the extensive test suite. 
 
+The same database is also used to measure performance of the algorithm X / dancing link based algorithm compared to a fairly optimized conventional solving algorithm. The algorithm X based solver is around 4 times faster.
+Note that if the conventional algorithm were a purely brute force algorithm (it's not) the difference would be considerably bigger.
+
 Build & Run
 -----------
 - Clone the repo

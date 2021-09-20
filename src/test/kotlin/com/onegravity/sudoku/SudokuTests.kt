@@ -6,6 +6,7 @@ import com.onegravity.dlx.PayloadProvider
 import com.onegravity.dlx.toDLX
 import com.onegravity.dlx.solve
 import com.onegravity.sudoku.SudokuMatrix.Companion.getIndexValue
+import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -43,8 +44,7 @@ class SudokuTests {
 
     private fun testSudoku(grid: Grid, solution: IntArray) {
         var solutionFound = false
-        SudokuMatrix(grid)
-            .sudokuMatrix
+        grid.toSudokuMatrix()
             .toDLX(object: PayloadProvider {
                 override fun getHeaderPayload(index: Int) = "h$index"
                 override fun getDataPayload(col: Int, row: Int) = getIndexValue(row)
