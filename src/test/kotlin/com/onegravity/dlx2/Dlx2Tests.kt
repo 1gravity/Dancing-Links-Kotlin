@@ -1,8 +1,10 @@
 package com.onegravity.dlx2
 
-import com.onegravity.dlx.matrixTest1
-import com.onegravity.dlx.matrixTest2
+import com.onegravity.dlx.*
 import com.onegravity.dlx2.CoverMatrix.Companion.toCoverMatrix
+import com.onegravity.sudoku.*
+import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
+import com.onegravity.sudoku.model.Grid
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -46,4 +48,30 @@ class Dlx2Tests {
         Assertions.assertEquals(2, solutionsFound)
     }
 
+    @Test
+    fun testSudoku() {
+        val grid = getTestGrid(testSudokuAlEscargot, null)
+        val l = System.currentTimeMillis()
+        repeat(1000) {
+            testSudoku(grid, testSudokuAlEscargotSolution)
+        }
+        println("MAP Took: ${System.currentTimeMillis() - l} ms")
+    }
+
+    private fun testSudoku(grid: Grid, solution: IntArray) {
+        var solutionFound = false
+        grid.toSudokuMatrix().toCoverMatrix()
+            .solveProblem { rows ->
+//                validateSolution(solution, grid, nodes.toGrid(grid))
+                solutionFound = true
+            }
+        assert(solutionFound)
+    }
+
+    private fun validateSolution(expected: IntArray, original: Grid, actual: Grid) {
+        expected.forEachIndexed { index, value ->
+            Assertions.assertEquals(original.getCell(index).isGiven, actual.getCell(index).isGiven)
+            Assertions.assertEquals(value, actual.getCell(index).value)
+        }
+    }
 }
