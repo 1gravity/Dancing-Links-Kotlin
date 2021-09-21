@@ -3,6 +3,8 @@ package com.onegravity.sudoku
 import com.onegravity.dlx.PayloadProvider
 import com.onegravity.dlx.solve
 import com.onegravity.dlx.toDLX
+import com.onegravity.dlx2.CoverMatrix.Companion.toCoverMatrix
+import com.onegravity.dlx2.solveProblem
 import com.onegravity.sudoku.SudokuMatrix.Companion.getIndexValue
 import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
 import com.onegravity.sudoku.legacy.Accumulator
@@ -49,6 +51,7 @@ class PerformanceTests {
     @Test
     fun testHardest() {
         var dlx = 0L
+        var dlx2 = 0L
         var legacy = 0L
         var count = 0
 
@@ -66,6 +69,13 @@ class PerformanceTests {
                 }
 
             l = System.currentTimeMillis()
+            grid.toSudokuMatrix()
+                .toCoverMatrix()
+                .solveProblem {
+                    dlx2 += (System.currentTimeMillis() - l)
+                }
+
+            l = System.currentTimeMillis()
             SolutionProducer().getHints(grid, object : Accumulator {
                 override fun add(hint: Hint?) {
                     if (hint is SolutionHint) {
@@ -78,8 +88,8 @@ class PerformanceTests {
             count++
         }
 
-        println("Hardest Total   - legacy: $legacy ms, dlx: $dlx ms")
-        println("Hardest Average - legacy: ${legacy.div(count)} ms, dlx: ${dlx.div(count)} ms")
+        println("Hardest Total   - legacy: $legacy ms, dlx: $dlx ms, dlx2: $dlx2 ms")
+        println("Hardest Average - legacy: ${legacy.div(count)} ms, dlx: ${dlx.div(count)} ms, dlx2: ${dlx2.div(count)} ms")
     }
 
     private fun testSudoku(grid: Grid, solution: IntArray) = measureTimeMillis {

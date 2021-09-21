@@ -51,17 +51,14 @@ class Dlx2Tests {
     @Test
     fun testSudoku() {
         val grid = getTestGrid(testSudokuAlEscargot, null)
-        val l = System.currentTimeMillis()
-        repeat(1000) {
-            testSudoku(grid, testSudokuAlEscargotSolution)
-        }
-        println("MAP Took: ${System.currentTimeMillis() - l} ms")
+        testSudoku(grid, testSudokuAlEscargotSolution)
     }
 
     private fun testSudoku(grid: Grid, solution: IntArray) {
         var solutionFound = false
         grid.toSudokuMatrix().toCoverMatrix()
             .solveProblem { rows ->
+                // todo
 //                validateSolution(solution, grid, nodes.toGrid(grid))
                 solutionFound = true
             }

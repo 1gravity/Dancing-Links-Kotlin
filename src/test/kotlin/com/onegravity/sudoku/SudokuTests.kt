@@ -21,11 +21,7 @@ class SudokuTests {
     @Test
     fun testSudokuAlEscargot() {
         val grid = getTestGrid(testSudokuAlEscargot, null)
-        val l = System.currentTimeMillis()
-        repeat(1000) {
-            testSudoku(grid, testSudokuAlEscargotSolution)
-        }
-        println("DLX Took: ${System.currentTimeMillis() - l} ms")
+        testSudoku(grid, testSudokuAlEscargotSolution)
     }
 
     @Test

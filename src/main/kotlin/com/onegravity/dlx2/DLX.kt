@@ -1,6 +1,7 @@
 package com.onegravity.dlx2
 
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashMap
 
 /**
@@ -30,7 +31,7 @@ data class CoverMatrix(val rows: Array<IntArray>, val columns: MutableMap<Int, M
                     .toIntArray()
             }
 
-            val columns = HashMap<Int, MutableSet<Int>>()
+            val columns = ConcurrentHashMap<Int, MutableSet<Int>>()
             rows.forEachIndexed { rowIndex, columnIndices ->
                 columnIndices.forEach { colIndex ->
                     val set = columns[colIndex] ?: HashSet()
@@ -61,8 +62,7 @@ data class CoverMatrix(val rows: Array<IntArray>, val columns: MutableMap<Int, M
 
             columns[col]?.forEach { rowIndex ->
                 rows[rowIndex].forEach { colIndex ->
-                    if (colIndex != col)
-                        columns[colIndex]?.add(rowIndex)
+                    if (colIndex != col) columns[colIndex]?.add(rowIndex)
                 }
             }
         }
