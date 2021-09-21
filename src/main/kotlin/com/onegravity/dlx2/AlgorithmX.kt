@@ -2,7 +2,6 @@ package com.onegravity.dlx2
 
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
 
 /**
  * The core of Algorithm X: https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X
@@ -18,7 +17,7 @@ import kotlin.collections.HashSet
  *         undo all changes for step 3 and 4
  */
 @Suppress("MoveVariableDeclarationIntoWhen")
-fun CoverMatrix.solveProblem(
+fun CoverMatrix.solve(
     solution: Stack<Int> = Stack<Int>(),
     collect: (List<Int>) -> Unit
 ) {
@@ -43,7 +42,7 @@ fun CoverMatrix.solveProblem(
                 val removedColumns = cover(rowIndex)
 
                 // 5. Repeat this algorithm recursively on the reduced matrix
-                solveProblem(solution, collect)
+                solve(solution, collect)
 
                 // we're at a dead end (no solution) and need to backtrack
                 // 5.1. undo all changes for step 3 and 4

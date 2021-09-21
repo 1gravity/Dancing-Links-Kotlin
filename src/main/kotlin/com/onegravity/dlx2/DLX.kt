@@ -1,7 +1,6 @@
 package com.onegravity.dlx2
 
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashMap
 
 /**
@@ -21,7 +20,7 @@ import kotlin.collections.HashMap
 data class CoverMatrix(val rows: Array<IntArray>, val columns: MutableMap<Int, MutableSet<Int>>) {
 
     companion object {
-        fun Array<BooleanArray>.toCoverMatrix(): CoverMatrix {
+        fun Array<BooleanArray>.toDLXMatrix(): CoverMatrix {
             val firstRow = if (isNotEmpty()) this[0] else throw IllegalStateException("cover matrix cannot be empty")
             val rowIndices = firstRow.indices.toList()
             val rows = Array(size) { rowIndex ->
@@ -31,7 +30,7 @@ data class CoverMatrix(val rows: Array<IntArray>, val columns: MutableMap<Int, M
                     .toIntArray()
             }
 
-            val columns = ConcurrentHashMap<Int, MutableSet<Int>>()
+            val columns = HashMap<Int, MutableSet<Int>>()
             rows.forEachIndexed { rowIndex, columnIndices ->
                 columnIndices.forEach { colIndex ->
                     val set = columns[colIndex] ?: HashSet()

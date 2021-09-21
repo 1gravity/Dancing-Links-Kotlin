@@ -3,8 +3,8 @@ package com.onegravity.sudoku
 import com.onegravity.dlx.PayloadProvider
 import com.onegravity.dlx.solve
 import com.onegravity.dlx.toDLX
-import com.onegravity.dlx2.CoverMatrix.Companion.toCoverMatrix
-import com.onegravity.dlx2.solveProblem
+import com.onegravity.dlx2.CoverMatrix.Companion.toDLXMatrix
+import com.onegravity.dlx2.solve
 import com.onegravity.sudoku.SudokuMatrix.Companion.getIndexValue
 import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
 import com.onegravity.sudoku.legacy.Accumulator
@@ -55,7 +55,7 @@ class PerformanceTests {
         var legacy = 0L
         var count = 0
 
-        HardestSudokuTests.getHardestPuzzles { puzzle ->
+        HardestSudokuTests.getHardestPuzzles { puzzle, _ ->
             val grid = getTestGrid(puzzle, null)
 
             var l = System.currentTimeMillis()
@@ -70,8 +70,8 @@ class PerformanceTests {
 
             l = System.currentTimeMillis()
             grid.toSudokuMatrix()
-                .toCoverMatrix()
-                .solveProblem {
+                .toDLXMatrix()
+                .solve {
                     dlx2 += (System.currentTimeMillis() - l)
                 }
 
@@ -98,7 +98,7 @@ class PerformanceTests {
         grid.toSudokuMatrix()
             .toDLX(object: PayloadProvider {
                 override fun getHeaderPayload(index: Int) = "h$index"
-                override fun getDataPayload(col: Int, row: Int) = SudokuMatrix.getIndexValue(row)
+                override fun getDataPayload(col: Int, row: Int) = getIndexValue(row)
             })
             .solve { nodes ->
                 validateSolution(solution, grid, nodes.toGrid(grid))
