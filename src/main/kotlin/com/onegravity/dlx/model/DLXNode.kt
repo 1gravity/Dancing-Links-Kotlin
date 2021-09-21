@@ -28,11 +28,11 @@ abstract class DLXNode(var payload: Any) {
         protected set
 
     /**
-     * Performs the given action on each node.
+     * Performs the given action on each node, excluding the starting node.
      *
      * This is a convenience method to make looping over rows/columns easier.
-     * Note: since DLXNodes are part of two circular linked lists it will loop over all nodes in th row or column
-     * (excluding the starting node) so looping from a DataNode downwards would also loop over the HeaderNode.
+     * Note: since DLXNodes are part of two circular linked lists it will loop over all nodes in th row or column so
+     * looping from a DataNode downwards would also loop over the HeaderNode.
      *
      * @param direction the Direction to loop over the nodes.
      * @param action the action to perform on each node taking the node as parameter.
@@ -42,7 +42,7 @@ abstract class DLXNode(var payload: Any) {
     }
 
     /**
-     * Performs the given action on each node, providing sequential index with the node.
+     * Performs the given action on each node (excluding the starting node), providing sequential index with the node.
      *
      * @param direction the Direction to loop over the nodes.
      * @param action the action to perform on each node taking the index of the node and the node itself as parameters.
@@ -54,6 +54,21 @@ abstract class DLXNode(var payload: Any) {
             action(index++, next)
             next = next.next(direction)
         }
+    }
+
+    /**
+     * Performs the given action on each node, including the starting node.
+     * The action will be called on the starting node first.
+     *
+     * @param direction the Direction to loop over the nodes.
+     * @param action the action to perform on each node taking the node as parameter.
+     */
+    fun forAll(direction: Direction, action: (node: DLXNode) -> Unit) {
+        var next = this
+        do {
+            action(next)
+            next = next.next(direction)
+        } while (next != this)
     }
 
     fun next(direction: Direction) = when (direction) {

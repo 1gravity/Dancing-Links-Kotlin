@@ -49,6 +49,34 @@ class DLXNodeTests {
     }
 
     @Test
+    fun testForAll() {
+        val rootNode = matrixTest2.toDLX()
+        val nodes = ArrayList<DLXNode>()
+        rootNode.forAll(Right) { node ->
+            nodes.add(node)
+        }
+        assertEquals(nodes[0], rootNode)
+        repeat(12) { index ->
+            assert(nodes[index + 1] is HeaderNode)
+        }
+        // total number of nodes
+        assertEquals(13, nodes.size)
+
+        var countDown = 0
+        nodes.clear()
+        rootNode.right.forAll(Down) { node ->
+            countDown++
+            nodes.add(node)
+            if (node !is HeaderNode) {
+                var countRight = 0
+                node.forAll(Right) { countRight++ }
+                assertEquals(3, countRight)
+            }
+        }
+        assertEquals(3, countDown)
+    }
+
+    @Test
     fun testDefaultPayloads() {
         val payloads = arrayOf(
             arrayOf(DefaultPayload(0, 0), DefaultPayload(0, 1)),

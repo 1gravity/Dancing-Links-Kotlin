@@ -7,6 +7,7 @@ import com.onegravity.dlx.model.RootNode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.produce
+import java.util.Stack
 
 /**
  * Solve the exact cover problem using Algorithm X and dancing links.
@@ -47,7 +48,6 @@ fun CoroutineScope.solve(rootNode: RootNode) = produce<List<DLXNode>> {
  *
  * 1. Pick a column
  *    1.1. if there's no column -> the matrix is empty -> we found a solution
- *    1.2. else remove the found column from the matrix -> cover the column
  * 2. Pick a row in the column
  * 3. Add the row to the solution set
  * 4. Cover all columns that this row links to (remove the constraints)
@@ -57,7 +57,7 @@ fun CoroutineScope.solve(rootNode: RootNode) = produce<List<DLXNode>> {
  */
 @Suppress("MoveVariableDeclarationIntoWhen")
 private fun RootNode.solveProblem(
-    solution: ArrayList<DLXNode> = ArrayList(),
+    solution: Stack<DLXNode> = Stack<DLXNode>(),
     collect: (List<DLXNode>) -> Unit
 ) {
    // 1. Pick a column (the one with the least amount of nodes
@@ -70,9 +70,6 @@ private fun RootNode.solveProblem(
             collect(ArrayList(solution))
         }
         else -> {
-            // 1.2. else remove the found column from the matrix
-            header.cover()
-
             // 2. Pick a row in the column
             // Note: we cannot use header.forEach here because the lambda can't be a suspending function (or the whole
             // solve function must be suspending), and thus we cannot call solveProblem(solution, rootNode, collect)
@@ -80,27 +77,25 @@ private fun RootNode.solveProblem(
             var node = header.next(Down)
             while (node != header) {
                 // 3. Add the row to the solution set
-                solution.add(node)
+                solution.push(node)
 
                 // 4. Cover all columns that this row links to (remove the constraints)
-                node.forEach(Right) {
+                node.forAll(Right) {
                     (it as DataNode).header.cover()
                 }
 
                 // 5. Repeat this algorithm recursively on the reduced matrix
                 solveProblem(solution, collect)
 
+                // we're at a dead end (no solution) and need to backtrack
                 // 5.1. undo all changes for step 3 and 4
-                solution.remove(node)
-                node.forEach(Left) {
+                solution.pop()
+                node.left.forAll(Left) {
                     (it as DataNode).header.uncover()
                 }
 
                 node = node.next(Down)
             }
-
-            // we're at a dead end (no solution) and need to backtrack -> undo step 1.2
-            header.uncover()
         }
     }
 }
