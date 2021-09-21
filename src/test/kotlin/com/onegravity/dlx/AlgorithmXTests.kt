@@ -42,7 +42,6 @@ class AlgorithmXTests {
                 }
                 verifySolution(solution, 7)
                 assertEquals(1, rows[0])
-                assertEquals(1, rows[0])
                 assertEquals(3, rows[1])
                 assertEquals(5, rows[2])
             }

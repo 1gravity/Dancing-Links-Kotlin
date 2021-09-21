@@ -38,9 +38,6 @@ class HeaderNode(payload: Any): DLXNode(payload) {
      * 0100001
      */
     fun cover() {
-        // remove the header
-        remove(Left, Right)
-
         // iterate down the column
         forEach(Down) {
             // remove all nodes in the row
@@ -49,12 +46,18 @@ class HeaderNode(payload: Any): DLXNode(payload) {
                 (node as DataNode).header.nrOfNodes--
             }
         }
+
+        // remove the header
+        remove(Left, Right)
     }
 
     /**
      * Add the column back into the matrix.
      */
     fun uncover() {
+        // re-insert the column
+        insertAt(left, Right)
+
         // iterate up the column
         forEach(Up) {
             // re-insert all nodes in the row
@@ -63,9 +66,6 @@ class HeaderNode(payload: Any): DLXNode(payload) {
                 (node as DataNode).header.nrOfNodes++
             }
         }
-
-        // re-insert the column
-        insertAt(left, Right)
     }
 
     override fun toString() = "header: $payload, #data_nodes: $nrOfNodes"
