@@ -42,14 +42,12 @@ class HardestSudokuTests {
     fun testDLXSolver() {
         getHardestPuzzles { puzzle, solution ->
             testSudokuDLX(puzzle, solution)
-            testSudokuDLX2(puzzle, solution)
         }
     }
 
     @Test
     fun testDLX2Solver() {
         getHardestPuzzles { puzzle, solution ->
-            testSudokuDLX(puzzle, solution)
             testSudokuDLX2(puzzle, solution)
         }
     }

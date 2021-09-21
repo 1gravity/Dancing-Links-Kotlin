@@ -4,16 +4,10 @@ import com.onegravity.dlx.matrixTest1
 import com.onegravity.dlx.matrixTest2
 import com.onegravity.dlx.matrixTest4
 import com.onegravity.dlx2.CoverMatrix.Companion.toDLXMatrix
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.ObsoleteCoroutinesApi
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import java.util.*
 
-@ObsoleteCoroutinesApi
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@OptIn(ExperimentalCoroutinesApi::class)
 class AlgorithmXTests {
 
     @Test

@@ -1,7 +1,6 @@
 package com.onegravity.dlx2
 
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * The core of Algorithm X: https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X
@@ -33,7 +32,8 @@ fun CoverMatrix.solve(
         }
         else -> {
             // 2. Pick a row in the column
-            // we can't just do header.value.forEach because the underlying map will be modified in the forEach lambda
+            // we can't do header.value.forEach because the underlying map will be modified in the forEach lambda,
+            // and we end up with a ConcurrentModificationException
             header.value.toList().forEach { rowIndex ->
                 // 3. Add the row to the solution set
                 solution.push(rowIndex)
