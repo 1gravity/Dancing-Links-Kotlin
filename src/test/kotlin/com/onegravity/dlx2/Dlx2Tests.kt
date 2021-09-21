@@ -10,17 +10,21 @@ class Dlx2Tests {
 
     @Test
     fun test1() {
+        var solutionFound = false
         matrixTest1
             .toCoverMatrix()
             .solveProblem { rows ->
                 Assertions.assertEquals(1, rows[0])
                 Assertions.assertEquals(3, rows[1])
                 Assertions.assertEquals(5, rows[2])
+                solutionFound = true
             }
+        Assertions.assertEquals(true, solutionFound)
     }
 
     @Test
     fun test2() {
+        var solutionsFound = 0
         matrixTest2
             .toCoverMatrix()
             .solveProblem { rows ->
@@ -37,7 +41,9 @@ class Dlx2Tests {
                     Assertions.assertEquals(5, rows[2])
                     Assertions.assertEquals(6, rows[3])
                 }
+                solutionsFound++
             }
+        Assertions.assertEquals(2, solutionsFound)
     }
 
 }
