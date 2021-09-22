@@ -1,5 +1,6 @@
 package com.onegravity.dlx2
 
+import com.onegravity.dlx.counter
 import java.util.*
 
 /**
@@ -15,11 +16,13 @@ import java.util.*
  *    5.1. Since step 2 (pick a row in the column) is done for all rows at this point we need to
  *         undo all changes for step 3 and 4
  */
+var counter = 0
 @Suppress("MoveVariableDeclarationIntoWhen")
 fun CoverMatrix.solve(
     solution: Stack<Int> = Stack<Int>(),
     collect: (List<Int>) -> Unit
 ) {
+    counter++
     // 1. Pick a column (the one with the least amount of nodes
     val header = columns.minByOrNull { it.value.size }
 
@@ -29,6 +32,7 @@ fun CoverMatrix.solve(
             //   we need to make a copy -> ArrayList(solution), because the solution list is mutable,
             //   and we want to return a list that won't be modified by the solve function
             collect(ArrayList(solution))
+            println("DLX2 #iterations: $counter")
         }
         else -> {
             // 2. Pick a row in the column
