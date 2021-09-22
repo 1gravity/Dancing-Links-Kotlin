@@ -22,6 +22,13 @@ A database of the hardest known Sudoku puzzles is part of the extensive test sui
 The same database is also used to measure performance of the algorithm X / dancing link based algorithm compared to a fairly optimized conventional solving algorithm. The algorithm X based solver is around 3 times faster.
 Note that if the conventional algorithm were a purely brute force algorithm (it's not) the difference would be considerably bigger.
 
+Alternative Data Structure
+--------------------------
+
+Based on an idea here https://www.cs.mcgill.ca/~aassaf9/python/algorithm_x.html, I implemented algorithm x using a more conventional data structure (arrays, hash maps and hash sets). 
+The resulting code is much shorter and easier to get right. However, it performs considerably worse than the dancing links data structure (which is more than twice as fast).
+While both data structures can insert and delete elements in O(1), there's still more overhead dealing with hashed data structures compared to just manipulating nodes in linked lists.
+
 Build & Run
 -----------
 - Clone the repo
@@ -35,5 +42,5 @@ Resources
 - https://www.baeldung.com/java-sudoku
 - https://github.com/rafalio/dancing-links-java
 - https://github.com/benfowler/dancing-links
+- https://www.cs.mcgill.ca/~aassaf9/python/algorithm_x.html
 - https://www.kth.se/social/files/58861771f276547fe1dbf8d1/HLaestanderMHarrysson_dkand14.pdf
-
