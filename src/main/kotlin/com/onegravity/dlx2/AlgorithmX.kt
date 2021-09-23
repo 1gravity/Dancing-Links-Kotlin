@@ -1,6 +1,5 @@
 package com.onegravity.dlx2
 
-import com.onegravity.dlx.counter
 import java.util.*
 
 /**
@@ -16,29 +15,25 @@ import java.util.*
  *    5.1. Since step 2 (pick a row in the column) is done for all rows at this point we need to
  *         undo all changes for step 3 and 4
  */
-var counter = 0
 @Suppress("MoveVariableDeclarationIntoWhen")
 fun CoverMatrix.solve(
     solution: Stack<Int> = Stack<Int>(),
     collect: (List<Int>) -> Unit
 ) {
-    counter++
     // 1. Pick a column (the one with the least amount of nodes
-    val header = columns.minByOrNull { it.value.size }
-
+    val header = findColumn()
     when (header) {
         null -> {
             // 1.1. if there's no column -> the matrix is empty -> we found a solution
             //   we need to make a copy -> ArrayList(solution), because the solution list is mutable,
             //   and we want to return a list that won't be modified by the solve function
             collect(ArrayList(solution))
-            println("DLX2 #iterations: $counter")
         }
         else -> {
             // 2. Pick a row in the column
             // we can't do header.value.forEach because the underlying map will be modified in the forEach lambda,
             // and we end up with a ConcurrentModificationException
-            header.value.toList().forEach { rowIndex ->
+            header.toList().forEach { rowIndex ->
                 // 3. Add the row to the solution set
                 solution.push(rowIndex)
 
@@ -55,4 +50,19 @@ fun CoverMatrix.solve(
             }
         }
     }
+}
+
+private fun CoverMatrix.findColumn(): Set<Int>? {
+    var header: Set<Int>? = null
+    var minNrOfNodes = Int.MAX_VALUE
+    // if minNrOfNodes == 0 -> the constraint isn't covered -> there's no solution
+    // if minNrOfNodes == 1 -> must be part of the solution (in Sudoku terms: it's a naked or hidden single ;-)
+    for (column in columns) {
+        if (column.value.size < minNrOfNodes) {
+            minNrOfNodes = column.value.size
+            header = column.value
+            if (minNrOfNodes <= 1) break
+        }
+    }
+    return header
 }

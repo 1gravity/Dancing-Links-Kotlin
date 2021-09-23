@@ -3,6 +3,7 @@ package com.onegravity.dlx
 import com.onegravity.dlx.model.DLXNode
 import com.onegravity.dlx.model.DataNode
 import com.onegravity.dlx.model.Direction.*
+import com.onegravity.dlx.model.HeaderNode
 import com.onegravity.dlx.model.RootNode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -55,22 +56,20 @@ fun CoroutineScope.solve(rootNode: RootNode) = produce<List<DLXNode>> {
  *    5.1. Since step 2 (pick a row in the column) is done for all rows at this point we need to
  *         undo all changes for step 3 and 4
  */
-var counter = 0
 @Suppress("MoveVariableDeclarationIntoWhen")
 private fun RootNode.solveProblem(
     solution: Stack<DLXNode> = Stack<DLXNode>(),
     collect: (List<DLXNode>) -> Unit
 ) {
-    counter++
    // 1. Pick a column (the one with the least amount of nodes
-    val header = getHeaders().minByOrNull { it.nrOfNodes }
+    val header = findColumn()
+
     when (header) {
         null -> {
             // 1.1. if there's no column -> the matrix is empty -> we found a solution
             //   we need to make a copy -> ArrayList(solution), because the solution list is mutable,
             //   and we want to return a list that won't be modified by the solve function
             collect(ArrayList(solution))
-            println("DLX #iterations: $counter")
         }
         else -> {
             // 2. Pick a row in the column
@@ -101,4 +100,21 @@ private fun RootNode.solveProblem(
             }
         }
     }
+}
+
+private fun RootNode.findColumn(): HeaderNode? {
+    var header: HeaderNode? = null
+    var minNrOfNodes = Int.MAX_VALUE
+    var next = right
+    // if minNrOfNodes == 0 -> the constraint isn't covered -> there's no solution
+    // if minNrOfNodes == 1 -> must be part of the solution (in Sudoku terms: it's a naked or hidden single ;-)
+    while (next != this && minNrOfNodes > 1) {
+        val nrOfNodes = (next as HeaderNode).nrOfNodes
+        if (nrOfNodes < minNrOfNodes) {
+            minNrOfNodes = nrOfNodes
+            header = next
+        }
+        next = next.right
+    }
+    return header
 }
