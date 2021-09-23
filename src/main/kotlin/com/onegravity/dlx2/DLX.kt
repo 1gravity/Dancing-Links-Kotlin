@@ -22,24 +22,24 @@ data class CoverMatrix(val rows: Array<IntArray>, val columns: MutableMap<Int, B
 
     companion object {
         fun Array<BooleanArray>.toDLXMatrix(): CoverMatrix {
+            val columns = HashMap<Int, BitSet>()
             val rows = Array(size) { rowIndex ->
                 this[rowIndex]
                     .foldIndexed(ArrayList<Int>()) { index, list, isSet ->
-                        if (isSet) list.add(index)
+                        if (isSet) {
+                            list.add(index)
+                            columns[index]
+                                ?.set(rowIndex)
+                                ?:run {
+                                    val bitset = BitSet()
+                                    columns[index] = bitset
+                                    bitset.set(rowIndex)
+                                }
+                        }
                         list
                     }
                     .toIntArray()
             }
-
-            val columns = HashMap<Int, BitSet>()
-            rows.forEachIndexed { rowIndex, columnIndices ->
-                columnIndices.forEach { colIndex ->
-                    val set = columns[colIndex] ?: BitSet()
-                    columns[colIndex] = set
-                    set.set(rowIndex)
-                }
-            }
-
             return CoverMatrix(rows, columns)
         }
     }
