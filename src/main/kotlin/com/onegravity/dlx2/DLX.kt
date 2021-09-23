@@ -17,7 +17,7 @@ import kotlin.collections.HashMap
  * 3 -> 18,19,20,21,22,23,24,25,26
  */
 @Suppress("ArrayInDataClass")
-data class CoverMatrix(val rows: Array<IntArray>, val columns: MutableMap<Int, MutableSet<Int>>) {
+data class CoverMatrix(val rows: Array<IntArray>, val columns: MutableMap<Int, BitSet>) {
 
     companion object {
         fun Array<BooleanArray>.toDLXMatrix(): CoverMatrix {
@@ -30,12 +30,12 @@ data class CoverMatrix(val rows: Array<IntArray>, val columns: MutableMap<Int, M
                     .toIntArray()
             }
 
-            val columns = HashMap<Int, MutableSet<Int>>()
+            val columns = HashMap<Int, BitSet>()
             rows.forEachIndexed { rowIndex, columnIndices ->
                 columnIndices.forEach { colIndex ->
-                    val set = columns[colIndex] ?: HashSet()
+                    val set = columns[colIndex] ?: BitSet()
                     columns[colIndex] = set
-                    set.add(rowIndex)
+                    set.set(rowIndex)
                 }
             }
 
@@ -43,11 +43,13 @@ data class CoverMatrix(val rows: Array<IntArray>, val columns: MutableMap<Int, M
         }
     }
 
-    fun cover(row: Int) = LinkedList<MutableSet<Int>>().also { removedCols ->
+    fun cover(row: Int) = LinkedList<BitSet>().also { removedCols ->
         rows[row].forEach { col: Int ->
-            columns[col]?.forEach { rowIndex ->
+            val it = BitSetIterator(columns[col]!!)
+            while (it.hasNext()) {
+                val rowIndex = it.next()
                 rows[rowIndex].forEach { colIndex ->
-                    if (colIndex != col) columns[colIndex]?.remove(rowIndex)
+                    if (colIndex != col) columns[colIndex]?.clear(rowIndex)
                 }
             }
 
@@ -55,16 +57,30 @@ data class CoverMatrix(val rows: Array<IntArray>, val columns: MutableMap<Int, M
         }
     }
 
-    fun uncover(row: Int, removedColumns: LinkedList<MutableSet<Int>>) {
+    fun uncover(row: Int, removedColumns: LinkedList<BitSet>) {
         rows[row].reversed().forEach { col: Int ->
             columns[col] = removedColumns.pop()
 
-            columns[col]?.forEach { rowIndex ->
+            val it = BitSetIterator(columns[col]!!)
+            while (it.hasNext()) {
+                val rowIndex = it.next()
                 rows[rowIndex].forEach { colIndex ->
-                    if (colIndex != col) columns[colIndex]?.add(rowIndex)
+                    if (colIndex != col) columns[colIndex]?.set(rowIndex)
                 }
             }
         }
     }
 
+}
+
+class BitSetIterator(private val bitset: BitSet) : Iterator<Int> {
+    private var pos = 0
+
+    override fun hasNext() = bitset.nextSetBit(pos) >= 0
+
+    override fun next() = bitset.run {
+        pos = nextSetBit(pos)
+        if (pos < 0) throw NoSuchElementException()
+        pos++
+    }
 }

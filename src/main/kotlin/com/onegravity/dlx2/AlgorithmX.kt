@@ -33,7 +33,9 @@ fun CoverMatrix.solve(
             // 2. Pick a row in the column
             // we can't do header.value.forEach because the underlying map will be modified in the forEach lambda,
             // and we end up with a ConcurrentModificationException
-            header.toList().forEach { rowIndex ->
+            val it = BitSetIterator(header)
+            while (it.hasNext()) {
+                val rowIndex = it.next()
                 // 3. Add the row to the solution set
                 solution.push(rowIndex)
 
@@ -52,14 +54,14 @@ fun CoverMatrix.solve(
     }
 }
 
-private fun CoverMatrix.findColumn(): Set<Int>? {
-    var header: Set<Int>? = null
+private fun CoverMatrix.findColumn(): BitSet? {
+    var header: BitSet? = null
     var minNrOfNodes = Int.MAX_VALUE
     // if minNrOfNodes == 0 -> the constraint isn't covered -> there's no solution
     // if minNrOfNodes == 1 -> must be part of the solution (in Sudoku terms: it's a naked or hidden single ;-)
     for (column in columns) {
-        if (column.value.size < minNrOfNodes) {
-            minNrOfNodes = column.value.size
+        if (column.value.cardinality() < minNrOfNodes) {
+            minNrOfNodes = column.value.cardinality()
             header = column.value
             if (minNrOfNodes <= 1) break
         }
