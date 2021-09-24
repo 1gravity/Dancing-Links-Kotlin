@@ -7,52 +7,43 @@ import com.onegravity.sudoku.SudokuMatrix
 import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
 import com.onegravity.sudoku.getTestGrid
 import com.onegravity.sudoku.model.Grid
-import com.onegravity.sudoku.testSudokuAlEscargotSolution
+import com.onegravity.sudoku.*
 import com.onegravity.sudoku.toGrid
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.ObsoleteCoroutinesApi
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 
-@ObsoleteCoroutinesApi
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@OptIn(ExperimentalCoroutinesApi::class)
 class AlgorithmComparison {
 
     @Test
     fun test1() {
-        var solutionFound = false
-        println("matrix 2")
-        matrixTest2
-            .toDLX(DefaultPayloadProvider)
-            .solve {
-                solutionFound = true
-            }
-        assertEquals(true, solutionFound)
+        println("sudoku 1\n--------")
+        val grid = getTestGrid(testSudoku1, null)
+        testSudokuDLX(grid, testSudoku1Solution)
+        testSudokuDLX2(grid, testSudoku1Solution)
+        testSudokuDLX(grid, testSudoku1Solution)
+        testSudokuDLX2(grid, testSudoku1Solution)
     }
 
     @Test
-    fun testDLX2() {
-        var solutionFound = false
-        println("matrix 2")
-        matrixTest2
-            .toDLXMatrix()
-            .solve {
-                solutionFound = true
-            }
-        assertEquals(true, solutionFound)
+    fun test2() {
+        println("jigsaw\n------")
+        val grid = getTestGrid(testSudokuJigsawValues, null, true, testSudokuJigsawBlocks)
+        testSudokuDLX(grid, testSudokuJigsawSolution)
+        testSudokuDLX2(grid, testSudokuJigsawSolution)
     }
 
     @Test
     fun testSudokuAlEscargot() {
-        println("Al Escargot")
-        val grid = getTestGrid(com.onegravity.sudoku.testSudokuAlEscargot, null)
-        testSudokuDLX(grid, testSudokuAlEscargotSolution)
-        testSudokuDLX2(grid, testSudokuAlEscargotSolution)
+        println("Al Escargot\n-----------")
+        val grid = getTestGrid(testSudokuAlEscargot, null)
+        repeat(1) {
+            testSudokuDLX(grid, testSudokuAlEscargotSolution)
+            testSudokuDLX2(grid, testSudokuAlEscargotSolution)
+        }
     }
 
     private fun testSudokuDLX(grid: Grid, solution: IntArray) {
+        val l = System.currentTimeMillis()
         var solutionFound = false
         grid.toSudokuMatrix()
             .toDLX(object: PayloadProvider {
@@ -62,17 +53,20 @@ class AlgorithmComparison {
             .solve { nodes ->
                 validateSolution(solution, grid, nodes.toGrid(grid))
                 solutionFound = true
+                println("DLX Took: ${System.currentTimeMillis() -l } ms")
             }
         assert(solutionFound)
     }
 
     private fun testSudokuDLX2(grid: Grid, solution: IntArray) {
+        val l = System.currentTimeMillis()
         var solutionFound = false
         grid.toSudokuMatrix()
             .toDLXMatrix()
             .solve { rows ->
                 validateSolution(solution, grid, rows.toGrid(grid))
                 solutionFound = true
+                println("DLX2 Took: ${System.currentTimeMillis() -l } ms")
             }
         assert(solutionFound)
     }
