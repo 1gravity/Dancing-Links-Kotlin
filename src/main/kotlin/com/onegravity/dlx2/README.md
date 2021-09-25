@@ -1,0 +1,1 @@
+Algorithm X implementation using a Map to store headers/columns for easy removal/reinsertion (cover/uncover).

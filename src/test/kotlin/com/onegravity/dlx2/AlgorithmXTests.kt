@@ -3,7 +3,6 @@ package com.onegravity.dlx2
 import com.onegravity.dlx.matrixTest1
 import com.onegravity.dlx.matrixTest2
 import com.onegravity.dlx.matrixTest4
-import com.onegravity.dlx2.CoverMatrix.Companion.toDLXMatrix
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -14,7 +13,7 @@ class AlgorithmXTests {
     fun test1() {
         var solutionFound = false
         matrixTest1
-            .toDLXMatrix()
+            .toDLX2()
             .solve { solution ->
                 verifySolution(matrixTest1, solution, 7)
                 assertEquals(1, solution[0])
@@ -29,7 +28,7 @@ class AlgorithmXTests {
     fun test2() {
         var solutionFound = false
         matrixTest2
-            .toDLXMatrix()
+            .toDLX2()
             .solve { solution ->
                 verifySolution(matrixTest2, solution, 12)
 
@@ -55,7 +54,7 @@ class AlgorithmXTests {
     @Test
     fun testNoSolution() {
         matrixTest4
-            .toDLXMatrix()
+            .toDLX2()
             .solve {
                 // if we reach this point the algorithm failed since the matrix has no solution
                 assert(false)

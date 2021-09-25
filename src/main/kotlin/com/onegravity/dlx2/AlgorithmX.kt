@@ -16,7 +16,7 @@ import java.util.*
  *         undo all changes for step 3 and 4
  */
 @Suppress("MoveVariableDeclarationIntoWhen")
-fun CoverMatrix.solve(
+fun DLXMatrix.solve(
     solution: Stack<Int> = Stack<Int>(),
     collect: (List<Int>) -> Unit
 ) {
@@ -54,7 +54,7 @@ fun CoverMatrix.solve(
     }
 }
 
-private fun CoverMatrix.findColumn(): BitSet? {
+private fun DLXMatrix.findColumn(): BitSet? {
     var header: BitSet? = null
     var minNrOfNodes = Int.MAX_VALUE
     // if minNrOfNodes == 0 -> the constraint isn't covered -> there's no solution

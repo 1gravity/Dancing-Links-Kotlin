@@ -61,7 +61,7 @@ private fun RootNode.solveProblem(
     solution: Stack<DLXNode> = Stack<DLXNode>(),
     collect: (List<DLXNode>) -> Unit
 ) {
-   // 1. Pick a column (the one with the least amount of nodes
+    // 1. Pick a column (the one with the least amount of nodes
     val header = findColumn()
 
     when (header) {

@@ -20,7 +20,7 @@ fun Array<BooleanArray>.toDLX(provider: PayloadProvider = DefaultPayloadProvider
 
     // create & insert all Headers
     val headers = ArrayList<HeaderNode>()
-    var currentHeader: DLXNode = this
+    var currentHeader: DLXNode = this@apply
     for (constraint in 0 until nrOfColumns) {
         val newHeader = HeaderNode(provider.getHeaderPayload(constraint))
         currentHeader = newHeader.insertAt(currentHeader, Right)
@@ -28,10 +28,10 @@ fun Array<BooleanArray>.toDLX(provider: PayloadProvider = DefaultPayloadProvider
     }
 
     // create & insert all Nodes
-    forEachIndexed { rowIndex, row ->
+    this@toDLX.forEachIndexed { rowIndex, row ->
         var currentNode: DLXNode? = null
-        row.forEachIndexed { colIndex, element ->
-            if (element) {
+        row.forEachIndexed { colIndex, isSet ->
+            if (isSet) {
                 val header = headers[colIndex]
                 val newNode = DataNode(header, provider.getDataPayload(colIndex, rowIndex))
                 // inserting Up will append it at the "bottom" of the list (downwards) because it's

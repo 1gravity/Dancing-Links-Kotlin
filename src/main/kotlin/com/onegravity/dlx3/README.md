@@ -1,0 +1,1 @@
+Algorithm X implementation with a simpler data structure (less OO).
