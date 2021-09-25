@@ -14,7 +14,6 @@ import com.onegravity.sudoku.legacy.Hint
 import com.onegravity.sudoku.legacy.SolutionHint
 import com.onegravity.sudoku.legacy.SolutionProducer
 import com.onegravity.sudoku.model.Grid
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import kotlin.system.measureTimeMillis
 
@@ -23,30 +22,42 @@ class PerformanceTests {
     @Test
     fun testSudoku1() {
         val grid = getTestGrid(testSudoku1, null)
-        val dlx = testSudoku(grid, testSudoku1Solution)
-        val dlx2 = testSudokuDLX2(grid, testSudoku1Solution)
-        val dlx3 = testSudokuDLX3(grid, testSudoku1Solution)
-        val legacy = testSudokuLegacy(grid, testSudoku1Solution)
+
+        // warmup
+        testSudoku(grid)
+
+        val dlx = testSudoku(grid)
+        val dlx2 = testSudokuDLX2(grid)
+        val dlx3 = testSudokuDLX3(grid)
+        val legacy = testSudokuLegacy(grid)
         println("Puzzle 1 - legacy: $legacy ms, dlx: $dlx ms, dlx2: $dlx2 ms, dlx3: $dlx3 ms")
     }
 
     @Test
     fun testSudoku2() {
         val grid = getTestGrid(testSudoku2, null)
-        val dlx = testSudoku(grid, testSudoku2)
-        val dlx2 = testSudokuDLX2(grid, testSudoku2)
-        val dlx3 = testSudokuDLX3(grid, testSudoku2)
-        val legacy = testSudokuLegacy(grid, testSudoku2)
+
+        // warmup
+        testSudoku(grid)
+
+        val dlx = testSudoku(grid)
+        val dlx2 = testSudokuDLX2(grid)
+        val dlx3 = testSudokuDLX3(grid)
+        val legacy = testSudokuLegacy(grid)
         println("Puzzle 2 - legacy: $legacy ms, dlx: $dlx ms, dlx2: $dlx2 ms, dlx3: $dlx3 ms")
     }
 
     @Test
     fun testSudoku3() {
         val grid = getTestGrid(testSudokuAlEscargot, null)
-        val dlx = testSudoku(grid, testSudokuAlEscargotSolution)
-        val dlx2 = testSudokuDLX2(grid, testSudokuAlEscargotSolution)
-        val dlx3 = testSudokuDLX3(grid, testSudokuAlEscargotSolution)
-        val legacy = testSudokuLegacy(grid, testSudokuAlEscargotSolution)
+
+        // warmup
+        testSudoku(grid)
+
+        val dlx = testSudoku(grid)
+        val dlx2 = testSudokuDLX2(grid)
+        val dlx3 = testSudokuDLX3(grid)
+        val legacy = testSudokuLegacy(grid)
         println("Puzzle 2 - legacy: $legacy ms, dlx: $dlx ms, dlx2: $dlx2 ms, dlx3: $dlx3 ms")
     }
 
@@ -68,9 +79,7 @@ class PerformanceTests {
             val grid = getTestGrid(puzzle, null)
             val matrix = grid.toSudokuMatrix()
 
-            var l = System.currentTimeMillis()
-
-            l = System.currentTimeMillis()
+            var l: Long = System.currentTimeMillis()
             matrix
                 .toDLX3()
                 .solve {
@@ -108,7 +117,7 @@ class PerformanceTests {
         println("Hardest Average - legacy: ${legacy.div(count)} ms, dlx: ${dlx.div(count)} ms, dlx2: ${dlx2.div(count)} ms, dlx3: ${dlx3.div(count)} ms")
     }
 
-    private fun testSudoku(grid: Grid, expected: IntArray) = measureTimeMillis {
+    private fun testSudoku(grid: Grid) = measureTimeMillis {
         var solutionFound = false
 
         grid.toSudokuMatrix()
@@ -116,48 +125,35 @@ class PerformanceTests {
                 override fun getHeaderPayload(index: Int) = "h$index"
                 override fun getDataPayload(col: Int, row: Int) = getIndexValue(row)
             })
-            .solve { nodes ->
-                validateSolution(expected, grid, nodes.toGrid(grid))
-                solutionFound = true
-            }
+            .solve { solutionFound = true }
 
         assert(solutionFound)
     }
 
-    private fun testSudokuDLX2(grid: Grid, expected: IntArray) = measureTimeMillis {
+    private fun testSudokuDLX2(grid: Grid) = measureTimeMillis {
         var solutionFound = false
         grid.toSudokuMatrix()
             .toDLX2()
-            .solve { rows ->
-                validateSolution(expected, grid, rows.toGrid(grid))
-                solutionFound = true
-            }
+            .solve { solutionFound = true }
         assert(solutionFound)
     }
 
-    private fun testSudokuDLX3(grid: Grid, expected: IntArray) = measureTimeMillis {
+    private fun testSudokuDLX3(grid: Grid) = measureTimeMillis {
         var solutionFound = false
 
         grid.toSudokuMatrix()
-            .toDLX3(object: PayloadProvider {
-                override fun getHeaderPayload(index: Int) = "h$index"
-                override fun getDataPayload(col: Int, row: Int) = getIndexValue(row)
-            })
-            .solve { nodes ->
-                validateSolution(expected, grid, nodes.toGridDLX3(grid))
-                solutionFound = true
-            }
+            .toDLX3()
+            .solve { solutionFound = true }
 
         assert(solutionFound)
     }
 
-    private fun testSudokuLegacy(grid: Grid, expected: IntArray) = measureTimeMillis {
+    private fun testSudokuLegacy(grid: Grid) = measureTimeMillis {
         var solutionFound = false
 
         SolutionProducer().getHints(grid, object : Accumulator {
             override fun add(hint: Hint?) {
                 if (hint is SolutionHint) {
-                    validateSolution(expected, grid, hint.solution)
                     solutionFound = true
                 }
             }
@@ -165,13 +161,6 @@ class PerformanceTests {
             override fun getHints() = emptyList<Hint>()
         })
         assert(solutionFound)
-    }
-
-    private fun validateSolution(expected: IntArray, original: Grid, actual: Grid) {
-        expected.forEachIndexed { index, value ->
-            assertEquals(original.getCell(index).isGiven, actual.getCell(index).isGiven)
-            assertEquals(value, actual.getCell(index).value)
-        }
     }
 
 }

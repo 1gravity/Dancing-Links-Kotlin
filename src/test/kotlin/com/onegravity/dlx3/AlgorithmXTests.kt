@@ -104,7 +104,7 @@ class AlgorithmXTests {
             }
             var current = node.right
             while (current != node) {
-                (current?.payload as DefaultPayloadProvider.DefaultPayload).col.let {
+                (current.payload as DefaultPayloadProvider.DefaultPayload).col.let {
                     assertEquals(false, validation[it])
                     validation[it] = true
                 }

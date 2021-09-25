@@ -1,13 +1,11 @@
 package com.onegravity.sudoku
 
-import com.onegravity.dlx.PayloadProvider
-import com.onegravity.dlx.toDLX
 import com.onegravity.dlx.solve
+import com.onegravity.dlx.toDLX
 import com.onegravity.dlx2.solve
 import com.onegravity.dlx2.toDLX2
 import com.onegravity.dlx3.solve
 import com.onegravity.dlx3.toDLX3
-import com.onegravity.sudoku.SudokuMatrix.Companion.getIndexValue
 import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
 import com.onegravity.sudoku.model.Grid
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -42,10 +40,7 @@ class HardestSudokuTests {
 
         val solutions = AtomicInteger(0)
         grid.toSudokuMatrix()
-            .toDLX(object: PayloadProvider {
-                override fun getHeaderPayload(index: Int) = "h$index"
-                override fun getDataPayload(col: Int, row: Int) = getIndexValue(row)
-            })
+            .toDLX()
             .solve { nodes ->
                 validateSolution(solution, grid, nodes.toGrid(grid))
                 solutions.incrementAndGet()
@@ -75,10 +70,7 @@ class HardestSudokuTests {
 
         val solutions = AtomicInteger(0)
         grid.toSudokuMatrix()
-            .toDLX3(object: PayloadProvider {
-                override fun getHeaderPayload(index: Int) = "h$index"
-                override fun getDataPayload(col: Int, row: Int) = getIndexValue(row)
-            })
+            .toDLX3()
             .solve { rows ->
                 validateSolution(solution, grid, rows.toGridDLX3(grid))
                 solutions.incrementAndGet()

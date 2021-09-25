@@ -1,16 +1,14 @@
 package com.onegravity.sudoku
 
-import com.onegravity.sudoku.model.Grid
-import com.onegravity.sudoku.model.region.RegionType
-import com.onegravity.dlx.PayloadProvider
-import com.onegravity.dlx.toDLX
 import com.onegravity.dlx.solve
+import com.onegravity.dlx.toDLX
 import com.onegravity.dlx2.solve
 import com.onegravity.dlx2.toDLX2
 import com.onegravity.dlx3.solve
 import com.onegravity.dlx3.toDLX3
-import com.onegravity.sudoku.SudokuMatrix.Companion.getIndexValue
 import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
+import com.onegravity.sudoku.model.Grid
+import com.onegravity.sudoku.model.region.RegionType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -61,10 +59,7 @@ class SudokuTests {
     private fun testSudokuDLX(grid: Grid, solution: IntArray) {
         var solutionFound = false
         grid.toSudokuMatrix()
-            .toDLX(object: PayloadProvider {
-                override fun getHeaderPayload(index: Int) = "h$index"
-                override fun getDataPayload(col: Int, row: Int) = getIndexValue(row)
-            })
+            .toDLX()
             .solve { nodes ->
                 validateSolution(solution, grid, nodes.toGrid(grid))
                 solutionFound = true
@@ -86,10 +81,7 @@ class SudokuTests {
     private fun testSudokuDLX3(grid: Grid, solution: IntArray) {
         var solutionFound = false
         grid.toSudokuMatrix()
-            .toDLX3(object: PayloadProvider {
-                override fun getHeaderPayload(index: Int) = "h$index"
-                override fun getDataPayload(col: Int, row: Int) = getIndexValue(row)
-            })
+            .toDLX3()
             .solve { nodes ->
                 validateSolution(solution, grid, nodes.toGridDLX3(grid))
                 solutionFound = true
