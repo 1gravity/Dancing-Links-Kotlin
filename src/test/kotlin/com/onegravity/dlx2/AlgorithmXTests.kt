@@ -3,9 +3,9 @@ package com.onegravity.dlx2
 import com.onegravity.dlx.matrixTest1
 import com.onegravity.dlx.matrixTest2
 import com.onegravity.dlx.matrixTest4
+import com.onegravity.dlx.verifySolution
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.util.*
 
 class AlgorithmXTests {
 
@@ -59,24 +59,6 @@ class AlgorithmXTests {
                 // if we reach this point the algorithm failed since the matrix has no solution
                 assert(false)
             }
-    }
-
-    /**
-     * This verifies if all constraints are met exactly once
-     */
-    private fun verifySolution(problem: Array<BooleanArray>, solution: Collection<Int>, nrOfConstraints: Int) {
-        val validation = BitSet()
-
-        solution.sorted().forEach { row ->
-            problem[row].forEachIndexed { col, value ->
-                if (value) {
-                    assertEquals(false, validation[col])
-                    validation.set(col)
-                }
-            }
-        }
-
-        assertEquals(nrOfConstraints, validation.cardinality())
     }
 
 }

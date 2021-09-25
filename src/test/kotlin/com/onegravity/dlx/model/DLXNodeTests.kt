@@ -161,13 +161,13 @@ class DLXNodeTests {
         assertEquals("h11", rootNode.left.left.payload)
         assertEquals("h11", hLeft.left.payload)
 
-        val nDown = DataNode(hRight, "New Data Node 1")
+        val nDown = DataNode(hRight, 1, "New Data Node 1")
         nDown.insertAt(hRight, Down)
         assertEquals("New Data Node 1", rootNode.right.down.payload)
         assertEquals("New Data Node 1", rootNode.right.up.payload)
         assertEquals("New Header 1", (rootNode.right.down as DataNode).header.payload)
 
-        val nUp = DataNode(hRight, "New Data Node 2")
+        val nUp = DataNode(hRight, 1, "New Data Node 2")
         nUp.insertAt(hRight, Up)
         assertEquals("New Data Node 2", rootNode.right.up.payload)
         assertEquals("New Data Node 1", rootNode.right.up.up.payload)
@@ -197,8 +197,8 @@ class DLXNodeTests {
         h1.remove(Up, Down)
         assertEquals("New Header 1", rootNode.right.payload)
 
-        val node1 = DataNode(h1, "New Data Node 1")
-        val node2 = DataNode(h1, "New Data Node 2")
+        val node1 = DataNode(h1, 1, "New Data Node 1")
+        val node2 = DataNode(h1, 1, "New Data Node 2")
         node1.insertAt(h1, Up)
         node2.insertAt(h1, Up)
         node1.remove(Up, Down)

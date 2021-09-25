@@ -2,10 +2,23 @@ package com.onegravity.dlx3
 
 import java.util.*
 
+/**
+ * The core of Algorithm X: https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X
+ *
+ * 1. Pick a column
+ *    1.1. if there's no column -> the matrix is empty -> we found a solution
+ *    1.2. else remove the found column from the matrix -> cover the column
+ * 2. Pick a row in the column
+ * 3. Add the row to the solution set
+ * 4. Cover all columns that this row links to (remove the constraints)
+ * 5. Repeat this algorithm recursively on the reduced matrix
+ *    5.1. Since step 2 (pick a row in the column) is done for all rows at this point we need to
+ *         undo all changes for step 3 and 4
+ */
 @Suppress("MoveVariableDeclarationIntoWhen")
 fun DLXNode.solve(
-    solution: Stack<DLXNode> = Stack<DLXNode>(),
-    collect: (List<DLXNode>) -> Unit
+    solution: Stack<Int> = Stack<Int>(),
+    collect: (List<Int>) -> Unit
 ) {
     // 1. Pick a column (the one with the least amount of nodes
     val header = findColumn()
@@ -25,7 +38,7 @@ fun DLXNode.solve(
             var node = header.down
             while (node != header) {
                 // 3. Add the row to the solution set
-                solution.push(node)
+                solution.push(node.row)
 
                 // 4. Cover all columns that this row links to (remove the constraints)
                 var nodeRight = node

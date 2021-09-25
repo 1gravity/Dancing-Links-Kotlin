@@ -1,13 +1,11 @@
 package com.onegravity.sudoku
 
-import com.onegravity.dlx.PayloadProvider
 import com.onegravity.dlx.solve
 import com.onegravity.dlx.toDLX
 import com.onegravity.dlx2.solve
 import com.onegravity.dlx2.toDLX2
 import com.onegravity.dlx3.solve
 import com.onegravity.dlx3.toDLX3
-import com.onegravity.sudoku.SudokuMatrix.Companion.getIndexValue
 import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
 import com.onegravity.sudoku.legacy.Accumulator
 import com.onegravity.sudoku.legacy.Hint
@@ -118,34 +116,21 @@ class PerformanceTests {
     }
 
     private fun testSudoku(grid: Grid) = measureTimeMillis {
-        var solutionFound = false
-
-        grid.toSudokuMatrix()
-            .toDLX(object: PayloadProvider {
-                override fun getHeaderPayload(index: Int) = "h$index"
-                override fun getDataPayload(col: Int, row: Int) = getIndexValue(row)
-            })
-            .solve { solutionFound = true }
-
-        assert(solutionFound)
+        testSudoku(grid) { collect ->
+            toDLX().solve { rows -> collect(rows) }
+        }
     }
 
     private fun testSudokuDLX2(grid: Grid) = measureTimeMillis {
-        var solutionFound = false
-        grid.toSudokuMatrix()
-            .toDLX2()
-            .solve { solutionFound = true }
-        assert(solutionFound)
+        testSudoku(grid) { collect ->
+            toDLX2().solve { rows -> collect(rows) }
+        }
     }
 
     private fun testSudokuDLX3(grid: Grid) = measureTimeMillis {
-        var solutionFound = false
-
-        grid.toSudokuMatrix()
-            .toDLX3()
-            .solve { solutionFound = true }
-
-        assert(solutionFound)
+        testSudoku(grid) { collect ->
+            toDLX3().solve { rows -> collect(rows) }
+        }
     }
 
     private fun testSudokuLegacy(grid: Grid) = measureTimeMillis {

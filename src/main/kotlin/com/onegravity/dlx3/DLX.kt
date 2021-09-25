@@ -37,7 +37,7 @@ fun Array<BooleanArray>.toDLX3(provider: PayloadProvider = DefaultPayloadProvide
         row.forEachIndexed { colIndex, isSet ->
             if (isSet) {
                 val header = headers[colIndex]
-                val newNode = DLXNode(header, payload = provider.getDataPayload(colIndex, rowIndex))
+                val newNode = DLXNode(header, payload = provider.getDataPayload(colIndex, rowIndex), row = rowIndex)
                 // inserting Up will append it at the "bottom" of the list (downwards) because it's
                 // a circular list
                 newNode.down = header

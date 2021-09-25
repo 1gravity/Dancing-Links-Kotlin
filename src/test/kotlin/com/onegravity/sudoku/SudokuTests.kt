@@ -6,10 +6,8 @@ import com.onegravity.dlx2.solve
 import com.onegravity.dlx2.toDLX2
 import com.onegravity.dlx3.solve
 import com.onegravity.dlx3.toDLX3
-import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
 import com.onegravity.sudoku.model.Grid
 import com.onegravity.sudoku.model.region.RegionType
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class SudokuTests {
@@ -57,42 +55,20 @@ class SudokuTests {
     }
 
     private fun testSudokuDLX(grid: Grid, solution: IntArray) {
-        var solutionFound = false
-        grid.toSudokuMatrix()
-            .toDLX()
-            .solve { nodes ->
-                validateSolution(solution, grid, nodes.toGrid(grid))
-                solutionFound = true
-            }
-        assert(solutionFound)
+        testAndValidateSudoku(grid, solution) { collect ->
+            toDLX().solve { rows -> collect(rows) }
+        }
     }
 
     private fun testSudokuDLX2(grid: Grid, solution: IntArray) {
-        var solutionFound = false
-        grid.toSudokuMatrix()
-            .toDLX2()
-            .solve { rows ->
-                validateSolution(solution, grid, rows.toGrid(grid))
-                solutionFound = true
-            }
-        assert(solutionFound)
+        testAndValidateSudoku(grid, solution) { collect ->
+            toDLX2().solve { rows -> collect(rows) }
+        }
     }
 
     private fun testSudokuDLX3(grid: Grid, solution: IntArray) {
-        var solutionFound = false
-        grid.toSudokuMatrix()
-            .toDLX3()
-            .solve { nodes ->
-                validateSolution(solution, grid, nodes.toGridDLX3(grid))
-                solutionFound = true
-            }
-        assert(solutionFound)
-    }
-
-    private fun validateSolution(expected: IntArray, original: Grid, actual: Grid) {
-        expected.forEachIndexed { index, value ->
-            assertEquals(original.getCell(index).isGiven, actual.getCell(index).isGiven)
-            assertEquals(value, actual.getCell(index).value)
+        testAndValidateSudoku(grid, solution) { collect ->
+            toDLX3().solve { rows -> collect(rows) }
         }
     }
 

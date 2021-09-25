@@ -1,29 +1,49 @@
 package com.onegravity.sudoku
 
-import com.onegravity.dlx.DefaultPayloadProvider
-import com.onegravity.dlx.model.DLXNode
 import com.onegravity.sudoku.SudokuMatrix.Companion.getIndexValue
+import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
 import com.onegravity.sudoku.model.Grid
 import org.junit.jupiter.api.Assertions
 import java.io.File
 
-/**
- * Converts an AlgorithmX solution (Collection of DLXNodes) into a Sudoku Grid (original DLX algorithm).
- *
- * @param original the original Sudoku puzzle the algorithm solved so that we can set isGiven properly
- */
-fun Collection<DLXNode>.toGrid(original: Grid) =
-    Grid(original.extraRegionType, original.isJigsaw).apply {
-        forEach { node ->
-            with(node.payload as DefaultPayloadProvider.DefaultPayload) {
-                val (index, value) = getIndexValue(row)
-                setValue(index, value, original.getCell(index).isGiven)
-            }
+fun testAndValidateSudoku(
+    grid: Grid,
+    solution: IntArray,
+    solve: Array<BooleanArray>.(collect: (List<Int>) -> Unit) -> Unit
+) {
+    testSudoku(grid, solution, solve)
+}
+
+fun testSudoku(
+    grid: Grid,
+    solve: Array<BooleanArray>.(collect: (List<Int>) -> Unit) -> Unit
+) {
+    testSudoku(grid, null, solve)
+}
+
+private fun testSudoku(
+    grid: Grid,
+    solution: IntArray?,
+    solve: Array<BooleanArray>.(collect: (List<Int>) -> Unit) -> Unit
+) {
+    var solutionFound = false
+    grid.toSudokuMatrix()
+        .solve { rows ->
+            if (solution != null) validateSolution(solution, grid, rows.toGrid(grid))
+            solutionFound = true
         }
+    assert(solutionFound)
+}
+
+private fun validateSolution(expected: IntArray, original: Grid, actual: Grid) {
+    expected.forEachIndexed { index, value ->
+        Assertions.assertEquals(original.getCell(index).isGiven, actual.getCell(index).isGiven)
+        Assertions.assertEquals(value, actual.getCell(index).value)
     }
+}
 
 /**
- * Converts an AlgorithmX solution (Collection of row nodes) into a Sudoku Grid (DLX2 algorithm).
+ * Converts an AlgorithmX solution (Collection of row indices) into a Sudoku Grid.
  *
  * @param original the original Sudoku puzzle the algorithm solved so that we can set isGiven properly
  */
@@ -33,21 +53,6 @@ fun List<Int>.toGrid(original: Grid) = Grid(original.extraRegionType, original.i
         setValue(index, value, original.getCell(index).isGiven)
     }
 }
-
-/**
- * Converts an AlgorithmX solution (Collection of DLXNodes) into a Sudoku Grid (DLX3 algorithm).
- *
- * @param original the original Sudoku puzzle the algorithm solved so that we can set isGiven properly
- */
-fun Collection<com.onegravity.dlx3.DLXNode>.toGridDLX3(original: Grid) =
-    Grid(original.extraRegionType, original.isJigsaw).apply {
-        forEach { node ->
-            with(node.payload as DefaultPayloadProvider.DefaultPayload) {
-                val (index, value) = getIndexValue(row)
-                setValue(index, value, original.getCell(index).isGiven)
-            }
-        }
-    }
 
 private val sudokuPattern = """^([\d.]{81}),(\d{81}).*${'$'}""".toRegex()
 

@@ -1,14 +1,14 @@
 package com.onegravity.dlx
 
-import com.onegravity.dlx.model.DLXNode
-import com.onegravity.dlx.model.Direction.Right
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import java.util.*
-import kotlin.collections.ArrayList
 
 @ObsoleteCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -35,15 +35,11 @@ class AlgorithmXTests {
             .toDLX(DefaultPayloadProvider)
             .solve { solution ->
                 solutionFound = true
-                val rows = ArrayList<Int>()
-                solution.forEach { node ->
-                    val payload = node.payload as DefaultPayloadProvider.DefaultPayload
-                    rows.add(payload.row)
-                }
-                verifySolution(solution, 7)
-                assertEquals(1, rows[0])
-                assertEquals(3, rows[1])
-                assertEquals(5, rows[2])
+                verifySolution(matrixTest1, solution, 7)
+                val sortedRows = solution.sorted()
+                assertEquals(1, sortedRows[0])
+                assertEquals(3, sortedRows[1])
+                assertEquals(5, sortedRows[2])
             }
         assertEquals(true, solutionFound)
     }
@@ -54,16 +50,11 @@ class AlgorithmXTests {
         val dlxMatrix = matrixTest1.toDLX(DefaultPayloadProvider)
         for (solution in solve(dlxMatrix)) {
             solutionFound = true
-            val rows = ArrayList<Int>()
-            solution.forEach { node ->
-                val payload = node.payload as DefaultPayloadProvider.DefaultPayload
-                rows.add(payload.row)
-            }
-            verifySolution(solution, 7)
-            assertEquals(1, rows[0])
-            assertEquals(1, rows[0])
-            assertEquals(3, rows[1])
-            assertEquals(5, rows[2])
+            verifySolution(matrixTest1, solution, 7)
+            val sortedRows = solution.sorted()
+            assertEquals(1, sortedRows[0])
+            assertEquals(3, sortedRows[1])
+            assertEquals(5, sortedRows[2])
         }
 
         assertEquals(true, solutionFound)
@@ -76,25 +67,21 @@ class AlgorithmXTests {
             .toDLX(DefaultPayloadProvider)
             .solve { solution ->
                 solutionFound = true
-                val rows = ArrayList<Int>()
-                solution.forEach { node ->
-                    val payload = node.payload as DefaultPayloadProvider.DefaultPayload
-                    rows.add(payload.row)
-                }
-                verifySolution(solution, 12)
+                verifySolution(matrixTest2, solution, 12)
+                val sortedRows = solution.sorted()
 
-                if (rows[0] == 1) {
+                if (sortedRows[0] == 1) {
                     // solution 1
-                    assertEquals(1, rows[0])
-                    assertEquals(2, rows[1])
-                    assertEquals(4, rows[2])
-                    assertEquals(7, rows[3])
+                    assertEquals(1, sortedRows[0])
+                    assertEquals(2, sortedRows[1])
+                    assertEquals(4, sortedRows[2])
+                    assertEquals(7, sortedRows[3])
                 } else {
                     // solution 2
-                    assertEquals(0, rows[0])
-                    assertEquals(3, rows[1])
-                    assertEquals(5, rows[2])
-                    assertEquals(6, rows[3])
+                    assertEquals(0, sortedRows[0])
+                    assertEquals(3, sortedRows[1])
+                    assertEquals(5, sortedRows[2])
+                    assertEquals(6, sortedRows[3])
                 }
             }
         assertEquals(true, solutionFound)
@@ -118,7 +105,7 @@ class AlgorithmXTests {
             .toDLX(DefaultPayloadProvider)
             .solveAll { solutions ->
                 assertEquals(64, solutions.size)
-                solutions.forEach { verifySolution(it, 12) }
+                solutions.forEach { verifySolution(matrixTest3, it, 12) }
             }
     }
 
@@ -134,7 +121,7 @@ class AlgorithmXTests {
 
         count = 0
         for (solution in solve(matrixTest3.toDLX(DefaultPayloadProvider))) {
-            verifySolution(solution, 12)
+            verifySolution(matrixTest3, solution, 12)
             count++
         }
         assertEquals(64, count)
@@ -157,28 +144,6 @@ class AlgorithmXTests {
             // if we reach this point the algorithm failed since the matrix has no solution
             assert(false)
         }
-    }
-
-    /**
-     * This verifies if all constraints are met exactly once
-     */
-    private fun verifySolution(solution: Collection<DLXNode>, nrOfConstraints: Int) {
-        val validation = BitSet()
-
-        solution.forEach { node ->
-            (node.payload as DefaultPayloadProvider.DefaultPayload).col.let {
-                assertEquals(false, validation[it])
-                validation[it] = true
-            }
-            node.forEach(Right) { neighbor ->
-                (neighbor.payload as DefaultPayloadProvider.DefaultPayload).col.let {
-                    assertEquals(false, validation[it])
-                    validation[it] = true
-                }
-            }
-        }
-
-        assertEquals(nrOfConstraints, validation.cardinality())
     }
 
 }

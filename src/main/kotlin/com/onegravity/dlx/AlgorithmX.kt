@@ -1,6 +1,5 @@
 package com.onegravity.dlx
 
-import com.onegravity.dlx.model.DLXNode
 import com.onegravity.dlx.model.DataNode
 import com.onegravity.dlx.model.Direction.*
 import com.onegravity.dlx.model.HeaderNode
@@ -15,22 +14,22 @@ import java.util.Stack
  *
  * @param collect the function called with each of the found solutions (there can be 0..n solutions).
  */
-fun RootNode.solve(collect: (List<DLXNode>) -> Unit) {
+fun RootNode.solve(collect: (List<Int>) -> Unit) {
     solveProblem { collect(it) }
 }
 
 /**
  * solveAll collects all solutions before returning a Collection of them to the caller.
  */
-fun RootNode.solveAll(): Collection<List<DLXNode>> =
-    ArrayList<List<DLXNode>>().apply {
+fun RootNode.solveAll(): Collection<List<Int>> =
+    ArrayList<List<Int>>().apply {
         solveProblem { add(it) }
     }
 
 /**
  * This is a convenience function for solveAll so the caller can concatenate calls -> fluent API.
  */
-fun RootNode.solveAll(collect: (Collection<List<DLXNode>>) -> Unit) {
+fun RootNode.solveAll(collect: (Collection<List<Int>>) -> Unit) {
     collect(solveAll())
 }
 
@@ -38,7 +37,7 @@ fun RootNode.solveAll(collect: (Collection<List<DLXNode>>) -> Unit) {
  * The solve function using Coroutines/Channels.
  */
 @ExperimentalCoroutinesApi
-fun CoroutineScope.solve(rootNode: RootNode) = produce<List<DLXNode>> {
+fun CoroutineScope.solve(rootNode: RootNode) = produce<List<Int>> {
     rootNode.solveAll().forEach {
         channel.send(it)
     }
@@ -58,8 +57,8 @@ fun CoroutineScope.solve(rootNode: RootNode) = produce<List<DLXNode>> {
  */
 @Suppress("MoveVariableDeclarationIntoWhen")
 private fun RootNode.solveProblem(
-    solution: Stack<DLXNode> = Stack<DLXNode>(),
-    collect: (List<DLXNode>) -> Unit
+    solution: Stack<Int> = Stack<Int>(),
+    collect: (List<Int>) -> Unit
 ) {
     // 1. Pick a column (the one with the least amount of nodes
     val header = findColumn()
@@ -79,7 +78,7 @@ private fun RootNode.solveProblem(
             var node = header.next(Down)
             while (node != header) {
                 // 3. Add the row to the solution set
-                solution.push(node)
+                solution.push((node as DataNode).row)
 
                 // 4. Cover all columns that this row links to (remove the constraints)
                 node.forAll(Right) {
