@@ -10,7 +10,7 @@ import com.onegravity.sudoku.model.Grid
 import com.onegravity.sudoku.model.region.RegionType
 import org.junit.jupiter.api.Test
 
-class SudokuTests {
+object SudokuTests {
 
     @Test
     fun testSudoku1() {
@@ -54,19 +54,19 @@ class SudokuTests {
         testSudokuDLX3(grid, testSudoku2)
     }
 
-    private fun testSudokuDLX(grid: Grid, solution: IntArray) {
+    fun testSudokuDLX(grid: Grid, solution: IntArray) {
         testAndValidateSudoku(grid, solution) { collect ->
             toDLX().solve { rows -> collect(rows) }
         }
     }
 
-    private fun testSudokuDLX2(grid: Grid, solution: IntArray) {
+    fun testSudokuDLX2(grid: Grid, solution: IntArray) {
         testAndValidateSudoku(grid, solution) { collect ->
             toDLX2().solve { rows -> collect(rows) }
         }
     }
 
-    private fun testSudokuDLX3(grid: Grid, solution: IntArray) {
+    fun testSudokuDLX3(grid: Grid, solution: IntArray) {
         testAndValidateSudoku(grid, solution) { collect ->
             toDLX3().solve { rows -> collect(rows) }
         }

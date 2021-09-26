@@ -10,7 +10,7 @@ class HardestSudokuTests {
 
     @Test
     fun testDLXSolver() {
-        getPuzzles("HardestSudokus.csv") { puzzle, solution ->
+        getPuzzles("hardest.csv") { puzzle, solution ->
             val grid = getTestGrid(puzzle, null)
             testAndValidateSudoku(grid, solution) { collect ->
                 toDLX().solve { rows -> collect(rows) }
@@ -20,7 +20,7 @@ class HardestSudokuTests {
 
     @Test
     fun testDLX2Solver() {
-        getPuzzles("HardestSudokus.csv") { puzzle, solution ->
+        getPuzzles("hardest.csv") { puzzle, solution ->
             val grid = getTestGrid(puzzle, null)
             testAndValidateSudoku(grid, solution) { collect ->
                 toDLX().solve { rows -> collect(rows) }
@@ -30,7 +30,7 @@ class HardestSudokuTests {
 
     @Test
     fun testDLX3Solver() {
-        getPuzzles("HardestSudokus.csv") { puzzle, solution ->
+        getPuzzles("hardest.csv") { puzzle, solution ->
             val grid = getTestGrid(puzzle, null)
             testAndValidateSudoku(grid, solution) { collect ->
                 toDLX3().solve { rows -> collect(rows) }

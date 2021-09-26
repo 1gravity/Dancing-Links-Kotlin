@@ -1,18 +1,6 @@
 package com.onegravity.sudoku
 
-import com.onegravity.dlx.PayloadProvider
-import com.onegravity.dlx.toDLX
-import com.onegravity.dlx.solve
-import com.onegravity.dlx2.solve
-import com.onegravity.dlx2.toDLX2
-import com.onegravity.dlx3.solve
-import com.onegravity.dlx3.toDLX3
-import com.onegravity.sudoku.SudokuMatrix.Companion.getIndexValue
-import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
-import com.onegravity.sudoku.model.Grid
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import java.util.concurrent.atomic.AtomicInteger
+import com.onegravity.sudoku.SudokuTests.testSudokuDLX
 
 class KaggleSudokuTests {
 
@@ -21,7 +9,8 @@ class KaggleSudokuTests {
         val l = System.currentTimeMillis()
         var count = 0
         getPuzzles("kaggle.csv") { puzzle, solution ->
-            testSudokuDLX(puzzle, solution)
+            val grid = getTestGrid(puzzle, null)
+            testSudokuDLX(grid, solution)
             if ((++count).mod(1000) == 0) println("DLX.Kaggle: $count")
         }
         println("DLX.Kaggle took: ${System.currentTimeMillis() - l} ms")
@@ -32,7 +21,8 @@ class KaggleSudokuTests {
         val l = System.currentTimeMillis()
         var count = 0
         getPuzzles("kaggle.csv") { puzzle, solution ->
-            testSudokuDLX2(puzzle, solution)
+            val grid = getTestGrid(puzzle, null)
+            testSudokuDLX(grid, solution)
             if ((++count).mod(1000) == 0) println("DLX2.Kaggle: $count")
         }
         println("DLX2.Kaggle took: ${System.currentTimeMillis() - l} ms")
@@ -43,68 +33,11 @@ class KaggleSudokuTests {
         val l = System.currentTimeMillis()
         var count = 0
         getPuzzles("kaggle.csv") { puzzle, solution ->
-            testSudokuDLX3(puzzle, solution)
+            val grid = getTestGrid(puzzle, null)
+            testSudokuDLX(grid, solution)
             if ((++count).mod(1000) == 0) println("DLX3.Kaggle: $count")
         }
         println("DLX3.Kaggle took: ${System.currentTimeMillis() - l} ms")
-    }
-
-    private fun testSudokuDLX(puzzle: IntArray, solution: IntArray) {
-        val grid = getTestGrid(puzzle, null)
-
-        val solutions = AtomicInteger(0)
-        grid.toSudokuMatrix()
-            .toDLX(object: PayloadProvider {
-                override fun getHeaderPayload(index: Int) = "h$index"
-                override fun getDataPayload(col: Int, row: Int) = getIndexValue(row)
-            })
-            .solve { nodes ->
-                validateSolution(solution, grid, nodes.toGrid(grid))
-                solutions.incrementAndGet()
-            }
-
-        // make sure each puzzle has exactly one solution
-        assertEquals(1, solutions.get())
-    }
-
-    private fun testSudokuDLX2(puzzle: IntArray, solution: IntArray) {
-        val grid = getTestGrid(puzzle, null)
-
-        val solutions = AtomicInteger(0)
-        grid.toSudokuMatrix()
-            .toDLX2()
-            .solve { rows ->
-                validateSolution(solution, grid, rows.toGrid(grid))
-                solutions.incrementAndGet()
-            }
-
-        // make sure each puzzle has exactly one solution
-        assertEquals(1, solutions.get())
-    }
-
-    private fun testSudokuDLX3(puzzle: IntArray, solution: IntArray) {
-        val grid = getTestGrid(puzzle, null)
-
-        val solutions = AtomicInteger(0)
-        grid.toSudokuMatrix()
-            .toDLX3(object: PayloadProvider {
-                override fun getHeaderPayload(index: Int) = "h$index"
-                override fun getDataPayload(col: Int, row: Int) = getIndexValue(row)
-            })
-            .solve { nodes ->
-                validateSolution(solution, grid, nodes.toGridDLX3(grid))
-                solutions.incrementAndGet()
-            }
-
-        // make sure each puzzle has exactly one solution
-        assertEquals(1, solutions.get())
-    }
-
-    private fun validateSolution(expected: IntArray, original: Grid, actual: Grid) {
-        expected.forEachIndexed { index, value ->
-            assertEquals(original.getCell(index).isGiven, actual.getCell(index).isGiven)
-            assertEquals(value, actual.getCell(index).value)
-        }
     }
 
 }

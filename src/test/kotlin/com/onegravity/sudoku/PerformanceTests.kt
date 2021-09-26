@@ -73,7 +73,7 @@ class PerformanceTests {
         var legacy = 0L
         var count = 0
 
-        getPuzzles("HardestSudokus.csv") { puzzle, _ ->
+        getPuzzles("hardest.csv") { puzzle, _ ->
             val grid = getTestGrid(puzzle, null)
             val matrix = grid.toSudokuMatrix()
 
