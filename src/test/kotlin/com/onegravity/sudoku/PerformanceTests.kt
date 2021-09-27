@@ -112,31 +112,31 @@ class PerformanceTests {
 
 //    @Test
     fun testKaggle() {
-        testPerformance("DLX", "kaggle.csv") {
-            val grid = getTestGrid(it, null)
-            val matrix = grid.toSudokuMatrix()
-            matrix.toDLX().solve { }
-        }
-        testPerformance("DLX2", "kaggle.csv") {
-            val grid = getTestGrid(it, null)
-            val matrix = grid.toSudokuMatrix()
-            matrix.toDLX2().solve { }
-        }
-        testPerformance("DLX3", "kaggle.csv") {
-            val grid = getTestGrid(it, null)
-            val matrix = grid.toSudokuMatrix()
-            matrix.toDLX3().solve { }
-        }
-        testPerformance("Brute Force", "kaggle.csv") {
-            it.solve()
-        }
-        testPerformance("Legacy", "kaggle.csv") {
-            val grid = getTestGrid(it, null)
-            SolutionProducer().getHints(grid, object : Accumulator {
-                override fun add(hint: Hint?) {}
-                override fun getHints() = emptyList<Hint>()
-            })
-        }
+//        testPerformance("DLX", "kaggle.csv") {
+//            val grid = getTestGrid(it, null)
+//            val matrix = grid.toSudokuMatrix()
+//            matrix.toDLX().solve { }
+//        }
+//        testPerformance("DLX2", "kaggle.csv") {
+//            val grid = getTestGrid(it, null)
+//            val matrix = grid.toSudokuMatrix()
+//            matrix.toDLX2().solve { }
+//        }
+//        testPerformance("DLX3", "kaggle.csv") {
+//            val grid = getTestGrid(it, null)
+//            val matrix = grid.toSudokuMatrix()
+//            matrix.toDLX3().solve { }
+//        }
+//        testPerformance("Brute Force", "kaggle.csv") {
+//            it.solve()
+//        }
+//        testPerformance("Legacy", "kaggle.csv") {
+//            val grid = getTestGrid(it, null)
+//            SolutionProducer().getHints(grid, object : Accumulator {
+//                override fun add(hint: Hint?) {}
+//                override fun getHints() = emptyList<Hint>()
+//            })
+//        }
     }
 
 }

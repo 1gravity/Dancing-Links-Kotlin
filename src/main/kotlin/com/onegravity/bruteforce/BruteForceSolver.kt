@@ -77,13 +77,37 @@ fun IntArray.solve(): IntArray {
         }
     }
 
-    fun solve(digits: IntArray, todo: List<Indices>, todoIndex: Int): Boolean {
+    fun getMostConstraint(todo: MutableList<Indices>, todoIndex: Int): Pair<Int, Indices> {
+        var minIndex = todoIndex
+        var minSetBits = Int.MAX_VALUE
+
+        var candidates = 0
+
+        todo.subList(todoIndex, todo.size).forEachIndexed { index, indices ->
+            val tmp = rows[indices.row].and(columns[indices.col]).and(blocks[indices.block])
+            val setBits = tmp.countOneBits()
+            if (setBits < minSetBits) {
+                candidates = tmp
+                minSetBits = setBits
+                minIndex = todoIndex + index
+            }
+            if (minSetBits == 1) return@forEachIndexed
+        }
+
+        if (todoIndex != minIndex) {
+            val tmp = todo[todoIndex]
+            todo[todoIndex] = todo[minIndex]
+            todo[minIndex] = tmp
+        }
+
+        return Pair(candidates, todo[todoIndex])
+    }
+
+    fun solve(digits: IntArray, todo: MutableList<Indices>, todoIndex: Int): Boolean {
         if (todo.isEmpty()) return true
 
-        val indices = todo[todoIndex]
+        var (candidates, indices) = getMostConstraint(todo, todoIndex)
         val (cellIndex, rowIndex, colIndex, blockIndex) = indices
-
-        var candidates = rows[rowIndex].and(columns[colIndex]).and(blocks[blockIndex])
 
         while (candidates > 0) {
             // get the lowest bit
