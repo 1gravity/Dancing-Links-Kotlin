@@ -1,5 +1,6 @@
 package com.onegravity.sudoku
 
+import com.onegravity.bruteforce.solve
 import com.onegravity.dlx.solve
 import com.onegravity.dlx.toDLX
 import com.onegravity.dlx2.solve
@@ -8,9 +9,10 @@ import com.onegravity.dlx3.solve
 import com.onegravity.dlx3.toDLX3
 import com.onegravity.sudoku.model.Grid
 import com.onegravity.sudoku.model.region.RegionType
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-object SudokuTests {
+class SudokuTests {
 
     @Test
     fun testSudoku1() {
@@ -18,6 +20,7 @@ object SudokuTests {
         testSudokuDLX(grid, testSudoku1Solution)
         testSudokuDLX2(grid, testSudoku1Solution)
         testSudokuDLX3(grid, testSudoku1Solution)
+        testBruteForce(testSudoku1, testSudoku1Solution)
     }
 
     @Test
@@ -26,6 +29,7 @@ object SudokuTests {
         testSudokuDLX(grid, testSudokuAlEscargotSolution)
         testSudokuDLX2(grid, testSudokuAlEscargotSolution)
         testSudokuDLX3(grid, testSudokuAlEscargotSolution)
+        testBruteForce(testSudokuAlEscargot, testSudokuAlEscargotSolution)
     }
 
     @Test
@@ -52,24 +56,29 @@ object SudokuTests {
         testSudokuDLX(grid, testSudoku2)
         testSudokuDLX2(grid, testSudoku2)
         testSudokuDLX3(grid, testSudoku2)
+        testBruteForce(testSudoku2, testSudoku2)
     }
 
-    fun testSudokuDLX(grid: Grid, solution: IntArray) {
+    private fun testSudokuDLX(grid: Grid, solution: IntArray) {
         testAndValidateSudoku(grid, solution) { collect ->
             toDLX().solve { rows -> collect(rows) }
         }
     }
 
-    fun testSudokuDLX2(grid: Grid, solution: IntArray) {
+    private fun testSudokuDLX2(grid: Grid, solution: IntArray) {
         testAndValidateSudoku(grid, solution) { collect ->
             toDLX2().solve { rows -> collect(rows) }
         }
     }
 
-    fun testSudokuDLX3(grid: Grid, solution: IntArray) {
+    private fun testSudokuDLX3(grid: Grid, solution: IntArray) {
         testAndValidateSudoku(grid, solution) { collect ->
             toDLX3().solve { rows -> collect(rows) }
         }
+    }
+
+    private fun testBruteForce(puzzle: IntArray, solution: IntArray) {
+        Assertions.assertArrayEquals(solution, puzzle.solve())
     }
 
 }

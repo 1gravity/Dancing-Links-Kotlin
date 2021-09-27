@@ -15,13 +15,6 @@ fun testAndValidateSudoku(
     testSudoku(grid, solution, solve)
 }
 
-fun testSudoku(
-    grid: Grid,
-    solve: Array<BooleanArray>.(collect: (List<Int>) -> Unit) -> Unit
-) {
-    testSudoku(grid, null, solve)
-}
-
 private fun testSudoku(
     grid: Grid,
     solution: IntArray?,
@@ -77,6 +70,27 @@ fun getPuzzles(filename: String, process: (puzzle: IntArray, solution: IntArray)
                     process(puzzle, solution)
                 }
         }
+}
+
+fun testPerformance(testSet: String, puzzle: IntArray, solve: (puzzle: IntArray) -> Unit) {
+    val l = System.currentTimeMillis()
+    solve(puzzle)
+    val time = System.currentTimeMillis() - l
+    val puzzlesPerSec = 1000F.div(time)
+    println("$testSet took: $time ms, puzzles/sec: ${puzzlesPerSec.twoDecimals()}")
+}
+
+fun testPerformance(testSet: String, filename: String, solve: (puzzle: IntArray) -> Unit) {
+    val l = System.currentTimeMillis()
+    var count = 0
+    getPuzzles(filename) { puzzle, _ ->
+        count++
+        solve(puzzle)
+    }
+    val time = System.currentTimeMillis() - l
+    val average = time.toFloat().div(count)
+    val puzzlesPerSec = 1000F.div(average)
+    println("$testSet - $filename took: $time ms, average: ${average.twoDecimals()} ms, puzzles/sec: ${puzzlesPerSec.twoDecimals()}")
 }
 
 private val df = DecimalFormat("0.00")

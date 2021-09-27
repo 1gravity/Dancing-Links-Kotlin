@@ -1,43 +1,52 @@
 package com.onegravity.sudoku
 
-import com.onegravity.sudoku.SudokuTests.testSudokuDLX
+import com.onegravity.bruteforce.solve
+import com.onegravity.dlx.solve
+import com.onegravity.dlx.toDLX
+import com.onegravity.dlx3.solve
+import com.onegravity.dlx3.toDLX3
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 
 class KaggleSudokuTests {
 
+    private val filename = "kaggle.csv"
+
 //    @Test
-    fun testDLXSolver() {
-        val l = System.currentTimeMillis()
-        var count = 0
-        getPuzzles("kaggle.csv") { puzzle, solution ->
+    fun testDLX() {
+        getPuzzles(filename) { puzzle, solution ->
             val grid = getTestGrid(puzzle, null)
-            testSudokuDLX(grid, solution)
-            if ((++count).mod(1000) == 0) println("DLX.Kaggle: $count")
+            testAndValidateSudoku(grid, solution) { collect ->
+                toDLX().solve { rows -> collect(rows) }
+            }
         }
-        println("DLX.Kaggle took: ${System.currentTimeMillis() - l} ms")
     }
 
 //    @Test
-    fun testDLX2Solver() {
-        val l = System.currentTimeMillis()
-        var count = 0
-        getPuzzles("kaggle.csv") { puzzle, solution ->
+    fun testDLX2() {
+        getPuzzles(filename) { puzzle, solution ->
             val grid = getTestGrid(puzzle, null)
-            testSudokuDLX(grid, solution)
-            if ((++count).mod(1000) == 0) println("DLX2.Kaggle: $count")
+            testAndValidateSudoku(grid, solution) { collect ->
+                toDLX().solve { rows -> collect(rows) }
+            }
         }
-        println("DLX2.Kaggle took: ${System.currentTimeMillis() - l} ms")
     }
 
 //    @Test
-    fun testDL32Solver() {
-        val l = System.currentTimeMillis()
-        var count = 0
-        getPuzzles("kaggle.csv") { puzzle, solution ->
+    fun testDLX3() {
+        getPuzzles(filename) { puzzle, solution ->
             val grid = getTestGrid(puzzle, null)
-            testSudokuDLX(grid, solution)
-            if ((++count).mod(1000) == 0) println("DLX3.Kaggle: $count")
+            testAndValidateSudoku(grid, solution) { collect ->
+                toDLX3().solve { rows -> collect(rows) }
+            }
         }
-        println("DLX3.Kaggle took: ${System.currentTimeMillis() - l} ms")
+    }
+
+//    @Test
+    fun testBruteForce() {
+        getPuzzles(filename) { puzzle, solution ->
+            Assertions.assertArrayEquals(solution, puzzle.solve())
+        }
     }
 
 }

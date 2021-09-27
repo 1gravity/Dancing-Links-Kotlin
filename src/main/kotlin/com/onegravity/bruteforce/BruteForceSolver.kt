@@ -78,6 +78,8 @@ fun IntArray.solve(): IntArray {
     }
 
     fun solve(digits: IntArray, todo: List<Indices>, todoIndex: Int): Boolean {
+        if (todo.isEmpty()) return true
+
         val indices = todo[todoIndex]
         val (cellIndex, rowIndex, colIndex, blockIndex) = indices
 
