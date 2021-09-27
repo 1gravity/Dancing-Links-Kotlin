@@ -3,10 +3,6 @@ package com.onegravity.sudoku
 import com.onegravity.bruteforce.solve
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Test
-import java.text.DecimalFormat
-
-
-
 
 class BruteForceSolverTests {
 
@@ -37,8 +33,5 @@ class BruteForceSolverTests {
         val puzzlesPerSec = 1000F.div(average)
         println("Took: $time ms, average: ${average.twoDecimals()} ms, puzzles/sec: ${puzzlesPerSec.twoDecimals()}")
     }
-
-    private val df = DecimalFormat("0.00")
-    private fun Float.twoDecimals() = df.format(this)
 
 }

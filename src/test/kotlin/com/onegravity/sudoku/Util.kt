@@ -5,6 +5,7 @@ import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
 import com.onegravity.sudoku.model.Grid
 import org.junit.jupiter.api.Assertions
 import java.io.File
+import java.text.DecimalFormat
 
 fun testAndValidateSudoku(
     grid: Grid,
@@ -77,3 +78,6 @@ fun getPuzzles(filename: String, process: (puzzle: IntArray, solution: IntArray)
                 }
         }
 }
+
+private val df = DecimalFormat("0.00")
+fun Float.twoDecimals(): String = df.format(this)

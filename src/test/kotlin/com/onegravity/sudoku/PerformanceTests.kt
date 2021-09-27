@@ -111,8 +111,16 @@ class PerformanceTests {
             count++
         }
 
-        println("Hardest Total   - legacy: $legacy ms, dlx: $dlx ms, dlx2: $dlx2 ms, dlx3: $dlx3 ms")
-        println("Hardest Average - legacy: ${legacy.div(count)} ms, dlx: ${dlx.div(count)} ms, dlx2: ${dlx2.div(count)} ms, dlx3: ${dlx3.div(count)} ms")
+        printTime("legacy", legacy, count)
+        printTime("dlx", dlx, count)
+        printTime("dlx2", dlx2, count)
+        printTime("dlx3", dlx3, count)
+    }
+
+    private fun printTime(solver: String, time: Long, count: Int) {
+        val average = time.toFloat().div(count)
+        val puzzlesPerSec = 1000F.div(average)
+        println("$solver - Took: $time ms, average: ${average.twoDecimals()} ms, puzzles/sec: ${puzzlesPerSec.twoDecimals()}")
     }
 
     private fun testSudoku(grid: Grid) = measureTimeMillis {
