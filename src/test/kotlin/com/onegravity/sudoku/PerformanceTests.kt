@@ -16,51 +16,7 @@ import org.junit.jupiter.api.Test
 class PerformanceTests {
 
     @Test
-    fun testSudoku1() {
-        testPerformance("DLX", testSudoku1) {
-            getTestGrid(it, null).toSudokuMatrix().toDLX().solve {  }
-        }
-        testPerformance("DLX2", testSudoku1) {
-            getTestGrid(it, null).toSudokuMatrix().toDLX2().solve {  }
-        }
-        testPerformance("DLX3", testSudoku1) {
-            getTestGrid(it, null).toSudokuMatrix().toDLX3().solve {  }
-        }
-        testPerformance("Brute Force", testSudoku1) {
-            it.solve()
-        }
-        testPerformance("Legacy", testSudoku1) {
-            SolutionProducer().getHints(getTestGrid(it, null), object : Accumulator {
-                override fun add(hint: Hint?) {}
-                override fun getHints() = emptyList<Hint>()
-            })
-        }
-    }
-
-    @Test
-    fun testSudoku2() {
-        testPerformance("DLX", testSudoku2) {
-            getTestGrid(it, null).toSudokuMatrix().toDLX().solve {  }
-        }
-        testPerformance("DLX2", testSudoku2) {
-            getTestGrid(it, null).toSudokuMatrix().toDLX2().solve {  }
-        }
-        testPerformance("DLX3", testSudoku2) {
-            getTestGrid(it, null).toSudokuMatrix().toDLX3().solve {  }
-        }
-        testPerformance("Brute Force", testSudoku2) {
-            it.solve()
-        }
-        testPerformance("Legacy", testSudoku2) {
-            SolutionProducer().getHints(getTestGrid(it, null), object : Accumulator {
-                override fun add(hint: Hint?) {}
-                override fun getHints() = emptyList<Hint>()
-            })
-        }
-    }
-
-    @Test
-    fun testSudoku3() {
+    fun testAlEscargot() {
         testPerformance("DLX", testSudokuAlEscargot) {
             getTestGrid(it, null).toSudokuMatrix().toDLX().solve {  }
         }
@@ -110,7 +66,7 @@ class PerformanceTests {
         }
     }
 
-//    @Test
+    @Test
     fun testKaggle() {
 //        testPerformance("DLX", "kaggle.csv") {
 //            val grid = getTestGrid(it, null)
@@ -127,9 +83,9 @@ class PerformanceTests {
 //            val matrix = grid.toSudokuMatrix()
 //            matrix.toDLX3().solve { }
 //        }
-//        testPerformance("Brute Force", "kaggle.csv") {
-//            it.solve()
-//        }
+        testPerformance("Brute Force", "kaggle.csv") {
+            it.solve()
+        }
 //        testPerformance("Legacy", "kaggle.csv") {
 //            val grid = getTestGrid(it, null)
 //            SolutionProducer().getHints(grid, object : Accumulator {
