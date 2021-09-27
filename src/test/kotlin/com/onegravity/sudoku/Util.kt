@@ -54,11 +54,14 @@ fun List<Int>.toGrid(original: Grid) = Grid(original.extraRegionType, original.i
     }
 }
 
+/**
+ * Convert values from the standard csv format to an IntArray.
+ * Input: .......12........3..23..4....18....5.6..7.8.......9.....85.....9...4.5..47...6...
+ * Output: [0,0,0,0,0,0,0,1,2,0,0,0,0,0,0,0,0,3 etc.]
+ */
+fun String.toIntArray() = this.map { c -> c.digitToIntOrNull() ?: 0 }.toIntArray()
+
 private val sudokuPattern = """^([\d.]{81}),(\d{81}).*${'$'}""".toRegex()
-
-// convert values from a String to an IntArray
-private fun String.toIntArray() = this.map { c -> c.digitToIntOrNull() ?: 0 }.toIntArray()
-
 fun getPuzzles(filename: String, process: (puzzle: IntArray, solution: IntArray) -> Unit) {
     File(ClassLoader.getSystemResource(filename).file)
         .forEachLine { line ->
