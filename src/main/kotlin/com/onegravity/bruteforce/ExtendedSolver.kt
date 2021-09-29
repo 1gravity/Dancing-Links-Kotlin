@@ -20,6 +20,7 @@ fun Grid.solve(): IntArray {
     val constraints = arrayOf(rows, columns, blocks, *extraRegions)
 
     val todo = ArrayList<IntArray>()
+
     digits.forEachIndexed { cellIndex, digit ->
         val cell = getCell(cellIndex)
 
@@ -129,17 +130,17 @@ private fun getMostConstraint(
 }
 
 private fun clearCandidate(constraints: Array<IntArray>, indices: IntArray, bit: Int) {
-    set(constraints, indices, bit) { value, bit2Clear -> value xor bit2Clear }
+    indices.forEachIndexed { index, regionCode ->
+        if (index > 0 && regionCode >= 0) {    // skip the cell index (index == 0)
+            constraints[index - 1][regionCode] = constraints[index - 1][regionCode] xor bit
+        }
+    }
 }
 
 private fun setCandidate(constraints: Array<IntArray>, indices: IntArray, bit: Int) {
-    set(constraints, indices, bit) { value, bit2Set -> value or bit2Set }
-}
-
-private fun set(constraints: Array<IntArray>, indices: IntArray, bit: Int, op: (value: Int, bit: Int) -> Int) {
     indices.forEachIndexed { index, regionCode ->
         if (index > 0 && regionCode >= 0) {    // skip the cell index (index == 0)
-            constraints[index - 1][regionCode] = op(constraints[index - 1][regionCode], bit)
+            constraints[index - 1][regionCode] = constraints[index - 1][regionCode] or bit
         }
     }
 }

@@ -13,7 +13,7 @@ interface Puzzle<C: Cell> {
     val isJigsaw: Boolean
 
     /**
-     * Get all cells as a one-dimensional array of Cells[index].
+     * Get all cells as a one-dimensional array of Cells.
      *
      * @return all cells of this Puzzle as a one-dimensional array of Cells.
      */
@@ -75,7 +75,7 @@ interface Puzzle<C: Cell> {
     fun getRegionAtOrNull(index: Int, type: RegionType?): Region<C>?
 
     /**
-     * Returns the indices of all cells of a certain RegionType as an Array[n]IntArray[9].
+     * Returns the indices of all cells of a certain RegionType as an Array[IntArray[9]].
      *
      * The Array Index matches the region code/index (used internally to identify the region).
      * The IntArray elements are the cell indices from 0 to 80.

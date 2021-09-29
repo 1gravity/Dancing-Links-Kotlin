@@ -1,8 +1,6 @@
 package com.onegravity.dlx2
 
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 /**
  * Rows:
@@ -19,9 +17,6 @@ import kotlin.collections.HashMap
  */
 @Suppress("ArrayInDataClass")
 data class DLXMatrix(val rows: Array<IntArray>, val columns: MutableMap<Int, BitSet>) {
-
-    companion object {
-    }
 
     fun cover(row: Int) = LinkedList<BitSet>().also { removedCols ->
         rows[row].forEach { col: Int ->

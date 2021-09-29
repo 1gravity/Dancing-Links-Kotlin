@@ -1,1 +1,1 @@
-Algorithm X implementation using Donald Knuth's dancing links (quadruple linked nodes).
+Algorithm X implementation based on Donald Knuth's dancing links (quadruple linked nodes) with a clean OO design.

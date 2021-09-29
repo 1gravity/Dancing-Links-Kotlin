@@ -77,30 +77,30 @@ fun IntArray.solve(): IntArray {
         }
     }
 
-    fun getMostConstraint(todo: MutableList<Indices>, todoIndex: Int): Pair<Int, Indices> {
-        var minIndex = todoIndex
+    fun getMostConstraint(todo: MutableList<Indices>, startIndex: Int): Pair<Int, Indices> {
+        var minIndex = startIndex
         var minSetBits = Int.MAX_VALUE
         var candidates = 0
 
-        todo.subList(todoIndex, todo.size)
+        todo.subList(startIndex, todo.size)
             .forEachIndexed { index, indices ->
                 val tmp = rows[indices.row].and(columns[indices.col]).and(blocks[indices.block])
                 val setBits = tmp.countOneBits()
                 if (setBits < minSetBits) {
                     candidates = tmp
                     minSetBits = setBits
-                    minIndex = todoIndex + index
+                    minIndex = startIndex + index
                 }
                 if (minSetBits == 1) return@forEachIndexed
             }
 
-        if (todoIndex != minIndex) {
-            val tmp = todo[todoIndex]
-            todo[todoIndex] = todo[minIndex]
+        if (startIndex != minIndex) {
+            val tmp = todo[startIndex]
+            todo[startIndex] = todo[minIndex]
             todo[minIndex] = tmp
         }
 
-        return Pair(candidates, todo[todoIndex])
+        return Pair(candidates, todo[startIndex])
     }
 
     fun solve(digits: IntArray, todo: MutableList<Indices>, todoIndex: Int): Boolean {

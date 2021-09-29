@@ -98,26 +98,27 @@ class PerformanceTests {
         }
     }
 
-//    @Test
+    // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
+    // @Test
     fun testKaggleFull() {
-//        testPerformance("DLX", "kaggle.csv") {
-//            getTestGrid(it, null)
-//                .toSudokuMatrix()
-//                .toDLX()
-//                .solve { }
-//        }
-//        testPerformance("DLX2", "kaggle.csv") {
-//            getTestGrid(it, null)
-//                .toSudokuMatrix()
-//                .toDLX2()
-//                .solve { }
-//        }
-//        testPerformance("DLX3", "kaggle.csv") {
-//            getTestGrid(it, null)
-//                .toSudokuMatrix()
-//                .toDLX3()
-//                .solve { }
-//        }
+        testPerformance("DLX", "kaggle.csv") {
+            getTestGrid(it, null)
+                .toSudokuMatrix()
+                .toDLX()
+                .solve { }
+        }
+        testPerformance("DLX2", "kaggle.csv") {
+            getTestGrid(it, null)
+                .toSudokuMatrix()
+                .toDLX2()
+                .solve { }
+        }
+        testPerformance("DLX3", "kaggle.csv") {
+            getTestGrid(it, null)
+                .toSudokuMatrix()
+                .toDLX3()
+                .solve { }
+        }
         testPerformance("Brute Force", "kaggle.csv") {
             it.solve()
         }
