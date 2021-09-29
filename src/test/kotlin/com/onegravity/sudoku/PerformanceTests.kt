@@ -68,7 +68,8 @@ class PerformanceTests {
         }
     }
 
-    @Test
+    // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
+    // @Test
     fun testKaggleReduced() {
         val limit = 10000
 

@@ -12,7 +12,8 @@ class KaggleSudokuTests {
 
     private val filename = "kaggle.csv"
 
-//    @Test
+    // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
+    // @Test
     fun testDLX() {
         getPuzzles(filename) { puzzle, solution ->
             val grid = getTestGrid(puzzle, null)
@@ -22,7 +23,8 @@ class KaggleSudokuTests {
         }
     }
 
-//    @Test
+    // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
+    // @Test
     fun testDLX2() {
         getPuzzles(filename) { puzzle, solution ->
             val grid = getTestGrid(puzzle, null)
@@ -32,7 +34,8 @@ class KaggleSudokuTests {
         }
     }
 
-//    @Test
+    // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
+    // @Test
     fun testDLX3() {
         getPuzzles(filename) { puzzle, solution ->
             val grid = getTestGrid(puzzle, null)
@@ -42,10 +45,20 @@ class KaggleSudokuTests {
         }
     }
 
-//    @Test
-    fun testBruteForce() {
+    // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
+    // @Test
+    fun testBruteForce1() {
         getPuzzles(filename) { puzzle, solution ->
             Assertions.assertArrayEquals(solution, puzzle.solve())
+        }
+    }
+
+    // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
+    // @Test
+    fun testBruteForce2() {
+        getPuzzles(filename) { puzzle, solution ->
+            val grid = getTestGrid(puzzle)
+            Assertions.assertArrayEquals(solution, grid.solve())
         }
     }
 
