@@ -20,8 +20,7 @@ class SudokuTests {
         testSudokuDLX(grid, testSudoku1Solution)
         testSudokuDLX2(grid, testSudoku1Solution)
         testSudokuDLX3(grid, testSudoku1Solution)
-        testBruteForce(testSudoku1, testSudoku1Solution)
-        testBruteForce2(grid, testSudoku1Solution)
+        testBruteForce(grid, testSudoku1Solution)
     }
 
     @Test
@@ -30,8 +29,7 @@ class SudokuTests {
         testSudokuDLX(grid, testSudokuAlEscargotSolution)
         testSudokuDLX2(grid, testSudokuAlEscargotSolution)
         testSudokuDLX3(grid, testSudokuAlEscargotSolution)
-        testBruteForce(testSudokuAlEscargot, testSudokuAlEscargotSolution)
-        testBruteForce2(grid, testSudokuAlEscargotSolution)
+        testBruteForce(grid, testSudokuAlEscargotSolution)
     }
 
     @Test
@@ -40,7 +38,7 @@ class SudokuTests {
         testSudokuDLX(grid, testSudokuJigsawSolution)
         testSudokuDLX2(grid, testSudokuJigsawSolution)
         testSudokuDLX3(grid, testSudokuJigsawSolution)
-        testBruteForce2(grid, testSudokuJigsawSolution)
+        testBruteForce(grid, testSudokuJigsawSolution)
     }
 
     @Test
@@ -50,21 +48,21 @@ class SudokuTests {
         testSudokuDLX(gridHyper, testHyperSudokuSolution)
         testSudokuDLX2(gridHyper, testHyperSudokuSolution)
         testSudokuDLX3(gridHyper, testHyperSudokuSolution)
-        testBruteForce2(gridHyper, testHyperSudokuSolution)
+        testBruteForce(gridHyper, testHyperSudokuSolution)
 
         // X-Sudoku
         val gridX = getTestGrid(testXSudoku, extraRegionType = RegionType.X)
         testSudokuDLX(gridX, testXSudokuSolution)
         testSudokuDLX2(gridX, testXSudokuSolution)
         testSudokuDLX3(gridX, testXSudokuSolution)
-        testBruteForce2(gridX, testXSudokuSolution)
+        testBruteForce(gridX, testXSudokuSolution)
 
         // Color-Sudoku
         val gridColor = getTestGrid(testColorSudoku, extraRegionType = RegionType.COLOR)
         testSudokuDLX(gridColor, testColorSudokuSolution)
         testSudokuDLX2(gridColor, testColorSudokuSolution)
         testSudokuDLX3(gridColor, testColorSudokuSolution)
-        testBruteForce2(gridColor, testColorSudokuSolution)
+        testBruteForce(gridColor, testColorSudokuSolution)
     }
 
     @Test
@@ -73,8 +71,7 @@ class SudokuTests {
         testSudokuDLX(grid, testSudoku2)
         testSudokuDLX2(grid, testSudoku2)
         testSudokuDLX3(grid, testSudoku2)
-        testBruteForce(testSudoku2, testSudoku2)
-        testBruteForce2(grid, testSudoku2)
+        testBruteForce(grid, testSudoku2)
     }
 
     private fun testSudokuDLX(grid: Grid, solution: IntArray) {
@@ -95,11 +92,7 @@ class SudokuTests {
         }
     }
 
-    private fun testBruteForce(puzzle: IntArray, solution: IntArray) {
-        Assertions.assertArrayEquals(solution, puzzle.solve())
-    }
-
-    private fun testBruteForce2(grid: Grid, solution: IntArray) {
+    private fun testBruteForce(grid: Grid, solution: IntArray) {
         Assertions.assertArrayEquals(solution, grid.solve())
     }
 

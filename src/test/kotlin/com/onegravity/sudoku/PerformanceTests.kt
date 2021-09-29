@@ -15,116 +15,147 @@ class PerformanceTests {
     @Test
     fun testAlEscargot() {
         testPerformance("Al Escargot - DLX", testSudokuAlEscargot) {
-            getTestGrid(it, null)
+            getTestGrid(it)
                 .toSudokuMatrix()
                 .toDLX()
                 .solve {  }
         }
         testPerformance("Al Escargot - DLX2", testSudokuAlEscargot) {
-            getTestGrid(it, null)
+            getTestGrid(it)
                 .toSudokuMatrix()
                 .toDLX2()
                 .solve { }
         }
         testPerformance("Al Escargot - DLX3", testSudokuAlEscargot) {
-            getTestGrid(it, null)
+            getTestGrid(it)
                 .toSudokuMatrix()
                 .toDLX3()
                 .solve { }
         }
         testPerformance("Al Escargot - Brute Force", testSudokuAlEscargot) {
-            it.solve()
-        }
-        testPerformance("Al Escargot - Brute Force 2", testSudokuAlEscargot) {
-            getTestGrid(it, null).solve()
+            getTestGrid(it).solve()
         }
     }
 
     @Test
-    fun testHardest() {
-        testPerformance("DLX", "hardest.csv") {
-            getTestGrid(it, null)
+    fun testHardest1() {
+        testPerformance("DLX 1", "hardest.csv") {
+            getTestGrid(it)
                 .toSudokuMatrix()
                 .toDLX()
                 .solve { }
         }
-        testPerformance("DLX2", "hardest.csv") {
-            getTestGrid(it, null)
+    }
+
+    @Test
+    fun testHardest2() {
+        testPerformance("DLX 2", "hardest.csv") {
+            getTestGrid(it)
                 .toSudokuMatrix()
                 .toDLX2()
                 .solve { }
         }
-        testPerformance("DLX3", "hardest.csv") {
-            getTestGrid(it, null)
+    }
+
+    @Test
+    fun testHardest3() {
+        testPerformance("DLX 3", "hardest.csv") {
+            getTestGrid(it)
                 .toSudokuMatrix()
                 .toDLX3()
                 .solve { }
         }
+    }
+
+    @Test
+    fun testHardestBF() {
         testPerformance("Brute Force", "hardest.csv") {
-            it.solve()
+            getTestGrid(it).solve()
         }
-        testPerformance("Brute Force 2", "hardest.csv") {
-            getTestGrid(it, null).solve()
+    }
+
+    private val limit = 10000
+
+    // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
+    // @Test
+    fun testKaggleReduced1() {
+        testPerformance("$limit - DLX 1", "kaggle.csv", limit) {
+            getTestGrid(it)
+                .toSudokuMatrix()
+                .toDLX()
+                .solve { }
         }
     }
 
     // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
     // @Test
-    fun testKaggleReduced() {
-        val limit = 10000
-
-        testPerformance("$limit - DLX", "kaggle.csv", limit) {
-            getTestGrid(it, null)
-                .toSudokuMatrix()
-                .toDLX()
-                .solve { }
-        }
-        testPerformance("$limit - DLX2", "kaggle.csv", limit) {
-            getTestGrid(it, null)
+    fun testKaggleReduced2() {
+        testPerformance("$limit - DLX 2", "kaggle.csv", limit) {
+            getTestGrid(it)
                 .toSudokuMatrix()
                 .toDLX2()
                 .solve { }
         }
-        testPerformance("$limit - DLX3", "kaggle.csv", limit) {
-            getTestGrid(it, null)
+    }
+
+    // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
+    // @Test
+    fun testKaggleReduced3() {
+        testPerformance("$limit - DLX 3", "kaggle.csv", limit) {
+            getTestGrid(it)
                 .toSudokuMatrix()
                 .toDLX3()
                 .solve { }
         }
+    }
+
+    // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
+    // @Test
+    fun testKaggleReducedBF() {
         testPerformance("$limit - Brute Force", "kaggle.csv", limit) {
-            it.solve()
-        }
-        testPerformance("$limit - Brute Force 2", "kaggle.csv", limit) {
-            getTestGrid(it, null).solve()
+            getTestGrid(it).solve()
         }
     }
 
     // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
     // @Test
-    fun testKaggleFull() {
-        testPerformance("DLX", "kaggle.csv") {
-            getTestGrid(it, null)
+    fun testKaggleFull1() {
+        testPerformance("DLX 1", "kaggle.csv") {
+            getTestGrid(it)
                 .toSudokuMatrix()
                 .toDLX()
                 .solve { }
         }
-        testPerformance("DLX2", "kaggle.csv") {
-            getTestGrid(it, null)
+    }
+
+    // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
+    // @Test
+    fun testKaggleFull2() {
+        testPerformance("DLX 2", "kaggle.csv") {
+            getTestGrid(it)
                 .toSudokuMatrix()
                 .toDLX2()
                 .solve { }
         }
-        testPerformance("DLX3", "kaggle.csv") {
-            getTestGrid(it, null)
+    }
+
+
+    // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
+    // @Test
+    fun testKaggleFull3() {
+        testPerformance("DLX 3", "kaggle.csv") {
+            getTestGrid(it)
                 .toSudokuMatrix()
                 .toDLX3()
                 .solve { }
         }
+    }
+
+    // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
+    // @Test
+    fun testKaggleFullBF() {
         testPerformance("Brute Force", "kaggle.csv") {
-            it.solve()
-        }
-        testPerformance("Brute Force 2", "kaggle.csv") {
-            getTestGrid(it, null).solve()
+            getTestGrid(it).solve()
         }
     }
 

@@ -1,70 +1,25 @@
 package com.onegravity.bruteforce
 
+import com.onegravity.sudoku.model.Grid
 import java.util.*
 
-private val rowIndices = intArrayOf(
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 
-    4, 4, 4, 4, 4, 4, 4, 4, 4, 
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 
-    6, 6, 6, 6, 6, 6, 6, 6, 6, 
-    7, 7, 7, 7, 7, 7, 7, 7, 7, 
-    8, 8, 8, 8, 8, 8, 8, 8, 8, 
-)
+private data class Indices(val cell: Int, val row: Int, val col: Int, val block: Int)
 
-private val colIndices = intArrayOf(
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 
-    0, 1, 2, 3, 4, 5, 6, 7, 8
-)
+fun Grid.solveNoExtraRegions(): IntArray {
+    // initialize all data structures
+    val digits = getCells().map { it.value }.toIntArray()
 
-private val blockIndices = intArrayOf(
-    0, 0, 0, 1, 1, 1, 2, 2, 2, 
-    0, 0, 0, 1, 1, 1, 2, 2, 2, 
-    0, 0, 0, 1, 1, 1, 2, 2, 2, 
-    3, 3, 3, 4, 4, 4, 5, 5, 5, 
-    3, 3, 3, 4, 4, 4, 5, 5, 5, 
-    3, 3, 3, 4, 4, 4, 5, 5, 5, 
-    6, 6, 6, 7, 7, 7, 8, 8, 8, 
-    6, 6, 6, 7, 7, 7, 8, 8, 8, 
-    6, 6, 6, 7, 7, 7, 8, 8, 8
-)
-
-val bits2Digits = mapOf(
-    1   to 1,
-    2   to 2,
-    4   to 3,
-    8   to 4,
-    16  to 5,
-    32  to 6,
-    64  to 7,
-    128 to 8,
-    256 to 9,
-)
-
-data class Indices(val cell: Int, val row: Int, val col: Int, val block: Int)
-
-fun IntArray.solve(): IntArray {
-    val digits = clone()
-
-    val rows = Array(9) { 0x1ff }
-    val columns = Array(9) { 0x1ff }
-    val blocks = Array(9) { 0x1ff }
+    val rows = IntArray(9) { 0x1ff }
+    val columns = IntArray(9) { 0x1ff }
+    val blocks = IntArray(9) { 0x1ff }
 
     val todo = ArrayList<Indices>()
 
     digits.forEachIndexed { cellIndex, digit ->
-        val rowIndex = rowIndices[cellIndex]
-        val colIndex = colIndices[cellIndex]
-        val blockIndex = blockIndices[cellIndex]
+        val cell = getCell(cellIndex)
+        val rowIndex = cell.row
+        val colIndex = cell.col
+        val blockIndex = cell.block
         when (digit) {
             0 -> todo.add(Indices(cellIndex, rowIndex, colIndex, blockIndex))
             else -> {
@@ -138,4 +93,3 @@ fun IntArray.solve(): IntArray {
 
     return if (solve(digits, todo, 0)) digits else throw Exception("No solution")
 }
-

@@ -46,16 +46,8 @@ class KaggleSudokuTests {
     }
 
     // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
-    // @Test
-    fun testBruteForce1() {
-        getPuzzles(filename) { puzzle, solution ->
-            Assertions.assertArrayEquals(solution, puzzle.solve())
-        }
-    }
-
-    // disabled because you need GIT LFS (https://git-lfs.github.com) to run it
-    // @Test
-    fun testBruteForce2() {
+     @Test
+    fun testBruteForce() {
         getPuzzles(filename) { puzzle, solution ->
             val grid = getTestGrid(puzzle)
             Assertions.assertArrayEquals(solution, grid.solve())

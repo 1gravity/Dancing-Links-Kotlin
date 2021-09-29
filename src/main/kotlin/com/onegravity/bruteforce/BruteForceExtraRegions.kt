@@ -3,7 +3,21 @@ package com.onegravity.bruteforce
 import com.onegravity.sudoku.model.Grid
 import kotlin.collections.ArrayList
 
-fun Grid.solve(): IntArray {
+fun Grid.solve() = if (extraRegionType == null) solveNoExtraRegions() else solveWithExtraRegions()
+
+val bits2Digits = mapOf(
+    1   to 1,
+    2   to 2,
+    4   to 3,
+    8   to 4,
+    16  to 5,
+    32  to 6,
+    64  to 7,
+    128 to 8,
+    256 to 9,
+)
+
+private fun Grid.solveWithExtraRegions(): IntArray {
     // initialize all data structures
     val digits = getCells().map { it.value }.toIntArray()
 

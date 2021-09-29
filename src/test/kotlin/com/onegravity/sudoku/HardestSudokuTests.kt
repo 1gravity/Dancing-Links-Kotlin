@@ -42,10 +42,11 @@ class HardestSudokuTests {
         }
     }
 
-//    @Test
+    @Test
     fun testBruteForce() {
         getPuzzles(filename) { puzzle, solution ->
-            Assertions.assertArrayEquals(solution, puzzle.solve())
+            val grid = getTestGrid(puzzle, null)
+            Assertions.assertArrayEquals(solution, grid.solve())
         }
     }
 
