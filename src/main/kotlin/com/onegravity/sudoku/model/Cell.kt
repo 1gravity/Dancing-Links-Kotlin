@@ -14,8 +14,6 @@ import java.util.*
  */
 interface Cell {
 
-    val position: CellPosition
-
     var value: Int
 
     var isGiven: Boolean

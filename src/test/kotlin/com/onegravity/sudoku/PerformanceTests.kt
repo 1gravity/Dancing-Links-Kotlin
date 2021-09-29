@@ -8,91 +8,122 @@ import com.onegravity.dlx2.toDLX2
 import com.onegravity.dlx3.solve
 import com.onegravity.dlx3.toDLX3
 import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
-import com.onegravity.sudoku.legacy.Accumulator
-import com.onegravity.sudoku.legacy.Hint
-import com.onegravity.sudoku.legacy.SolutionProducer
 import org.junit.jupiter.api.Test
 
 class PerformanceTests {
 
     @Test
     fun testAlEscargot() {
-        testPerformance("DLX", testSudokuAlEscargot) {
-            getTestGrid(it, null).toSudokuMatrix().toDLX().solve {  }
+        testPerformance("Al Escargot - DLX", testSudokuAlEscargot) {
+            getTestGrid(it, null)
+                .toSudokuMatrix()
+                .toDLX()
+                .solve {  }
         }
-        testPerformance("DLX2", testSudokuAlEscargot) {
-            getTestGrid(it, null).toSudokuMatrix().toDLX2().solve {  }
+        testPerformance("Al Escargot - DLX2", testSudokuAlEscargot) {
+            getTestGrid(it, null)
+                .toSudokuMatrix()
+                .toDLX2()
+                .solve { }
         }
-        testPerformance("DLX3", testSudokuAlEscargot) {
-            getTestGrid(it, null).toSudokuMatrix().toDLX3().solve {  }
+        testPerformance("Al Escargot - DLX3", testSudokuAlEscargot) {
+            getTestGrid(it, null)
+                .toSudokuMatrix()
+                .toDLX3()
+                .solve { }
         }
-        testPerformance("Brute Force", testSudokuAlEscargot) {
+        testPerformance("Al Escargot - Brute Force", testSudokuAlEscargot) {
             it.solve()
         }
-        testPerformance("Legacy", testSudokuAlEscargot) {
-            SolutionProducer().getHints(getTestGrid(it, null), object : Accumulator {
-                override fun add(hint: Hint?) {}
-                override fun getHints() = emptyList<Hint>()
-            })
+        testPerformance("Al Escargot - Brute Force 2", testSudokuAlEscargot) {
+            getTestGrid(it, null).solve()
         }
     }
 
     @Test
     fun testHardest() {
         testPerformance("DLX", "hardest.csv") {
-            val grid = getTestGrid(it, null)
-            val matrix = grid.toSudokuMatrix()
-            matrix.toDLX().solve { }
+            getTestGrid(it, null)
+                .toSudokuMatrix()
+                .toDLX()
+                .solve { }
         }
         testPerformance("DLX2", "hardest.csv") {
-            val grid = getTestGrid(it, null)
-            val matrix = grid.toSudokuMatrix()
-            matrix.toDLX2().solve { }
+            getTestGrid(it, null)
+                .toSudokuMatrix()
+                .toDLX2()
+                .solve { }
         }
         testPerformance("DLX3", "hardest.csv") {
-            val grid = getTestGrid(it, null)
-            val matrix = grid.toSudokuMatrix()
-            matrix.toDLX3().solve { }
+            getTestGrid(it, null)
+                .toSudokuMatrix()
+                .toDLX3()
+                .solve { }
         }
         testPerformance("Brute Force", "hardest.csv") {
             it.solve()
         }
-        testPerformance("Legacy", "hardest.csv") {
-            val grid = getTestGrid(it, null)
-            SolutionProducer().getHints(grid, object : Accumulator {
-                override fun add(hint: Hint?) {}
-                override fun getHints() = emptyList<Hint>()
-            })
+        testPerformance("Brute Force 2", "hardest.csv") {
+            getTestGrid(it, null).solve()
         }
     }
 
     @Test
-    fun testKaggle() {
+    fun testKaggleReduced() {
+        val limit = 10000
+
+        testPerformance("$limit - DLX", "kaggle.csv", limit) {
+            getTestGrid(it, null)
+                .toSudokuMatrix()
+                .toDLX()
+                .solve { }
+        }
+        testPerformance("$limit - DLX2", "kaggle.csv", limit) {
+            getTestGrid(it, null)
+                .toSudokuMatrix()
+                .toDLX2()
+                .solve { }
+        }
+        testPerformance("$limit - DLX3", "kaggle.csv", limit) {
+            getTestGrid(it, null)
+                .toSudokuMatrix()
+                .toDLX3()
+                .solve { }
+        }
+        testPerformance("$limit - Brute Force", "kaggle.csv", limit) {
+            it.solve()
+        }
+        testPerformance("$limit - Brute Force 2", "kaggle.csv", limit) {
+            getTestGrid(it, null).solve()
+        }
+    }
+
+//    @Test
+    fun testKaggleFull() {
 //        testPerformance("DLX", "kaggle.csv") {
-//            val grid = getTestGrid(it, null)
-//            val matrix = grid.toSudokuMatrix()
-//            matrix.toDLX().solve { }
+//            getTestGrid(it, null)
+//                .toSudokuMatrix()
+//                .toDLX()
+//                .solve { }
 //        }
 //        testPerformance("DLX2", "kaggle.csv") {
-//            val grid = getTestGrid(it, null)
-//            val matrix = grid.toSudokuMatrix()
-//            matrix.toDLX2().solve { }
+//            getTestGrid(it, null)
+//                .toSudokuMatrix()
+//                .toDLX2()
+//                .solve { }
 //        }
 //        testPerformance("DLX3", "kaggle.csv") {
-//            val grid = getTestGrid(it, null)
-//            val matrix = grid.toSudokuMatrix()
-//            matrix.toDLX3().solve { }
+//            getTestGrid(it, null)
+//                .toSudokuMatrix()
+//                .toDLX3()
+//                .solve { }
 //        }
         testPerformance("Brute Force", "kaggle.csv") {
             it.solve()
         }
-//        testPerformance("Legacy", "kaggle.csv") {
-//            val grid = getTestGrid(it, null)
-//            SolutionProducer().getHints(grid, object : Accumulator {
-//                override fun add(hint: Hint?) {}
-//                override fun getHints() = emptyList<Hint>()
-//            })
-//        }
+        testPerformance("Brute Force 2", "kaggle.csv") {
+            getTestGrid(it, null).solve()
+        }
     }
 
 }

@@ -9,18 +9,18 @@ class Percent<C : Cell>(puzzle: Puzzle<C>, regionCode: Int) :
     ExtraRegion<C>(puzzle, RegionType.PERCENT, regionCode, regionCodes) {
 
     companion object {
-        const val nrOfRegions: Int = 3
+        const val nrOfGroups = 3
 
-        private val regionCodes = arrayOf(
-            intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1, 2),
-            intArrayOf(-1, 0, 0, 0,-1,-1,-1, 2,-1),
-            intArrayOf(-1, 0, 0, 0,-1,-1, 2,-1,-1),
-            intArrayOf(-1, 0, 0, 0,-1, 2,-1,-1,-1),
-            intArrayOf(-1,-1,-1,-1, 2,-1,-1,-1,-1),
-            intArrayOf(-1,-1,-1, 2,-1, 1, 1, 1,-1),
-            intArrayOf(-1,-1, 2,-1,-1, 1, 1, 1,-1),
-            intArrayOf(-1, 2,-1,-1,-1, 1, 1, 1,-1),
-            intArrayOf( 2,-1,-1,-1,-1,-1,-1,-1,-1)
+        private val regionCodes = intArrayOf(
+            -1,-1,-1,-1,-1,-1,-1,-1, 2,
+            -1, 0, 0, 0,-1,-1,-1, 2,-1,
+            -1, 0, 0, 0,-1,-1, 2,-1,-1,
+            -1, 0, 0, 0,-1, 2,-1,-1,-1,
+            -1,-1,-1,-1, 2,-1,-1,-1,-1,
+            -1,-1,-1, 2,-1, 1, 1, 1,-1,
+            -1,-1, 2,-1,-1, 1, 1, 1,-1,
+            -1, 2,-1,-1,-1, 1, 1, 1,-1,
+             2,-1,-1,-1,-1,-1,-1,-1,-1
         )
 
         val indices by lazy { computeRegionIndices(regionCodes) }

@@ -9,32 +9,32 @@ class X<C : Cell>(puzzle: Puzzle<C>, regionCode: Int) :
     ExtraRegion<C>(puzzle, RegionType.X, regionCode, regionCodes[regionCode]) {
 
     companion object {
-        const val nrOfRegions: Int = 2
+        const val nrOfGroups = 2
 
         // we need two block definitions for the X-Sudoku because that's the only puzzle type with
         // overlapping regions (R4C4 is in both regions)
         private val regionCodes = arrayOf(
-            arrayOf(
-                intArrayOf( 0,-1,-1,-1,-1,-1,-1,-1,-1),
-                intArrayOf(-1, 0,-1,-1,-1,-1,-1,-1,-1),
-                intArrayOf(-1,-1, 0,-1,-1,-1,-1,-1,-1),
-                intArrayOf(-1,-1,-1, 0,-1,-1,-1,-1,-1),
-                intArrayOf(-1,-1,-1,-1, 0,-1,-1,-1,-1),
-                intArrayOf(-1,-1,-1,-1,-1, 0,-1,-1,-1),
-                intArrayOf(-1,-1,-1,-1,-1,-1, 0,-1,-1),
-                intArrayOf(-1,-1,-1,-1,-1,-1,-1, 0,-1),
-                intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1, 0),
+            intArrayOf(
+                 0,-1,-1,-1,-1,-1,-1,-1,-1,
+                -1, 0,-1,-1,-1,-1,-1,-1,-1,
+                -1,-1, 0,-1,-1,-1,-1,-1,-1,
+                -1,-1,-1, 0,-1,-1,-1,-1,-1,
+                -1,-1,-1,-1, 0,-1,-1,-1,-1,
+                -1,-1,-1,-1,-1, 0,-1,-1,-1,
+                -1,-1,-1,-1,-1,-1, 0,-1,-1,
+                -1,-1,-1,-1,-1,-1,-1, 0,-1,
+                -1,-1,-1,-1,-1,-1,-1,-1, 0,
             ),
-            arrayOf(
-                intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1, 1),
-                intArrayOf(-1,-1,-1,-1,-1,-1,-1, 1,-1),
-                intArrayOf(-1,-1,-1,-1,-1,-1, 1,-1,-1),
-                intArrayOf(-1,-1,-1,-1,-1, 1,-1,-1,-1),
-                intArrayOf(-1,-1,-1,-1, 1,-1,-1,-1,-1),
-                intArrayOf(-1,-1,-1, 1,-1,-1,-1,-1,-1),
-                intArrayOf(-1,-1, 1,-1,-1,-1,-1,-1,-1),
-                intArrayOf(-1, 1,-1,-1,-1,-1,-1,-1,-1),
-                intArrayOf( 1,-1,-1,-1,-1,-1,-1,-1,-1),
+            intArrayOf(
+                -1,-1,-1,-1,-1,-1,-1,-1, 1,
+                -1,-1,-1,-1,-1,-1,-1, 1,-1,
+                -1,-1,-1,-1,-1,-1, 1,-1,-1,
+                -1,-1,-1,-1,-1, 1,-1,-1,-1,
+                -1,-1,-1,-1, 1,-1,-1,-1,-1,
+                -1,-1,-1, 1,-1,-1,-1,-1,-1,
+                -1,-1, 1,-1,-1,-1,-1,-1,-1,
+                -1, 1,-1,-1,-1,-1,-1,-1,-1,
+                 1,-1,-1,-1,-1,-1,-1,-1,-1,
             )
         )
 

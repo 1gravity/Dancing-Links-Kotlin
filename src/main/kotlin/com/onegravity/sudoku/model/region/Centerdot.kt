@@ -9,18 +9,18 @@ class Centerdot<C : Cell>(puzzle: Puzzle<C>, regionCode: Int) :
     ExtraRegion<C>(puzzle, RegionType.CENTERDOT, regionCode, regionCodes) {
 
     companion object {
-        const val nrOfRegions: Int = 1
+        const val nrOfGroups = 1
 
-        private val regionCodes = arrayOf(
-            intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1,-1),
-            intArrayOf(-1, 0,-1,-1, 0,-1,-1, 0,-1),
-            intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1,-1),
-            intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1,-1),
-            intArrayOf(-1, 0,-1,-1, 0,-1,-1, 0,-1),
-            intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1,-1),
-            intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1,-1),
-            intArrayOf(-1, 0,-1,-1, 0,-1,-1, 0,-1),
-            intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1,-1)
+        private val regionCodes = intArrayOf(
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,
+            -1, 0,-1,-1, 0,-1,-1, 0,-1,
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,
+            -1, 0,-1,-1, 0,-1,-1, 0,-1,
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,
+            -1, 0,-1,-1, 0,-1,-1, 0,-1,
+            -1,-1,-1,-1,-1,-1,-1,-1,-1
         )
 
         val indices by lazy { computeRegionIndices(regionCodes) }

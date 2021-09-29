@@ -11,17 +11,16 @@ class Color<C : Cell>(puzzle: Puzzle<C>, regionCode: Int) :
     companion object {
         const val nrOfRegions: Int = 9
 
-        // (looks diagonally mirrored because we want to use (column, row) coordinates)
-        private val regionCodes = arrayOf(
-            intArrayOf(0, 3, 6, 0, 3, 6, 0, 3, 6),
-            intArrayOf(1, 4, 7, 1, 4, 7, 1, 4, 7),
-            intArrayOf(2, 5, 8, 2, 5, 8, 2, 5, 8),
-            intArrayOf(0, 3, 6, 0, 3, 6, 0, 3, 6),
-            intArrayOf(1, 4, 7, 1, 4, 7, 1, 4, 7),
-            intArrayOf(2, 5, 8, 2, 5, 8, 2, 5, 8),
-            intArrayOf(0, 3, 6, 0, 3, 6, 0, 3, 6),
-            intArrayOf(1, 4, 7, 1, 4, 7, 1, 4, 7),
-            intArrayOf(2, 5, 8, 2, 5, 8, 2, 5, 8)
+        private val regionCodes = intArrayOf(
+            0, 1, 2, 0, 1, 2, 0, 1, 2,
+            3, 4, 5, 3, 4, 5, 3, 4, 5,
+            6, 7, 8, 6, 7, 8, 6, 7, 8,
+            0, 1, 2, 0, 1, 2, 0, 1, 2,
+            3, 4, 5, 3, 4, 5, 3, 4, 5,
+            6, 7, 8, 6, 7, 8, 6, 7, 8,
+            0, 1, 2, 0, 1, 2, 0, 1, 2,
+            3, 4, 5, 3, 4, 5, 3, 4, 5,
+            6, 7, 8, 6, 7, 8, 6, 7, 8,
         )
 
         val indices by lazy { computeRegionIndices(regionCodes) }

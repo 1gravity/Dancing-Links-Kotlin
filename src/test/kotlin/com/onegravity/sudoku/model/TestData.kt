@@ -2,21 +2,21 @@ package com.onegravity.sudoku.model
 
 import com.onegravity.sudoku.model.region.RegionType
 
-val jigsawTest = arrayOf(
-    intArrayOf(0, 0, 0, 0, 0, 3, 3, 3, 6),
-    intArrayOf(0, 0, 1, 0, 0, 3, 3, 6, 6),
-    intArrayOf(1, 1, 1, 4, 3, 3, 6, 6, 7),
-    intArrayOf(1, 2, 1, 4, 3, 3, 6, 6, 7),
-    intArrayOf(1, 2, 4, 4, 4, 4, 4, 6, 7),
-    intArrayOf(1, 2, 2, 5, 5, 4, 7, 6, 7),
-    intArrayOf(1, 2, 2, 5, 5, 4, 7, 7, 7),
-    intArrayOf(2, 2, 5, 5, 8, 8, 7, 8, 8),
-    intArrayOf(2, 5, 5, 5, 8, 8, 8, 8, 8)
+val jigsawTest = intArrayOf(
+    0, 0, 1, 1, 1, 1, 1, 2, 2, 
+    0, 0, 1, 2, 2, 2, 2, 2, 5, 
+    0, 1, 1, 1, 4, 2, 2, 5, 5, 
+    0, 0, 4, 4, 4, 5, 5, 5, 5, 
+    0, 0, 3, 3, 4, 5, 5, 8, 8, 
+    3, 3, 3, 3, 4, 4, 4, 8, 8, 
+    3, 3, 6, 6, 4, 7, 7, 7, 8, 
+    3, 6, 6, 6, 6, 6, 7, 8, 8, 
+    6, 6, 7, 7, 7, 7, 7, 8, 8
 )
 
 object Regions {
-    // the region indices here match the ones in the code to test but we use these here to
-    // verify that the code to test returns identical ones
+    // the region indices here match the ones in the code to test, but we use these here to verify that the code to test
+    // returns identical ones
     private val row = arrayOf(
         intArrayOf( 0, 1, 2, 3, 4, 5, 6, 7, 8),
         intArrayOf( 9,10,11,12,13,14,15,16,17),

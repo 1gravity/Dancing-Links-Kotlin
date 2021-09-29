@@ -21,8 +21,8 @@ class GridTests {
                 val cell = grid.getCell(x, y)
                 assertEquals(value, cell.value)
                 assertEquals(isGiven, cell.isGiven)
-                assertEquals(x, cell.position.col)
-                assertEquals(y, cell.position.row)
+                assertEquals(x, cell.col)
+                assertEquals(y, cell.row)
                 isGiven = ! isGiven
             }
         }
@@ -32,10 +32,8 @@ class GridTests {
     fun testAllCells() {
         val grid = getTestGrid()
         val cells = grid.getCells()
-        for (y in 0..8) {
-            for (x in 0..8) {
-                assertEquals(cells[x][y], grid.getCell(x, y))
-            }
+        for (index in 0..80) {
+            assertEquals(cells[index], grid.getCell(index))
         }
     }
 

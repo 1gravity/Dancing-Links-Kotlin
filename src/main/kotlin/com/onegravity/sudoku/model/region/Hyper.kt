@@ -9,19 +9,18 @@ class Hyper<C : Cell>(puzzle: Puzzle<C>, regionCode: Int) :
     ExtraRegion<C>(puzzle, RegionType.HYPER, regionCode, regionCodes) {
 
     companion object {
-        const val nrOfRegions: Int = 4
+        const val nrOfGroups = 4
 
-        // (looks diagonally mirrored because we want to use (column, row) coordinates)
-        private val regionCodes = arrayOf(
-            intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1,-1),
-            intArrayOf(-1, 0, 0, 0,-1, 2, 2, 2,-1),
-            intArrayOf(-1, 0, 0, 0,-1, 2, 2, 2,-1),
-            intArrayOf(-1, 0, 0, 0,-1, 2, 2, 2,-1),
-            intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1,-1),
-            intArrayOf(-1, 1, 1, 1,-1, 3, 3, 3,-1),
-            intArrayOf(-1, 1, 1, 1,-1, 3, 3, 3,-1),
-            intArrayOf(-1, 1, 1, 1,-1, 3, 3, 3,-1),
-            intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1,-1)
+        private val regionCodes = intArrayOf(
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,
+            -1, 0, 0, 0,-1, 1, 1, 1,-1,
+            -1, 0, 0, 0,-1, 1, 1, 1,-1,
+            -1, 0, 0, 0,-1, 1, 1, 1,-1,
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,
+            -1, 2, 2, 2,-1, 3, 3, 3,-1,
+            -1, 2, 2, 2,-1, 3, 3, 3,-1,
+            -1, 2, 2, 2,-1, 3, 3, 3,-1,
+            -1,-1,-1,-1,-1,-1,-1,-1,-1
         )
 
         val indices by lazy { computeRegionIndices(regionCodes) }

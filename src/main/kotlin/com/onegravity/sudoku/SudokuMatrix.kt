@@ -1,6 +1,5 @@
 package com.onegravity.sudoku
 
-import com.onegravity.sudoku.model.CellPosition
 import com.onegravity.sudoku.model.Grid
 import com.onegravity.sudoku.model.region.Block
 import com.onegravity.sudoku.model.region.RegionType
@@ -85,15 +84,15 @@ class SudokuMatrix(private val grid: Grid) {
     fun baseMatrix() = emptyMatrix().apply {
         val regions = grid.getRegions(grid.extraRegionType)
         for (index in 0 until 81) {
-            val pos = CellPosition(index)
+            val cell = grid.getCell(index)
             for (nr in 1..9) {
                 val row = index * 9 + nr - 1
                 this[row][index] = true                                     // cell constraint
-                this[row][81 + pos.row * 9 + nr - 1] = true                 // row constraint
-                this[row][2 * 81 + pos.col * 9 + nr - 1] = true             // column constraint
+                this[row][81 + cell.row * 9 + nr - 1] = true                 // row constraint
+                this[row][2 * 81 + cell.col * 9 + nr - 1] = true             // column constraint
                 // block constraint
-                val block = grid.getRegionAtOrThrow(pos.col, pos.row, RegionType.BLOCK) as Block
-                this[row][3 * 81 + block.blockCode * 9 + nr - 1] = true
+                val block = grid.getRegionAtOrThrow(cell.col, cell.row, RegionType.BLOCK) as Block
+                this[row][3 * 81 + block.regionCode * 9 + nr - 1] = true
                 // extra region constraint
                 regions.forEachIndexed { regionIndex, region ->
                     if (region.contains(grid.getCell(index))) {

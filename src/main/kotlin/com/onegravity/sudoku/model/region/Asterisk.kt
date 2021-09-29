@@ -9,18 +9,18 @@ class Asterisk<C : Cell>(puzzle: Puzzle<C>, regionCode: Int) :
     ExtraRegion<C>(puzzle, RegionType.ASTERISK, regionCode, regionCodes) {
 
     companion object {
-        const val nrOfRegions: Int = 1
+        const val nrOfGroups = 1
 
-        val regionCodes = arrayOf(
-            intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1,-1),
-            intArrayOf(-1,-1,-1,-1, 0,-1,-1,-1,-1),
-            intArrayOf(-1,-1, 0,-1,-1,-1, 0,-1,-1),
-            intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1,-1),
-            intArrayOf(-1, 0,-1,-1, 0,-1,-1, 0,-1),
-            intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1,-1),
-            intArrayOf(-1,-1, 0,-1,-1,-1, 0,-1,-1),
-            intArrayOf(-1,-1,-1,-1, 0,-1,-1,-1,-1),
-            intArrayOf(-1,-1,-1,-1,-1,-1,-1,-1,-1)
+        val regionCodes = intArrayOf(
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,
+            -1,-1,-1,-1, 0,-1,-1,-1,-1,
+            -1,-1, 0,-1,-1,-1, 0,-1,-1,
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,
+            -1, 0,-1,-1, 0,-1,-1, 0,-1,
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,
+            -1,-1, 0,-1,-1,-1, 0,-1,-1,
+            -1,-1,-1,-1, 0,-1,-1,-1,-1,
+            -1,-1,-1,-1,-1,-1,-1,-1,-1
         )
 
         val indices by lazy { computeRegionIndices(regionCodes) }

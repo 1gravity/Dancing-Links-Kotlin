@@ -42,7 +42,7 @@ class HardestSudokuTests {
         }
     }
 
-    @Test
+//    @Test
     fun testBruteForce() {
         getPuzzles(filename) { puzzle, solution ->
             Assertions.assertArrayEquals(solution, puzzle.solve())

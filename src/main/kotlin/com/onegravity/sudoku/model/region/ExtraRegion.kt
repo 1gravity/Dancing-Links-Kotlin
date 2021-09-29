@@ -2,7 +2,7 @@ package com.onegravity.sudoku.model.region
 
 import com.onegravity.sudoku.model.Cell
 import com.onegravity.sudoku.model.Puzzle
-import com.onegravity.sudoku.model.mapCodes2Positions
+import com.onegravity.sudoku.model.mapCodes2Indices
 
 /**
  * ExtraRegion defines an extra region in the puzzle (beyond the regular Regions Block, Row and Column).
@@ -16,9 +16,9 @@ import com.onegravity.sudoku.model.mapCodes2Positions
 abstract class ExtraRegion<C : Cell>(
     private val puzzle: Puzzle<C>,
     regionType: RegionType,
-    val regionCode: Int,
-    private vararg val regionCodes: Array<IntArray>
-) : Region<C>(regionType) {
+    regionCode: Int,
+    private vararg val regionCodes: IntArray
+) : Region<C>(regionType, regionCode) {
 
     init {
         assert(regionType.isExtraRegion)
@@ -29,10 +29,9 @@ abstract class ExtraRegion<C : Cell>(
     @Suppress("UNCHECKED_CAST")
     override val cells by lazy {
         val cells = ArrayList<C>()
-        val codes2CellPositions = mapCodes2Positions(regionCodes[0])
-        val region = codes2CellPositions[regionCode]
-        region?.forEach { position ->
-            cells.add(puzzle.getCell(position.col, position.row))
+        val cellIndices = mapCodes2Indices(regionCodes[0])[regionCode]
+        cellIndices?.forEach { index ->
+            cells.add(puzzle.getCell(index))
         }
         cells
     }

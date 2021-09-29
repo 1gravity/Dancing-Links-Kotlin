@@ -41,36 +41,47 @@ private fun validateSolution(expected: IntArray, original: Grid, actual: Grid) {
  *
  * @param original the original Sudoku puzzle the algorithm solved so that we can set isGiven properly
  */
-fun List<Int>.toGrid(original: Grid) = Grid(original.extraRegionType, original.isJigsaw).apply {
-    sorted().forEach { row ->
-        val (index, value) = getIndexValue(row)
-        setValue(index, value, original.getCell(index).isGiven)
+fun List<Int>.toGrid(original: Grid) = Grid(original.extraRegionType, original.isJigsaw)
+    .apply {
+        sorted().forEach { row ->
+            val (index, value) = getIndexValue(row)
+            setValue(index, value, original.getCell(index).isGiven)
+        }
     }
-}
 
 /**
  * Convert values from the standard csv format to an IntArray.
- * Input: .......12........3..23..4....18....5.6..7.8.......9.....85.....9...4.5..47...6...
+ * Input:  .......12........3..23..4....18....5.6..7.8.......9.....85.....9...4.5..47...6...
  * Output: [0,0,0,0,0,0,0,1,2,0,0,0,0,0,0,0,0,3 etc.]
  */
 fun String.toIntArray() = this.map { c -> c.digitToIntOrNull() ?: 0 }.toIntArray()
 
-private val sudokuPattern = """^([\d.]{81}),(\d{81}).*${'$'}""".toRegex()
-fun getPuzzles(filename: String, process: (puzzle: IntArray, solution: IntArray) -> Unit) {
-    File(ClassLoader.getSystemResource(filename).file)
+/**
+ * Reads puzzles from a file in the standard csv format with comma separated solution.
+ *
+ * @param fileName The name of the file to read
+ * @param process the function called with each Sudoku passing in the puzzle and the solution as IntArrays
+ */
+fun getPuzzles(fileName: String, limit: Int = Int.MAX_VALUE, process: (puzzle: IntArray, solution: IntArray) -> Unit) {
+    var count = 0
+    File(ClassLoader.getSystemResource(fileName).file)
         .forEachLine { line ->
             // find Sudoku puzzles
             sudokuPattern.findAll(line)
-                .forEach { match ->
-                    // get group with puzzle values
-                    val puzzle = match.groupValues[1].toIntArray()
-                    val solution = match.groupValues[2].toIntArray()
-                    Assertions.assertEquals(81, puzzle.size)
-                    Assertions.assertEquals(81, solution.size)
-                    process(puzzle, solution)
+                .forEach { matchResult ->
+                    if (count++ < limit) {
+                        // get group with puzzle values
+                        val puzzle = matchResult.groupValues[1].toIntArray()
+                        val solution = matchResult.groupValues[2].toIntArray()
+                        Assertions.assertEquals(81, puzzle.size)
+                        Assertions.assertEquals(81, solution.size)
+                        process(puzzle, solution)
+                    } else
+                        return@forEachLine
                 }
         }
 }
+private val sudokuPattern = """^([\d.]{81}),(\d{81}).*${'$'}""".toRegex()
 
 fun testPerformance(testSet: String, puzzle: IntArray, solve: (puzzle: IntArray) -> Unit) {
     val l = System.currentTimeMillis()
@@ -80,17 +91,18 @@ fun testPerformance(testSet: String, puzzle: IntArray, solve: (puzzle: IntArray)
     println("$testSet took: $time ms, puzzles/sec: ${puzzlesPerSec.twoDecimals()}")
 }
 
-fun testPerformance(testSet: String, filename: String, solve: (puzzle: IntArray) -> Unit) {
-    val l = System.currentTimeMillis()
+fun testPerformance(testSet: String, filename: String, limit: Int = Int.MAX_VALUE, solve: (puzzle: IntArray) -> Unit) {
     var count = 0
-    getPuzzles(filename) { puzzle, _ ->
+    var totalTime = 0L
+    getPuzzles(filename, limit) { puzzle, _ ->
         count++
+        val l = System.currentTimeMillis()
         solve(puzzle)
+        totalTime += System.currentTimeMillis() - l
     }
-    val time = System.currentTimeMillis() - l
-    val average = time.toFloat().div(count)
+    val average = totalTime.toFloat().div(count)
     val puzzlesPerSec = 1000F.div(average)
-    println("$testSet - $filename took: $time ms, average: ${average.twoDecimals()} ms, puzzles/sec: ${puzzlesPerSec.twoDecimals()}")
+    println("$filename - $testSet took: $totalTime ms, average: ${average.twoDecimals()} ms, puzzles/sec: ${puzzlesPerSec.twoDecimals()}")
 }
 
 private val df = DecimalFormat("0.00")

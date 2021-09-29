@@ -22,75 +22,49 @@ import com.onegravity.sudoku.model.region.*
 class Grid(
     override val extraRegionType: RegionType?,
     override val isJigsaw: Boolean,
-    private val blockCodes: Array<IntArray> = Block.regionCodes
+    private val blockCodes: IntArray = Block.regionCodes
 ): Puzzle<CellImpl> {
 
     init {
-        blockCodes.forEach { it.forEach { code -> assert(code in 0..8) } }
+        blockCodes.forEach { code -> assert(code in 0..8) }
+        assert(blockCodes.size == 81)
         assert(extraRegionType?.isExtraRegion ?: true)
     }
 
-    /*
-     * The Cells.
-     * The first array index is the vertical index (from top to bottom) -> y/row,
-     * the second index is the horizontal index (from left to right) -> x/column.
-     */
-    private val cellList = ArrayList<CellImpl>().apply {
-        for (row in 0 until 9) {
-            for (col in 0 until 9) {
-                add(CellImpl(CellPosition(col, row), blockCodes[col][row]))
-            }
-        }
+    private val cells = Array(81) { index ->
+        CellImpl(index, blockCodes[index])
     }
 
-    private val cells = Array(9) { col ->
-        Array(9) { row ->
-            cellList[row * 9 + col]
-        }
-    }
-
+    // these are all the cell regions (rows, columns, blocks
     private val rows by lazy { create(9) { Row(this@Grid, it) } }
-
     private val columns by lazy { create(9) { Column(this@Grid, it) } }
-
     private val blocks by lazy {
         ArrayList<Block<CellImpl>>().apply {
-            val blockMapping = cellList.groupBy { it.blockCode }
+            val blockMapping = cells.groupBy { it.block }
             for (blockCode in 0..8) {
                 val block = Block(blockMapping[blockCode] ?: emptyList(), blockCode)
                 add(block)
             }
         }
     }
-    private val blockNeighbors by lazy { computeNeighbors(blockCodes) }
-    private val blockIndices by lazy { computeRegionIndices(blockCodes) }
-
-    private val xRegions by lazy { create(X.nrOfRegions) { X(this@Grid, it) } }
-
-    private val hyperRegions by lazy { create(Hyper.nrOfRegions) { Hyper(this@Grid, it) } }
-
-    private val percentRegions by lazy { create(Percent.nrOfRegions) { Percent(this@Grid, it) } }
-
-    private val centerdotRegions by lazy { create(Centerdot.nrOfRegions) { Centerdot(this@Grid, it) } }
-
-    private val asteriskRegions by lazy { create(Asterisk.nrOfRegions) { Asterisk(this@Grid, it) } }
-
+    private val xRegions by lazy { create(X.nrOfGroups) { X(this@Grid, it) } }
+    private val hyperRegions by lazy { create(Hyper.nrOfGroups) { Hyper(this@Grid, it) } }
+    private val percentRegions by lazy { create(Percent.nrOfGroups) { Percent(this@Grid, it) } }
+    private val centerdotRegions by lazy { create(Centerdot.nrOfGroups) { Centerdot(this@Grid, it) } }
+    private val asteriskRegions by lazy { create(Asterisk.nrOfGroups) { Asterisk(this@Grid, it) } }
     private val colorRegions by lazy { create(Color.nrOfRegions) { Color(this@Grid, it) } }
-
-    private fun <R: Region<CellImpl>>create(
-        nrOfRegions: Int,
-        instance: (regionNr: Int) -> R
-    ) = ArrayList<R>().apply {
-        for (regionNr in 0 until nrOfRegions) {
-            add(instance(regionNr))
+    private fun <R: Region<CellImpl>>create(nrOfRegions: Int, instance: (regionNr: Int) -> R) = ArrayList<R>()
+        .apply {
+            for (regionNr in 0 until nrOfRegions) {
+                add(instance(regionNr))
+            }
         }
-    }
 
     override fun getCells() = cells
 
-    override fun getCell(col: Int, row: Int) = cells[col][row]
+    override fun getCell(col: Int, row: Int) = cells[row * 9 + col]
 
-    override fun getCell(index: Int) = CellPosition(index).run { cells[col][row] }
+    override fun getCell(index: Int) = cells[index]
 
     override fun getRegions(type: RegionType?): List<Region<CellImpl>> {
         val hasExtraRegion = extraRegionType != null
@@ -120,11 +94,22 @@ class Grid(
         return null
     }
 
+    override fun getRegionAtOrNull(index: Int, type: RegionType?): Region<CellImpl>? {
+        if (type == null) return null
+        val cell = getCell(index)
+        getRegions(type).forEach { region ->
+            if (region.contains(cell)) return region
+        }
+        return null
+    }
+
+    // we compute the block indices here because they are not constant unlike for any other region
+    private val blockIndices by lazy { computeRegionIndices(blockCodes) }
     override fun getIndices(type: RegionType) =
         when(type) {
             RegionType.ROW -> Row.indices
             RegionType.COLUMN -> Column.indices
-            RegionType.BLOCK -> blockIndices
+            RegionType.BLOCK -> if (isJigsaw) blockIndices else Block.indices
             RegionType.X -> handleExtraRegion(type, X.indices)
             RegionType.HYPER -> handleExtraRegion(type, Hyper.indices)
             RegionType.PERCENT -> handleExtraRegion(type, Percent.indices)
@@ -133,6 +118,8 @@ class Grid(
             RegionType.COLOR -> handleExtraRegion(type, Color.indices)
         }
 
+    // we compute the block neighbors here because they are not constant unlike for any other region
+    private val blockNeighbors by lazy { computeNeighbors(blockCodes) }
     override fun getNeighbors(type: RegionType) =
         when(type) {
             RegionType.ROW -> Row.neighbors
@@ -167,11 +154,9 @@ class Grid(
     }
 
     override fun toString() = StringBuilder().apply {
-        for (row in 0..8) {
-            for (col in 0..8) {
-                append("${cells[col][row].value}, ")
-            }
-            append("\n\r")
+        for (index in 0..80) {
+            append("${cells[index].value}, ")
+            if (index.mod(9) == 8) append("\n\r")
         }
     }.toString()
 

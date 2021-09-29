@@ -155,8 +155,8 @@ class RegionTests {
         regions.forEachIndexed { regionIndex, region ->
             val indices = regionIndices[regionIndex]
             region.cells.forEachIndexed{ index, cell ->
-                assertEquals(indices[index], cell.position.index())
-                assertEquals(testValues[cell.position.index()], cell.value)
+                assertEquals(indices[index], cell.index)
+                assertEquals(testValues[cell.index], cell.value)
             }
         }
     }

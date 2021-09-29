@@ -2,7 +2,6 @@ package com.onegravity.sudoku
 
 import com.onegravity.sudoku.SudokuMatrix.Companion.getIndexValue
 import com.onegravity.sudoku.SudokuMatrix.Companion.IndexValue
-import com.onegravity.sudoku.model.CellPosition
 import com.onegravity.sudoku.model.Grid
 import com.onegravity.sudoku.model.region.*
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -33,12 +32,12 @@ class BaseMatrixTests {
 
     @Test
     fun testSudokusWithExtraRegions() {
-        testBaseMatrix(RegionType.X, X.nrOfRegions)
-        testBaseMatrix(RegionType.HYPER, Hyper.nrOfRegions)
-        testBaseMatrix(RegionType.ASTERISK, Asterisk.nrOfRegions)
+        testBaseMatrix(RegionType.X, X.nrOfGroups)
+        testBaseMatrix(RegionType.HYPER, Hyper.nrOfGroups)
+        testBaseMatrix(RegionType.ASTERISK, Asterisk.nrOfGroups)
         testBaseMatrix(RegionType.COLOR, Color.nrOfRegions)
-        testBaseMatrix(RegionType.CENTERDOT, Centerdot.nrOfRegions)
-        testBaseMatrix(RegionType.PERCENT, Percent.nrOfRegions)
+        testBaseMatrix(RegionType.CENTERDOT, Centerdot.nrOfGroups)
+        testBaseMatrix(RegionType.PERCENT, Percent.nrOfGroups)
     }
 
     private fun testBaseMatrix(type: RegionType?, nrOfRegions: Int) {
@@ -85,11 +84,10 @@ class BaseMatrixTests {
     private fun getRegionMatrix(grid: Grid, type: RegionType) = Array(729) { matrixRow ->
         val indices = grid.getIndices(type)
         val (cellIndex, cellValue) = getIndexValue(matrixRow)
-        val cellPos = CellPosition(cellIndex)
         Array(81) { matrixCol ->
             val (regionNr, matrixValue) = matrixCol.getIndexValue()
             val regionIndices = if (indices.size > regionNr) indices[regionNr] else intArrayOf()
-            regionIndices.contains(cellPos.index()) && matrixValue == (cellValue-1)
+            regionIndices.contains(cellIndex) && matrixValue == (cellValue-1)
         }
     }
 

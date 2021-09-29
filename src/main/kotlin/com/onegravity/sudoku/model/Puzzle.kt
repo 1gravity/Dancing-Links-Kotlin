@@ -13,12 +13,11 @@ interface Puzzle<C: Cell> {
     val isJigsaw: Boolean
 
     /**
-     * Get all cells as a two-dimensional array of Cells[column][row].
+     * Get all cells as a one-dimensional array of Cells[index].
      *
-     * @return all cells of this Puzzle as a two-dimensional array of Cells with the first index
-     * being the x coordinate / column.
+     * @return all cells of this Puzzle as a one-dimensional array of Cells.
      */
-    fun getCells(): Array<Array<C>>
+    fun getCells(): Array<C>
 
     /**
      * Get the cell at the given coordinates
@@ -71,7 +70,12 @@ interface Puzzle<C: Cell> {
     fun getRegionAtOrNull(col: Int, row: Int, type: RegionType?): Region<C>?
 
     /**
-     * Returns the indices of all cells of a certain RegionType as an Array[9]IntArray[9].
+     * Returns the region at a specific position or Null of no such region exists.
+     */
+    fun getRegionAtOrNull(index: Int, type: RegionType?): Region<C>?
+
+    /**
+     * Returns the indices of all cells of a certain RegionType as an Array[n]IntArray[9].
      *
      * The Array Index matches the region code/index (used internally to identify the region).
      * The IntArray elements are the cell indices from 0 to 80.

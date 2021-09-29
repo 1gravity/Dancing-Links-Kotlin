@@ -5,7 +5,7 @@ import com.onegravity.sudoku.model.Cell
 /**
  * Region defines a region within a Sudoku puzzle like a block, row, column or an ExtraRegion.
  */
-abstract class Region<C: Cell>(val regionType: RegionType) : Comparable<Region<C>>, Cloneable {
+abstract class Region<C: Cell>(val regionType: RegionType, val regionCode: Int) : Comparable<Region<C>>, Cloneable {
 
     /**
      * The cells of this region sorted by cell index.

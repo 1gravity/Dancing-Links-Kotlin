@@ -6,10 +6,13 @@ import java.util.*
  * The Cell implementation.
  */
 class CellImpl(
-    override val position: CellPosition,
-    val blockCode: Int,
+    val index: Int,
+    val block: Int,
     override var isGiven: Boolean = false,
 ) : Cell {
+
+    val col = index % 9
+    val row = index / 9
 
     override var value: Int = 0
         set(newValue) {
@@ -39,13 +42,13 @@ class CellImpl(
         potentialValues.clear()
     }
 
-    override fun toString() = "${position.col}/${position.row}: $value"
+    override fun toString() = "$col/$row: $value"
 
     override fun equals(other: Any?) = when(other) {
-        is CellImpl -> position == other.position
+        is CellImpl -> index == other.index
         else -> false
     }
 
-    override fun hashCode() = position.hashCode()
+    override fun hashCode() = index.hashCode()
 
 }
