@@ -3,6 +3,7 @@ package com.onegravity.sudoku
 import com.onegravity.sudoku.SudokuMatrix.Companion.getIndexValue
 import com.onegravity.sudoku.SudokuMatrix.Companion.IndexValue
 import com.onegravity.sudoku.model.Grid
+import com.onegravity.sudoku.model.getTestGrid
 import com.onegravity.sudoku.model.region.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

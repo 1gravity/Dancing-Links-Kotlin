@@ -1,7 +1,5 @@
 package com.onegravity.sudoku.model
 
-import com.onegravity.sudoku.getJigsawTestGrid
-import com.onegravity.sudoku.getTestGrid
 import com.onegravity.sudoku.model.region.RegionType
 import com.onegravity.sudoku.testValues
 import org.junit.jupiter.api.Assertions.assertEquals

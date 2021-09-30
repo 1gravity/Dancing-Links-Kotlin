@@ -1,9 +1,8 @@
 package com.onegravity.bruteforce
 
-import com.onegravity.sudoku.model.Grid
-import kotlin.collections.ArrayList
+import com.onegravity.sudoku.model.Puzzle
 
-fun Grid.solve() = if (extraRegionType == null) solveNoExtraRegions() else solveWithExtraRegions()
+fun Puzzle.solve() = if (extraRegionType == null) solveNoExtraRegions() else solveWithExtraRegions()
 
 val bits2Digits = mapOf(
     1   to 1,
@@ -17,7 +16,7 @@ val bits2Digits = mapOf(
     256 to 9,
 )
 
-private fun Grid.solveWithExtraRegions(): IntArray {
+private fun Puzzle.solveWithExtraRegions(): IntArray {
     // initialize all data structures
     val digits = getCells().map { it.value }.toIntArray()
 
@@ -38,7 +37,7 @@ private fun Grid.solveWithExtraRegions(): IntArray {
     digits.forEachIndexed { cellIndex, digit ->
         val cell = getCell(cellIndex)
 
-        val indicesByGroup = if (extraRegionType != null) getIndices(extraRegionType) else emptyArray()
+        val indicesByGroup = extraRegionType?.let { getIndices(it) } ?: emptyArray()
         val extraRegionIndices = indicesByGroup.fold(ArrayList<Int>()) { extraRegionIndices, groupIndices ->
             // since each region group is a separate constraint, the group index will always be 0 (or -1)
             val index2Add = if (groupIndices.contains(cellIndex)) 0 else -1

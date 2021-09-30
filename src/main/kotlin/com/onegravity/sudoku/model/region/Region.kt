@@ -5,12 +5,12 @@ import com.onegravity.sudoku.model.Cell
 /**
  * Region defines a region within a Sudoku puzzle like a block, row, column or an ExtraRegion.
  */
-abstract class Region<C: Cell>(val regionType: RegionType, val regionCode: Int) : Comparable<Region<C>>, Cloneable {
+abstract class Region(val regionType: RegionType, val regionCode: Int) : Comparable<Region>, Cloneable {
 
     /**
      * The cells of this region sorted by cell index.
      */
-    abstract val cells: List<C>
+    abstract val cells: List<Cell>
 
     /**
      * Determines whether the Regions contains a specific cell.
@@ -19,7 +19,7 @@ abstract class Region<C: Cell>(val regionType: RegionType, val regionCode: Int) 
      *
      * @return True if the region contains the Cell, False otherwise
      */
-    fun contains(cell: C) = cells.contains(cell)
+    fun contains(cell: Cell) = cells.contains(cell)
 
     /**
      * Return intersection between this and another Region
@@ -28,7 +28,7 @@ abstract class Region<C: Cell>(val regionType: RegionType, val regionCode: Int) 
      *
      * @return the cells that are part of both regions
      */
-    fun intersection(other: Region<C>): Collection<Cell> = cells.intersect(other.cells.toList())
+    fun intersection(other: Region): Collection<Cell> = cells.intersect(other.cells.toList())
 
     /**
      * Test whether this region intersects another region.
@@ -38,7 +38,7 @@ abstract class Region<C: Cell>(val regionType: RegionType, val regionCode: Int) 
      *
      * @return whether this region crosses the other region.
      */
-    fun intersects(other: Region<C>) = !intersection(other).isEmpty()
+    fun intersects(other: Region) = !intersection(other).isEmpty()
 
     /**
      * Get a string representation of this region

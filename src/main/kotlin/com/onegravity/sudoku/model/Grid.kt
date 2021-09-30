@@ -23,7 +23,7 @@ class Grid(
     override val extraRegionType: RegionType?,
     override val isJigsaw: Boolean,
     private val blockCodes: IntArray = Block.regionCodes
-): Puzzle<CellImpl> {
+): Puzzle {
 
     init {
         blockCodes.forEach { code -> assert(code in 0..8) }
@@ -31,15 +31,13 @@ class Grid(
         assert(extraRegionType?.isExtraRegion ?: true)
     }
 
-    private val cells = Array(81) { index ->
-        CellImpl(index, blockCodes[index])
-    }
+    private val cells = Array(81) { index -> Cell(index, blockCodes[index]) }
 
     // these are all the cell regions (rows, columns, blocks
     private val rows by lazy { create(9) { Row(this@Grid, it) } }
     private val columns by lazy { create(9) { Column(this@Grid, it) } }
     private val blocks by lazy {
-        ArrayList<Block<CellImpl>>().apply {
+        ArrayList<Block>().apply {
             val blockMapping = cells.groupBy { it.block }
             for (blockCode in 0..8) {
                 val block = Block(blockMapping[blockCode] ?: emptyList(), blockCode)
@@ -53,7 +51,7 @@ class Grid(
     private val centerdotRegions by lazy { create(Centerdot.nrOfGroups) { Centerdot(this@Grid, it) } }
     private val asteriskRegions by lazy { create(Asterisk.nrOfGroups) { Asterisk(this@Grid, it) } }
     private val colorRegions by lazy { create(Color.nrOfRegions) { Color(this@Grid, it) } }
-    private fun <R: Region<CellImpl>>create(nrOfRegions: Int, instance: (regionNr: Int) -> R) = ArrayList<R>()
+    private fun <R: Region>create(nrOfRegions: Int, instance: (regionNr: Int) -> R) = ArrayList<R>()
         .apply {
             for (regionNr in 0 until nrOfRegions) {
                 add(instance(regionNr))
@@ -66,7 +64,7 @@ class Grid(
 
     override fun getCell(index: Int) = cells[index]
 
-    override fun getRegions(type: RegionType?): List<Region<CellImpl>> {
+    override fun getRegions(type: RegionType?): List<Region> {
         val hasExtraRegion = extraRegionType != null
         return when(type) {
             RegionType.ROW -> rows
@@ -85,7 +83,7 @@ class Grid(
     override fun getRegionAtOrThrow(col: Int, row: Int, type: RegionType?) =
         getRegionAtOrNull(col, row, type) ?: throw NoSuchElementException("No region of type $type at $col/$row")
 
-    override fun getRegionAtOrNull(col: Int, row: Int, type: RegionType?): Region<CellImpl>? {
+    override fun getRegionAtOrNull(col: Int, row: Int, type: RegionType?): Region? {
         if (type == null) return null
         val cell = getCell(col, row)
         getRegions(type).forEach { region ->
@@ -94,7 +92,7 @@ class Grid(
         return null
     }
 
-    override fun getRegionAtOrNull(index: Int, type: RegionType?): Region<CellImpl>? {
+    override fun getRegionAtOrNull(index: Int, type: RegionType?): Region? {
         if (type == null) return null
         val cell = getCell(index)
         getRegions(type).forEach { region ->

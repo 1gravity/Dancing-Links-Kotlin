@@ -9,8 +9,8 @@ import com.onegravity.sudoku.model.Cell
  * For performance reasons the Grid does that job and just passes the List of Cells to the blocks.
  * @param regionCode the regionCode defines which block this is (0 to 8).
  */
-class Block<C : Cell>(override val cells: List<C>, regionCode: Int) :
-    Region<C>(RegionType.BLOCK, regionCode) {
+class Block(override val cells: List<Cell>, regionCode: Int) :
+    Region(RegionType.BLOCK, regionCode) {
 
     init {
         assert(cells.size == 9)
@@ -19,7 +19,7 @@ class Block<C : Cell>(override val cells: List<C>, regionCode: Int) :
 
     override fun toString() = "B$regionCode"
 
-    override fun compareTo(other: Region<C>) =
+    override fun compareTo(other: Region) =
         when (other is Block) {
             true -> if (regionCode == other.regionCode) 0 else -1
             else -> -1

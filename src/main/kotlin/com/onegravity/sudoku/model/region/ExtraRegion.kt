@@ -13,12 +13,12 @@ import com.onegravity.sudoku.model.mapCodes2Indices
  * @param regionCodes The regionCodes defines which Cells are part of which region. Together with the regionCode this
  * ExtraRegion can determine which cells are part of this region.
  */
-abstract class ExtraRegion<C : Cell>(
-    private val puzzle: Puzzle<C>,
+abstract class ExtraRegion(
+    private val puzzle: Puzzle,
     regionType: RegionType,
     regionCode: Int,
     private vararg val regionCodes: IntArray
-) : Region<C>(regionType, regionCode) {
+) : Region(regionType, regionCode) {
 
     init {
         assert(regionType.isExtraRegion)
@@ -28,7 +28,7 @@ abstract class ExtraRegion<C : Cell>(
 
     @Suppress("UNCHECKED_CAST")
     override val cells by lazy {
-        val cells = ArrayList<C>()
+        val cells = ArrayList<Cell>()
         val cellIndices = mapCodes2Indices(regionCodes[0])[regionCode]
         cellIndices?.forEach { index ->
             cells.add(puzzle.getCell(index))
@@ -38,7 +38,7 @@ abstract class ExtraRegion<C : Cell>(
 
     override fun toString() = "${regionType.name} $regionCode/$nrOfRegions"
 
-    override fun compareTo(other: Region<C>) =
+    override fun compareTo(other: Region) =
         when (other is ExtraRegion) {
             true -> if (
                 regionType == other.regionType &&

@@ -1,8 +1,6 @@
 package com.onegravity.sudoku.model
 
 import com.onegravity.sudoku.model.region.RegionType
-import com.onegravity.sudoku.checkFailure
-import com.onegravity.sudoku.getTestGrid
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import kotlin.math.absoluteValue

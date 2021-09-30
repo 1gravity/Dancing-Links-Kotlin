@@ -6,7 +6,7 @@ import com.onegravity.sudoku.model.region.*
  * Puzzle is the interface for a Sudoku puzzle.
  * It supports jigsaw/squiggly puzzles and also puzzles with extra regions (X-Sudoku, Hyper-Sudoku etc.).
  */
-interface Puzzle<C: Cell> {
+interface Puzzle {
 
     val extraRegionType: RegionType?
 
@@ -17,7 +17,7 @@ interface Puzzle<C: Cell> {
      *
      * @return all cells of this Puzzle as a one-dimensional array of Cells.
      */
-    fun getCells(): Array<C>
+    fun getCells(): Array<Cell>
 
     /**
      * Get the cell at the given coordinates
@@ -27,7 +27,7 @@ interface Puzzle<C: Cell> {
      *
      * @return the cell at the given coordinates
      */
-    fun getCell(col: Int, row: Int): C
+    fun getCell(col: Int, row: Int): Cell
 
     /**
      * Get the cell at the given index
@@ -39,7 +39,7 @@ interface Puzzle<C: Cell> {
      *
      * @return the cell at the given index
      */
-    fun getCell(index: Int): C
+    fun getCell(index: Int): Cell
 
     /**
      * Returns a list of regions by RegionType.
@@ -48,7 +48,7 @@ interface Puzzle<C: Cell> {
      *
      * @return A list of Regions, they will be returned in their natural order (row 0, row 1 etc.)
      */
-    fun getRegions(type: RegionType?): List<Region<C>>
+    fun getRegions(type: RegionType?): List<Region>
 
     /**
      * Returns the region at a specific position.
@@ -62,17 +62,17 @@ interface Puzzle<C: Cell> {
      *
      * @throws NoSuchElementException if no region can be found at col/row
      */
-    fun getRegionAtOrThrow(col: Int, row: Int, type: RegionType?): Region<C>
+    fun getRegionAtOrThrow(col: Int, row: Int, type: RegionType?): Region
 
     /**
      * Returns the region at a specific position or Null of no such region exists.
      */
-    fun getRegionAtOrNull(col: Int, row: Int, type: RegionType?): Region<C>?
+    fun getRegionAtOrNull(col: Int, row: Int, type: RegionType?): Region?
 
     /**
      * Returns the region at a specific position or Null of no such region exists.
      */
-    fun getRegionAtOrNull(index: Int, type: RegionType?): Region<C>?
+    fun getRegionAtOrNull(index: Int, type: RegionType?): Region?
 
     /**
      * Returns the indices of all cells of a certain RegionType as an Array[IntArray[9]].

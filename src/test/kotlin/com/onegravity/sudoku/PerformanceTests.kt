@@ -8,6 +8,7 @@ import com.onegravity.dlx2.toDLX2
 import com.onegravity.dlx3.solve
 import com.onegravity.dlx3.toDLX3
 import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
+import com.onegravity.sudoku.model.getTestGrid
 import org.junit.jupiter.api.Test
 
 class PerformanceTests {

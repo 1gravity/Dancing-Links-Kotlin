@@ -2,6 +2,7 @@ package com.onegravity.sudoku
 
 import com.onegravity.sudoku.SudokuMatrix.Companion.getSubset
 import com.onegravity.sudoku.model.Grid
+import com.onegravity.sudoku.model.getTestGrid
 import com.onegravity.sudoku.model.region.Block
 import com.onegravity.sudoku.model.region.RegionType
 import org.junit.jupiter.api.Assertions.assertEquals

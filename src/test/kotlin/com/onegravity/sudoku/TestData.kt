@@ -1,9 +1,5 @@
 package com.onegravity.sudoku
 
-import com.onegravity.sudoku.model.Grid
-import com.onegravity.sudoku.model.region.Block
-import com.onegravity.sudoku.model.region.RegionType
-
 val testValues = intArrayOf(
     0, 1, 2, 3, 4, 5, 6, 7, 8,
     1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -178,47 +174,3 @@ val testColorSudokuSolution = intArrayOf(
     6, 3, 5, 4, 2, 9, 7, 8, 1, 
     1, 2, 7, 8, 6, 5, 3, 9, 4
 )
-
-fun getTestGrid(
-    values: IntArray = testValues,
-    extraRegionType: RegionType? = null,
-    isJigsaw: Boolean = false,
-    blockCodes: IntArray = Block.regionCodes
-) = Grid(extraRegionType, isJigsaw, blockCodes).apply {
-        for (index in 0..80) {
-            val value = values[index]
-            setValue(index, value, value != 0)
-        }
-    }
-
-val jigsawIndices = arrayOf(
-    intArrayOf( 0, 1, 9,10,18,27,28,36,37),
-    intArrayOf( 2, 3, 4, 5, 6,11,19,20,21),
-    intArrayOf( 7, 8,12,13,14,15,16,23,24),
-    intArrayOf(38,39,45,46,47,48,54,55,63),
-    intArrayOf(22,29,30,31,40,49,50,51,58),
-    intArrayOf(17,25,26,32,33,34,35,41,42),
-    intArrayOf(56,57,64,65,66,67,68,72,73),
-    intArrayOf(59,60,61,69,74,75,76,77,78),
-    intArrayOf(43,44,52,53,62,70,71,79,80),
-)
-
-fun getJigsawTestGrid(values:IntArray, blockCodes: IntArray) =
-    Grid(null, true, blockCodes).apply {
-        for (index in 0..80) {
-            setValue(index, values[index], true)
-        }
-    }
-
-fun checkFailure(errorMsg: String, check: () -> Unit) {
-    var failed = false
-    try {
-        check()
-        failed = true
-    } catch (e: AssertionError) { }
-    if (failed) throw AssertionError(errorMsg)
-}
-
-fun checkRange(check: () -> Unit) {
-    checkFailure("Range not enforced", check)
-}

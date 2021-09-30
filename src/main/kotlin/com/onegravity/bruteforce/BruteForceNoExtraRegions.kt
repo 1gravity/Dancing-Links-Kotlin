@@ -1,11 +1,11 @@
 package com.onegravity.bruteforce
 
-import com.onegravity.sudoku.model.Grid
+import com.onegravity.sudoku.model.Puzzle
 import java.util.*
 
 private data class Indices(val cell: Int, val row: Int, val col: Int, val block: Int)
 
-fun Grid.solveNoExtraRegions(): IntArray {
+fun Puzzle.solveNoExtraRegions(): IntArray {
     // initialize all data structures
     val digits = getCells().map { it.value }.toIntArray()
 

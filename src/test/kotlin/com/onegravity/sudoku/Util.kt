@@ -3,33 +3,34 @@ package com.onegravity.sudoku
 import com.onegravity.sudoku.SudokuMatrix.Companion.getIndexValue
 import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
 import com.onegravity.sudoku.model.Grid
+import com.onegravity.sudoku.model.Puzzle
 import org.junit.jupiter.api.Assertions
 import java.io.File
 import java.text.DecimalFormat
 
 fun testAndValidateSudoku(
-    grid: Grid,
+    puzzle: Puzzle,
     solution: IntArray,
     solve: Array<BooleanArray>.(collect: (List<Int>) -> Unit) -> Unit
 ) {
-    testSudoku(grid, solution, solve)
+    testSudoku(puzzle, solution, solve)
 }
 
 private fun testSudoku(
-    grid: Grid,
+    puzzle: Puzzle,
     solution: IntArray?,
     solve: Array<BooleanArray>.(collect: (List<Int>) -> Unit) -> Unit
 ) {
     var solutionFound = false
-    grid.toSudokuMatrix()
+    puzzle.toSudokuMatrix()
         .solve { rows ->
-            if (solution != null) validateSolution(solution, grid, rows.toGrid(grid))
+            if (solution != null) validateSolution(solution, puzzle, rows.toGrid(puzzle))
             solutionFound = true
         }
     assert(solutionFound)
 }
 
-private fun validateSolution(expected: IntArray, original: Grid, actual: Grid) {
+private fun validateSolution(expected: IntArray, original: Puzzle, actual: Puzzle) {
     expected.forEachIndexed { index, value ->
         Assertions.assertEquals(original.getCell(index).isGiven, actual.getCell(index).isGiven)
         Assertions.assertEquals(value, actual.getCell(index).value)
@@ -41,7 +42,7 @@ private fun validateSolution(expected: IntArray, original: Grid, actual: Grid) {
  *
  * @param original the original Sudoku puzzle the algorithm solved so that we can set isGiven properly
  */
-fun List<Int>.toGrid(original: Grid) = Grid(original.extraRegionType, original.isJigsaw)
+fun List<Int>.toGrid(original: Puzzle) = Grid(original.extraRegionType, original.isJigsaw)
     .apply {
         sorted().forEach { row ->
             val (index, value) = getIndexValue(row)

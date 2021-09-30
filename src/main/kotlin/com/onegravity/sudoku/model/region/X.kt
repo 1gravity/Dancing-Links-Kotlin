@@ -1,12 +1,11 @@
 package com.onegravity.sudoku.model.region
 
-import com.onegravity.sudoku.model.Cell
 import com.onegravity.sudoku.model.Puzzle
 import com.onegravity.sudoku.model.computeRegionIndices
 import com.onegravity.sudoku.model.computeNeighbors
 
-class X<C : Cell>(puzzle: Puzzle<C>, regionCode: Int) :
-    ExtraRegion<C>(puzzle, RegionType.X, regionCode, regionCodes[regionCode]) {
+class X(puzzle: Puzzle, regionCode: Int) :
+    ExtraRegion(puzzle, RegionType.X, regionCode, regionCodes[regionCode]) {
 
     companion object {
         const val nrOfGroups = 2

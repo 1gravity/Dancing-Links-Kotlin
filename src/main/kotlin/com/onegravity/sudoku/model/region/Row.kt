@@ -7,17 +7,17 @@ import com.onegravity.sudoku.model.computeNeighbors
 /**
  * A row in the Sudoku puzzle.
  */
-class Row<C : Cell>(private val puzzle: Puzzle<C>, rowIndex: Int) :
-    Region<C>(RegionType.ROW, rowIndex) {
+class Row(private val puzzle: Puzzle, rowIndex: Int) :
+    Region(RegionType.ROW, rowIndex) {
 
-    override val cells = (0 until 9).fold(ArrayList<C>()) { list, colIndex ->
+    override val cells = (0 until 9).fold(ArrayList<Cell>()) { list, colIndex ->
         list.add(puzzle.getCell(colIndex, rowIndex))
         list
     }
 
     override fun toString() = "R$regionCode"
 
-    override fun compareTo(other: Region<C>) =
+    override fun compareTo(other: Region) =
         when (other is Row) {
             true -> regionCode.compareTo(other.regionCode)
             else -> -1

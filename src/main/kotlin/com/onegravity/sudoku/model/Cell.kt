@@ -12,16 +12,27 @@ import java.util.*
  * <li>The bitset of potential values for this cell (the candidates).
  * </ul>
  */
-interface Cell {
+class Cell(
+    val index: Int,
+    val block: Int,
+    var isGiven: Boolean = false,
+) {
 
-    var value: Int
+    val col = index % 9
+    val row = index / 9
 
-    var isGiven: Boolean
+    var value: Int = 0
+        set(newValue) {
+            if (newValue in 0..9) field = newValue else throw IllegalArgumentException("value must be between 0 and 9")
+            potentialValues.clear()
+        }
 
     /**
      * Returns true if no value has been set yet
      */
     fun isEmpty() = value == 0
+
+    private val potentialValues = BitSet(9)
 
     /**
      * Get the potential values for this cell.
@@ -31,7 +42,7 @@ interface Cell {
      *
      * @return the potential values for this cell
      */
-    fun getPotentialValues(): BitSet
+    fun getPotentialValues() = potentialValues
 
     /**
      * Test whether the given value is a potential value for this cell.
@@ -40,32 +51,49 @@ interface Cell {
      *
      * @return whether the given value is a potential value for this cell
      */
-    fun hasPotentialValue(value: Int): Boolean
+    fun hasPotentialValue(value: Int) = potentialValues[value]
 
     /**
      * Add the given value as a potential value for this cell.
      *
      * @param value the value to add, between 1 and 9, inclusive
      */
-    fun addPotentialValue(value: Int)
+    fun addPotentialValue(value: Int) {
+        potentialValues[value] = true
+    }
 
     /**
      * Remove the given value from the potential values of this cell.
      *
      * @param value the value to remove, between 1 and 9, inclusive
      */
-    fun removePotentialValue(value: Int)
+    fun removePotentialValue(value: Int) {
+        potentialValues[value] = false
+    }
 
     /**
      * Remove the given valueS from the potential values of this cell.
      *
      * @param valuesToRemove the valueS to remove, between 1 and 9, inclusive
      */
-    fun removePotentialValues(valuesToRemove: BitSet)
+    fun removePotentialValues(valuesToRemove: BitSet) {
+        potentialValues.andNot(valuesToRemove)
+    }
 
     /**
      * Delete all potential values of this cell.
      */
-    fun clearPotentialValues()
+    fun clearPotentialValues() {
+        potentialValues.clear()
+    }
+
+    override fun toString() = "$col/$row: $value"
+
+    override fun equals(other: Any?) = when(other) {
+        is Cell -> index == other.index
+        else -> false
+    }
+
+    override fun hashCode() = index.hashCode()
 
 }
