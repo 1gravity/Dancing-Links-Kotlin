@@ -83,17 +83,9 @@ class SudokuTests {
         testMultipleSolutions { puzzle, collect ->
             puzzle.toSudokuMatrix().toDLX().solve { collect(it) }
         }
-    }
-
-    @Test
-    fun testMultipleSolutionsDLX2() {
         testMultipleSolutions { puzzle, collect ->
             puzzle.toSudokuMatrix().toDLX2().solve { collect(it) }
         }
-    }
-
-    @Test
-    fun testMultipleSolutionsDLX3() {
         testMultipleSolutions { puzzle, collect ->
             puzzle.toSudokuMatrix().toDLX3().solve { collect(it) }
         }
@@ -112,6 +104,15 @@ class SudokuTests {
             solutionsFound.incrementAndGet()
         }
         assertEquals(2, solutionsFound.get())
+    }
+
+    @Test
+    fun testNoSolutions() {
+        val grid = getTestGrid(testSudokuNoSolution)
+        grid.toSudokuMatrix().toDLX().solve { assert(false) }
+        grid.toSudokuMatrix().toDLX2().solve { assert(false) }
+        grid.toSudokuMatrix().toDLX3().solve { assert(false) }
+        grid.solve { assert(false) }
     }
 
     private fun testMultipleSolutions(solve: (puzzle: Puzzle, collect: (List<Int>) -> Unit) -> Unit) {

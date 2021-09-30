@@ -96,6 +96,18 @@ val testSudokuMultipleSolutionsSolution2 = intArrayOf(
     7, 1, 5, 2, 4, 8, 6, 9, 3,
 )
 
+val testSudokuNoSolution = intArrayOf(
+    0, 8, 0, 3, 0, 0, 5, 0, 7,
+    0, 0, 6, 9, 0, 0, 0, 2, 0,
+    5, 0, 1, 0, 2, 0, 0, 0, 0,
+    0, 0, 2, 0, 0, 0, 7, 1, 0,
+    0, 0, 0, 4, 6, 2, 0, 0, 0,
+    0, 6, 3, 0, 0, 0, 4, 0, 0,
+    0, 0, 0, 0, 9, 0, 1, 0, 8,
+    1, 9, 0, 0, 0, 3, 2, 0, 0,
+    7, 0, 5, 0, 0, 8, 0, 0, 0
+)
+
 val testSudokuJigsawBlocks = intArrayOf(
     0, 0, 0, 0, 1, 2, 2, 2, 2, 
     0, 0, 0, 1, 1, 1, 2, 5, 5, 
