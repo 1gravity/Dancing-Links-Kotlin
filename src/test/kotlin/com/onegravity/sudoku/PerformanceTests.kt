@@ -34,7 +34,7 @@ class PerformanceTests {
                 .solve { }
         }
         testPerformance("Al Escargot - Brute Force", testSudokuAlEscargot) {
-            getTestGrid(it).solve()
+            getTestGrid(it).solve(true)
         }
     }
 
@@ -71,7 +71,7 @@ class PerformanceTests {
     @Test
     fun testHardestBF() {
         testPerformance("Brute Force", "hardest.csv") {
-            getTestGrid(it).solve()
+            getTestGrid(it).solve(true)
         }
     }
 
@@ -114,7 +114,7 @@ class PerformanceTests {
     // @Test
     fun testKaggleReducedBF() {
         testPerformance("$limit - Brute Force", "kaggle.csv", limit) {
-            getTestGrid(it).solve()
+            getTestGrid(it).solve(true)
         }
     }
 
@@ -156,7 +156,7 @@ class PerformanceTests {
     // @Test
     fun testKaggleFullBF() {
         testPerformance("Brute Force", "kaggle.csv") {
-            getTestGrid(it).solve()
+            getTestGrid(it).solve(true)
         }
     }
 

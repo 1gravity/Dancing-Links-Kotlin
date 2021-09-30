@@ -3,16 +3,16 @@ package com.onegravity.sudoku.solver
 import com.onegravity.sudoku.model.Puzzle
 import java.lang.Exception
 
-fun Puzzle.solve(): IntArray {
+fun Puzzle.solve(onlyOneSolution: Boolean = false): IntArray {
     var result: IntArray? = null
-    solve { result = it }
+    solve(onlyOneSolution) { result = it }
     return result ?: throw Exception("No solution found")
 }
 
-fun Puzzle.solve(collect: (IntArray) -> Unit) {
+fun Puzzle.solve(onlyOneSolution: Boolean = false, collect: (IntArray) -> Unit) {
     when (extraRegionType) {
-        null -> solveNoExtraRegions(collect)
-        else -> solveWithExtraRegions(collect)
+        null -> solveNoExtraRegions(onlyOneSolution, collect)
+        else -> solveWithExtraRegions(onlyOneSolution, collect)
     }
 }
 
@@ -30,7 +30,7 @@ val bits2Digits = mapOf(
 
 private data class Indices(val cell: Int, val row: Int, val col: Int, val block: Int)
 
-private fun Puzzle.solveNoExtraRegions(collect: (IntArray) -> Unit) {
+private fun Puzzle.solveNoExtraRegions(onlyOneSolution: Boolean, collect: (IntArray) -> Unit) {
     // initialize all data structures
     val digits = getCells().map { it.value }.toIntArray()
 
@@ -83,8 +83,16 @@ private fun Puzzle.solveNoExtraRegions(collect: (IntArray) -> Unit) {
         return Pair(candidates, todo[startIndex])
     }
 
-    fun solve(digits: IntArray, todo: MutableList<Indices>, todoIndex: Int, collect: (IntArray) -> Unit) {
-        if (todoIndex >= todo.size) return
+    /**
+     * @param digits the puzzle in process (81 digits, partially or fully completed)
+     * @param todo the cells that aren't filled yet
+     * @param todoIndex the next todo item we need to process
+     * @param collect this function will be called once a solution is found
+     *
+     * @return True if the processing should stop (if onlyOneSolution = True and a solution was found)
+     */
+    fun solve(digits: IntArray, todo: MutableList<Indices>, todoIndex: Int, collect: (IntArray) -> Unit): Boolean {
+        if (todoIndex >= todo.size) return false
 
         var (candidates, indices) = getMostConstraint(todo, todoIndex)
         val (cellIndex, rowIndex, colIndex, blockIndex) = indices
@@ -99,8 +107,11 @@ private fun Puzzle.solveNoExtraRegions(collect: (IntArray) -> Unit) {
             blocks[blockIndex] = blocks[blockIndex] xor lowestBit
 
             digits[cellIndex] = bits2Digits[lowestBit] ?: throw IllegalStateException("candidate not in range [1, 1ff]")
-            solve(digits, todo, todoIndex + 1, collect)
-            if (todoIndex == todo.size-1) collect(digits.clone())
+            if (todoIndex == todo.size-1) {
+                collect(digits.clone()) // the result needs to be immutable -> clone()
+                if (onlyOneSolution) return true
+            }
+            if (solve(digits, todo, todoIndex + 1, collect)) return true
 
             // restore the candidate
             rows[rowIndex] = rows[rowIndex] or lowestBit
@@ -110,12 +121,14 @@ private fun Puzzle.solveNoExtraRegions(collect: (IntArray) -> Unit) {
             // clear the lowest bit
             candidates = candidates.xor(lowestBit)
         }
+
+        return false
     }
 
     if (todo.isEmpty()) collect(digits) else solve(digits, todo, 0, collect)
 }
 
-private fun Puzzle.solveWithExtraRegions(collect: (IntArray) -> Unit) {
+private fun Puzzle.solveWithExtraRegions(onlyOneSolution: Boolean, collect: (IntArray) -> Unit) {
     // initialize all data structures
     val digits = getCells().map { it.value }.toIntArray()
 
@@ -156,17 +169,28 @@ private fun Puzzle.solveWithExtraRegions(collect: (IntArray) -> Unit) {
     }
 
     // solve the puzzle
-    if (todo.isEmpty()) collect(digits) else solve(digits, todo, 0, constraints, collect)
+    if (todo.isEmpty()) collect(digits) else solve(digits, todo, 0, constraints, onlyOneSolution, collect)
 }
 
+/**
+ * @param digits the puzzle in process (81 digits, partially or fully completed)
+ * @param todo the cells that aren't filled yet
+ * @param todoIndex the next todo item we need to process
+ * @param constraints the constraints/candidates for all region types (rows, columns, block, extra regions)
+ * @param onlyOneSolution if True stop looking for solutions once one was found
+ * @param collect this function will be called once a solution is found
+ *
+ * @return True if the processing should stop (if onlyOneSolution = True and a solution was found)
+ */
 private fun solve(
     digits: IntArray,
     todo: MutableList<IntArray>,
     todoIndex: Int,
     constraints: Array<IntArray>,
+    onlyOneSolution: Boolean,
     collect: (IntArray) -> Unit
-) {
-    if (todoIndex >= todo.size) return
+): Boolean {
+    if (todoIndex >= todo.size) return false
 
     var (candidates, indices) = getMostConstraint(todo, todoIndex, constraints)
     val (cellIndex) = indices   // the first elements is always the cell index
@@ -179,8 +203,11 @@ private fun solve(
         clearCandidate(constraints, indices, lowestBit)
 
         digits[cellIndex] = bits2Digits[lowestBit] ?: throw IllegalStateException("candidate not in range [1, 1ff]")
-        solve(digits, todo, todoIndex + 1, constraints, collect)
-        if (todoIndex == todo.size-1) collect(digits.clone())
+        if (todoIndex == todo.size-1) {
+            collect(digits.clone()) // the result needs to be immutable -> clone()
+            if (onlyOneSolution) return true
+        }
+        if (solve(digits, todo, todoIndex + 1, constraints, onlyOneSolution, collect)) return true
 
         // restore the candidate
         setCandidate(constraints, indices, lowestBit)
@@ -188,6 +215,8 @@ private fun solve(
         // clear the lowest bit
         candidates = candidates.xor(lowestBit)
     }
+    
+    return false
 }
 
 /**
