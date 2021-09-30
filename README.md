@@ -1,8 +1,9 @@
 # Dancing-Links-Kotlin
 
-This repo contains multiple Kotlin implementations of Donald Knuth's [Algorithm X](https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X) using [dancing links](https://en.wikipedia.org/wiki/Dancing_Links) to solve [exact cover problems](https://en.wikipedia.org/wiki/Exact_cover).
+This repo contains multiple Kotlin implementations of Donald Knuth's [Algorithm X](https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X) using [dancing links](https://en.wikipedia.org/wiki/Dancing_Links) to solve [exact cover problems](https://en.wikipedia.org/wiki/Exact_cover) 
+(see also Donald Knuth's 2020 paper: https://arxiv.org/pdf/cs/0011047.pdf.).
 
-See also Donald Knuth's paper from 2020 on the topic: https://arxiv.org/pdf/cs/0011047.pdf.
+It also contains a fairly fast brute force Sudoku solver.
 
 ### DLX Solver 1
 The first [Algorithm X](https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X) solver has a proper object-oriented design for the [dancing links](https://en.wikipedia.org/wiki/Dancing_Links).

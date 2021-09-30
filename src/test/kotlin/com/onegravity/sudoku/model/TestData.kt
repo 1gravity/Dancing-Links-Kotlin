@@ -2,7 +2,6 @@ package com.onegravity.sudoku.model
 
 import com.onegravity.sudoku.model.region.Block
 import com.onegravity.sudoku.model.region.RegionType
-import com.onegravity.sudoku.testValues
 
 fun getJigsawTestGrid(values:IntArray, blockCodes: IntArray) =
     Grid(null, true, blockCodes).apply {
@@ -31,6 +30,18 @@ fun getTestGrid(
         setValue(index, value, value != 0)
     }
 }
+
+val testValues = intArrayOf(
+    0, 1, 2, 3, 4, 5, 6, 7, 8,
+    1, 2, 3, 4, 5, 6, 7, 8, 9,
+    2, 3, 4, 5, 6, 7, 8, 9, 0,
+    3, 4, 5, 6, 7, 8, 9, 0, 1,
+    4, 5, 6, 7, 8, 9, 0, 1, 2,
+    5, 6, 7, 8, 9, 0, 1, 2, 3,
+    6, 7, 8, 9, 0, 1, 2, 3, 4,
+    7, 8, 9, 0, 1, 2, 3, 4, 5,
+    8, 9, 0, 1, 2, 3, 4, 5, 6
+)
 
 val jigsawTest = intArrayOf(
     0, 0, 1, 1, 1, 1, 1, 2, 2, 

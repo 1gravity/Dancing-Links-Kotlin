@@ -1,6 +1,6 @@
 package com.onegravity.sudoku
 
-import com.onegravity.bruteforce.solve
+import com.onegravity.sudoku.solver.solve
 import com.onegravity.dlx.solve
 import com.onegravity.dlx.toDLX
 import com.onegravity.dlx3.solve

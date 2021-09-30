@@ -1,7 +1,7 @@
 package com.onegravity.sudoku.model
 
 import com.onegravity.sudoku.model.region.RegionType
-import com.onegravity.sudoku.testValues
+import com.onegravity.sudoku.model.testValues
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

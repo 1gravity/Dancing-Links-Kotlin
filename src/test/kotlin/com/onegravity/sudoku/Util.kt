@@ -30,7 +30,7 @@ private fun testSudoku(
     assert(solutionFound)
 }
 
-private fun validateSolution(expected: IntArray, original: Puzzle, actual: Puzzle) {
+fun validateSolution(expected: IntArray, original: Puzzle, actual: Puzzle) {
     expected.forEachIndexed { index, value ->
         Assertions.assertEquals(original.getCell(index).isGiven, actual.getCell(index).isGiven)
         Assertions.assertEquals(value, actual.getCell(index).value)
