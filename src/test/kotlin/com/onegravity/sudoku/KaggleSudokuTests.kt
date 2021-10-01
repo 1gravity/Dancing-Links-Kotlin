@@ -9,6 +9,7 @@ import com.onegravity.dlx3.solve
 import com.onegravity.dlx3.toDLX3
 import com.onegravity.sudoku.model.getTestGrid
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -57,7 +58,7 @@ class KaggleSudokuTests : BaseClass4CoroutineTests() {
         getPuzzles(filename) { puzzle, solution ->
             val grid = getTestGrid(puzzle)
             var solutionFound = false
-            runBlocking {
+            runBlocking(Dispatchers.Main) {
                 grid.solve {
                     Assertions.assertArrayEquals(solution, it)
                     solutionFound = true

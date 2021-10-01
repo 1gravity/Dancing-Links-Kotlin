@@ -97,7 +97,7 @@ class SudokuTests : BaseClass4CoroutineTests() {
     fun testMultipleSolutionsBF() {
         val solutionsFound = AtomicInteger(0)
         val puzzle = getTestGrid(testSudokuMultipleSolutions)
-        runBlocking {
+        runBlocking(Dispatchers.Main) {
             puzzle.solve { solution ->
                 when (solution[80]) {
                     9 -> assertArrayEquals(testSudokuMultipleSolutionsSolution1, solution)
@@ -116,7 +116,7 @@ class SudokuTests : BaseClass4CoroutineTests() {
         grid.toSudokuMatrix().toDLX().solve { assert(false) }
         grid.toSudokuMatrix().toDLX2().solve { assert(false) }
         grid.toSudokuMatrix().toDLX3().solve { assert(false) }
-        runBlocking { grid.solve { assert(false) } }
+        runBlocking(Dispatchers.Main) { grid.solve { assert(false) } }
     }
 
     private fun testMultipleSolutions(solve: (puzzle: Puzzle, collect: (List<Int>) -> Unit) -> Unit) {

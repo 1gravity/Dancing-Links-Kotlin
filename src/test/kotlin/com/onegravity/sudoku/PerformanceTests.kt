@@ -9,6 +9,7 @@ import com.onegravity.dlx3.solve
 import com.onegravity.dlx3.toDLX3
 import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
 import com.onegravity.sudoku.model.getTestGrid
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
@@ -36,7 +37,7 @@ class PerformanceTests : BaseClass4CoroutineTests() {
                 .solve { }
         }
         testPerformance("Al Escargot - Brute Force", testSudokuAlEscargot) {
-            runBlocking {
+            runBlocking(Dispatchers.Main) {
                 getTestGrid(it).solve(true).collect { }
             }
         }
@@ -75,7 +76,7 @@ class PerformanceTests : BaseClass4CoroutineTests() {
     @Test
     fun testHardestBF() {
         testPerformance("Brute Force", "hardest.csv") {
-            runBlocking {
+            runBlocking(Dispatchers.Main) {
                 getTestGrid(it).solve(true).collect { }
             }
         }
@@ -120,7 +121,7 @@ class PerformanceTests : BaseClass4CoroutineTests() {
     // @Test
     fun testKaggleReducedBF() {
         testPerformance("$limit - Brute Force", "kaggle.csv", limit) {
-            runBlocking {
+            runBlocking(Dispatchers.Main) {
                 getTestGrid(it).solve(true).collect {  }
             }
         }
@@ -164,7 +165,7 @@ class PerformanceTests : BaseClass4CoroutineTests() {
     // @Test
     fun testKaggleFullBF() {
         testPerformance("Brute Force", "kaggle.csv") {
-            runBlocking {
+            runBlocking(Dispatchers.Main) {
                 getTestGrid(it).solve(true).collect { }
             }
         }
