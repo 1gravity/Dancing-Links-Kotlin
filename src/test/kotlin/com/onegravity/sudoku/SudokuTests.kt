@@ -30,6 +30,37 @@ class SudokuTests : BaseClass4CoroutineTests() {
     }
 
     @Test
+    fun testSudokuOnlyGivens() {
+        // no extra regions
+        testSudokuOnlyGivens(getTestGrid(testSudoku1), testSudoku1Solution)
+
+        // with extra regions
+        testSudokuOnlyGivens(getTestGrid(testHyperSudoku, extraRegionType = RegionType.HYPER), testHyperSudokuSolution)
+    }
+
+    private fun testSudokuOnlyGivens(puzzle: Puzzle, solution: IntArray) {
+        puzzle.getCells().forEach { cell ->
+            if (! cell.isGiven) cell.value = 1
+        }
+
+        var solutionFound = false
+        runBlocking {
+            puzzle.solve(onlyGivens = true) {
+                assertArrayEquals(solution, it)
+                solutionFound = true
+            }
+        }
+        assertEquals(true, solutionFound)
+
+        runBlocking {
+            puzzle.solve(onlyGivens = false) {
+                // there can't be a solution if the solver uses all digits not just the givens
+                assert(false)
+            }
+        }
+    }
+
+    @Test
     fun testSudokuAlEscargot() {
         val grid = getTestGrid(testSudokuAlEscargot)
         testSudokuDLX(grid, testSudokuAlEscargotSolution)
