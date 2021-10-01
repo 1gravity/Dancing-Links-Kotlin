@@ -11,12 +11,14 @@ import com.onegravity.sudoku.SudokuMatrix.Companion.toSudokuMatrix
 import com.onegravity.sudoku.model.Puzzle
 import com.onegravity.sudoku.model.getTestGrid
 import com.onegravity.sudoku.model.region.RegionType
-import org.junit.jupiter.api.Assertions
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.concurrent.atomic.AtomicInteger
 
-class SudokuTests {
+class SudokuTests : BaseClass4CoroutineTests() {
 
     @Test
     fun testSudoku1() {
@@ -95,13 +97,15 @@ class SudokuTests {
     fun testMultipleSolutionsBF() {
         val solutionsFound = AtomicInteger(0)
         val puzzle = getTestGrid(testSudokuMultipleSolutions)
-        puzzle.solve { solution ->
-            when (solution[80]) {
-                9 -> Assertions.assertArrayEquals(testSudokuMultipleSolutionsSolution1, solution)
-                3 -> Assertions.assertArrayEquals(testSudokuMultipleSolutionsSolution2, solution)
-                else -> assert(false)
+        runBlocking {
+            puzzle.solve { solution ->
+                when (solution[80]) {
+                    9 -> assertArrayEquals(testSudokuMultipleSolutionsSolution1, solution)
+                    3 -> assertArrayEquals(testSudokuMultipleSolutionsSolution2, solution)
+                    else -> assert(false)
+                }
+                solutionsFound.incrementAndGet()
             }
-            solutionsFound.incrementAndGet()
         }
         assertEquals(2, solutionsFound.get())
     }
@@ -112,7 +116,7 @@ class SudokuTests {
         grid.toSudokuMatrix().toDLX().solve { assert(false) }
         grid.toSudokuMatrix().toDLX2().solve { assert(false) }
         grid.toSudokuMatrix().toDLX3().solve { assert(false) }
-        grid.solve { assert(false) }
+        runBlocking { grid.solve { assert(false) } }
     }
 
     private fun testMultipleSolutions(solve: (puzzle: Puzzle, collect: (List<Int>) -> Unit) -> Unit) {
@@ -149,7 +153,14 @@ class SudokuTests {
     }
 
     private fun testBruteForce(puzzle: Puzzle, solution: IntArray) {
-        Assertions.assertArrayEquals(solution, puzzle.solve())
+        var solutionFound = false
+        runBlocking(Dispatchers.Main) {
+            puzzle.solve {
+                assertArrayEquals(solution, it)
+                solutionFound = true
+            }
+        }
+        assertEquals(true, solutionFound)
     }
 
 }

@@ -1,18 +1,26 @@
 package com.onegravity.sudoku.solver
 
 import com.onegravity.sudoku.model.Puzzle
-import java.lang.Exception
+import kotlinx.coroutines.flow.flow
 
-fun Puzzle.solve(onlyOneSolution: Boolean = false): IntArray {
-    var result: IntArray? = null
-    solve(onlyOneSolution) { result = it }
-    return result ?: throw Exception("No solution found")
+suspend fun Puzzle.solve(
+    onlyGivens: Boolean = true,
+    onlyOneSolution: Boolean = false,
+    collect: suspend (IntArray) -> Unit
+) {
+    when (extraRegionType) {
+        null -> solveNoExtraRegions(this, onlyGivens, onlyOneSolution, collect)
+        else -> solveWithExtraRegions(this, onlyGivens, onlyOneSolution, collect)
+    }
 }
 
-fun Puzzle.solve(onlyOneSolution: Boolean = false, collect: (IntArray) -> Unit) {
+fun Puzzle.solve(
+    onlyGivens: Boolean = true,
+    onlyOneSolution: Boolean = false
+) = flow {
     when (extraRegionType) {
-        null -> solveNoExtraRegions(onlyOneSolution, collect)
-        else -> solveWithExtraRegions(onlyOneSolution, collect)
+        null -> solveNoExtraRegions(this@solve, onlyGivens, onlyOneSolution) { emit(it) }
+        else -> solveWithExtraRegions(this@solve, onlyGivens, onlyOneSolution) { emit(it) }
     }
 }
 
@@ -30,18 +38,22 @@ val bits2Digits = mapOf(
 
 private data class Indices(val cell: Int, val row: Int, val col: Int, val block: Int)
 
-private fun Puzzle.solveNoExtraRegions(onlyOneSolution: Boolean, collect: (IntArray) -> Unit) {
-    // initialize all data structures
-    val digits = getCells().map { it.value }.toIntArray()
-
+private suspend fun solveNoExtraRegions(
+    puzzle: Puzzle,
+    onlyGivens: Boolean,
+    onlyOneSolution: Boolean,
+    collect: suspend (IntArray) -> Unit
+) {
+    // initialize the data structures
+    val digits = puzzle.getCells()
+        .map { cell -> if (onlyGivens && ! cell.isGiven) 0 else cell.value }
+        .toIntArray()
     val rows = IntArray(9) { 0x1ff }
     val columns = IntArray(9) { 0x1ff }
     val blocks = IntArray(9) { 0x1ff }
-
     val todo = ArrayList<Indices>()
-
     digits.forEachIndexed { cellIndex, digit ->
-        val cell = getCell(cellIndex)
+        val cell = puzzle.getCell(cellIndex)
         val rowIndex = cell.row
         val colIndex = cell.col
         val blockIndex = cell.block
@@ -91,7 +103,12 @@ private fun Puzzle.solveNoExtraRegions(onlyOneSolution: Boolean, collect: (IntAr
      *
      * @return True if the processing should stop (if onlyOneSolution = True and a solution was found)
      */
-    fun solve(digits: IntArray, todo: MutableList<Indices>, todoIndex: Int, collect: (IntArray) -> Unit): Boolean {
+    suspend fun solve(
+        digits: IntArray,
+        todo: MutableList<Indices>,
+        todoIndex: Int,
+        collect: suspend (IntArray) -> Unit
+    ): Boolean {
         if (todoIndex >= todo.size) return false
 
         var (candidates, indices) = getMostConstraint(todo, todoIndex)
@@ -125,12 +142,25 @@ private fun Puzzle.solveNoExtraRegions(onlyOneSolution: Boolean, collect: (IntAr
         return false
     }
 
-    if (todo.isEmpty()) collect(digits) else solve(digits, todo, 0, collect)
+    if (todo.isEmpty()) {
+        // make sure the puzzle is valid before calling the collect function
+        val isValid = rows.all { it == 0 } && columns.all { it == 0 } && blocks.all { it == 0 }
+        if (isValid) collect(digits)
+    } else {
+        solve(digits, todo, 0, collect)
+    }
 }
 
-private fun Puzzle.solveWithExtraRegions(onlyOneSolution: Boolean, collect: (IntArray) -> Unit) {
-    // initialize all data structures
-    val digits = getCells().map { it.value }.toIntArray()
+private suspend fun solveWithExtraRegions(
+    puzzle: Puzzle,
+    onlyGivens: Boolean,
+    onlyOneSolution: Boolean,
+    collect: suspend (IntArray) -> Unit
+) {
+    // initialize the data structures
+    val digits = puzzle.getCells()
+        .map { cell -> if (onlyGivens && ! cell.isGiven) 0 else cell.value }
+        .toIntArray()
 
     val rows = IntArray(9) { 0x1ff }
     val columns = IntArray(9) { 0x1ff }
@@ -138,7 +168,7 @@ private fun Puzzle.solveWithExtraRegions(onlyOneSolution: Boolean, collect: (Int
 
     // we map every extra region group to a constraint because that's the only way we can model it to fit X-Sudoku,
     // the only puzzle type with overlapping groups (cell 4/4)
-    val nrOfExtraRegions = getRegions(extraRegionType).size
+    val nrOfExtraRegions = puzzle.getRegions(puzzle.extraRegionType).size
     val hasExtraRegions = nrOfExtraRegions > 0
     val extraRegions = if (hasExtraRegions) Array(nrOfExtraRegions) { IntArray(1) { 0x1ff } } else emptyArray()
 
@@ -147,9 +177,9 @@ private fun Puzzle.solveWithExtraRegions(onlyOneSolution: Boolean, collect: (Int
     val todo = ArrayList<IntArray>()
 
     digits.forEachIndexed { cellIndex, digit ->
-        val cell = getCell(cellIndex)
+        val cell = puzzle.getCell(cellIndex)
 
-        val indicesByGroup = extraRegionType?.let { getIndices(it) } ?: emptyArray()
+        val indicesByGroup = puzzle.extraRegionType?.let { puzzle.getIndices(it) } ?: emptyArray()
         val extraRegionIndices = indicesByGroup.fold(ArrayList<Int>()) { extraRegionIndices, groupIndices ->
             // since each region group is a separate constraint, the group index will always be 0 (or -1)
             val index2Add = if (groupIndices.contains(cellIndex)) 0 else -1
@@ -169,7 +199,15 @@ private fun Puzzle.solveWithExtraRegions(onlyOneSolution: Boolean, collect: (Int
     }
 
     // solve the puzzle
-    if (todo.isEmpty()) collect(digits) else solve(digits, todo, 0, constraints, onlyOneSolution, collect)
+    if (todo.isEmpty()) {
+        // make sure the puzzle is valid before calling the collect function
+        val isValid = constraints.fold(true) { candidates, constraint ->
+            candidates && constraint.all { it == 0 }
+        }
+        if (isValid) collect(digits)
+    } else {
+        solve(digits, todo, 0, constraints, onlyOneSolution, collect)
+    }
 }
 
 /**
@@ -182,13 +220,13 @@ private fun Puzzle.solveWithExtraRegions(onlyOneSolution: Boolean, collect: (Int
  *
  * @return True if the processing should stop (if onlyOneSolution = True and a solution was found)
  */
-private fun solve(
+private suspend fun solve(
     digits: IntArray,
     todo: MutableList<IntArray>,
     todoIndex: Int,
     constraints: Array<IntArray>,
     onlyOneSolution: Boolean,
-    collect: (IntArray) -> Unit
+    collect: suspend (IntArray) -> Unit
 ): Boolean {
     if (todoIndex >= todo.size) return false
 
@@ -215,7 +253,7 @@ private fun solve(
         // clear the lowest bit
         candidates = candidates.xor(lowestBit)
     }
-    
+
     return false
 }
 
