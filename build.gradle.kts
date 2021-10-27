@@ -5,7 +5,7 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version "1.5.30"
+    kotlin("jvm") version "1.5.31"
 }
 
 group = "com.onegravity.dlx"
@@ -16,12 +16,12 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.30")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.31")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
 
     // Tests
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2-native-mt")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

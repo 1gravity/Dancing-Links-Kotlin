@@ -82,7 +82,7 @@ fun getPuzzles(fileName: String, limit: Int = Int.MAX_VALUE, process: (puzzle: I
                 }
         }
 }
-private val sudokuPattern = """^([\d.]{81}),(\d{81}).*${'$'}""".toRegex()
+private val sudokuPattern = """^([\d.]{81}),(\d{81}).*$""".toRegex()
 
 fun testPerformance(testSet: String, puzzle: IntArray, solve: (puzzle: IntArray) -> Unit) {
     val l = System.currentTimeMillis()
